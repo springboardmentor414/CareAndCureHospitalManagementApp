@@ -32,6 +32,7 @@ public class PaymentService {
         payment.setBill(bill);
         paymentRepository.save(payment);
         logger.info("Payment saved successfully for bill ID: " + payment.getBill().getBillId());
+        logger.info("Payment saved successfully ");
     }
 
     public List<Payment> getPaymentsByBillId(int billId) {
