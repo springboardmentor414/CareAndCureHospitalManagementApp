@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Care and Cure Hospital</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            color: #333;
+        }
+
+        /* Navbar Styles */
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #4CAF50;
+            padding: 10px 20px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+        .navbar h1 {
+            margin: 0;
+            font-size: 24px;
+            color: white;
+        }
+        .navbar a {
+            text-decoration: none;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 5px;
+            transition: background 0.3s ease;
+        }
+        .navbar a:hover {
+            background-color: #45a049;
+        }
+
+        /* Main Section Styles */
+        .main-section {
+            text-align: center;
+            padding: 50px;
+        }
+        .main-section h2 {
+            font-size: 36px;
+            color: #2e7d32;
+            margin-bottom: 20px;
+        }
+        .main-section p {
+            font-size: 18px;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+<!-- Navbar -->
+<div class="navbar">
+    <h1>Admin Dashboard</h1>
+    <div>
+        <a href="/showDoctors">List of Doctors</a>
+        <a href="/admin-add-doctor">Add Doctor</a>
+		<a href="/showAppointments">Appointment schedule</a>
+		<a href="/show-doctors-for-editing">Profile update</a>
+        <a href="/">Logout</a>
+    </div>
+</div>
+
+<!-- Main Section -->
+<div class="main-section">
+    <h2>Welcome, Admin!</h2>
+    <p>Use the navigation bar to manage doctors and view their details.</p>
+</div>
+</body>
+</html>

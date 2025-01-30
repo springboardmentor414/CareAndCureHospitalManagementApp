@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #74ebd5, #acb6e5);
+            color: #333;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            width: 300px;
+            text-align: center;
+        }
+        input {
+            margin: 10px 0;
+            padding: 10px;
+            width: 90%;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        label {
+            font-weight: bold;
+        }
+        button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            border: none;
+            border-radius: 5px;
+            background: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #45a049;
+        }
+
+        /* Alert Styling */
+        .alert {
+            position: fixed;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: #4CAF50;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            text-align: center;
+            z-index: 9999;
+            opacity: 0;
+            transition: all 0.5s ease-in-out;
+        }
+        .alert.error {
+            background-color: #f44336;
+        }
+        .alert.show {
+            top: 20px;
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+<div id="alert" class="alert"></div>
+
+<form id="adminLoginForm">
+    <h1>Admin Login</h1>
+    <label for="username">Username</label>
+    <input type="text" id="username" placeholder="Enter Username" required><br>
+    <label for="password">Password</label>
+    <input type="password" id="password" placeholder="Enter Password" required><br>
+    <button type="submit">Login</button>
+</form>
+
+<script>
+    document.getElementById('adminLoginForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Prevent default form submission
+
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+        const alert = document.getElementById('alert');
+
+        // Validate username and password
+        if (username === 'username' && password === 'password') {
+            // Success
+            alert.textContent = "Login successfully!";
+            alert.className = "alert show";
+            setTimeout(() => {
+                alert.classList.remove('show');
+                window.location.href = '/adminPage'; // Redirect to admin page
+            }, 2000);
+        } else {
+            // Error
+            alert.textContent = "Username or password is incorrect!";
+            alert.className = "alert error show";
+            setTimeout(() => {
+                alert.classList.remove('show');
+            }, 2000);
+        }
+    });
+</script>
+</body>
+</html>

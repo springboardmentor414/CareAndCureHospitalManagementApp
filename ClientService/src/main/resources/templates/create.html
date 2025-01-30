@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Payment</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to right, #eef2f3, #8e9eab);
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .container {
+            margin-top: 50px;
+            background-color: #ffffff;
+            padding: 40px;
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1 {
+            text-align: center;
+            color: #0056b3;
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: #333;
+        }
+
+        .form-control {
+            border-radius: 5px;
+            border: 1px solid #ced4da;
+        }
+
+        .btn-primary {
+            background-color: #0056b3;
+            border: none;
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 25px;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #003d82;
+        }
+
+        .btn-secondary {
+            padding: 10px 20px;
+            font-size: 1rem;
+            border-radius: 25px;
+        }
+
+        #payButton {
+            width: 100%;
+            font-size: 1.2rem;
+        }
+
+        .modal-content {
+            border-radius: 10px;
+        }
+
+        .modal-title {
+            color: #0056b3;
+        }
+
+        .modal-body p {
+            font-size: 1.1rem;
+            color: #555;
+        }
+
+        .theme {
+            color: #5F9EA0;
+        }
+    </style>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Create a New Payment</h1>
+        <form id="paymentForm" method="post">
+            <div class="form-group">
+                <label for="billId">Bill ID:</label>
+                <input type="text" class="form-control" id="billId" name="billId" required>
+            </div>
+            <div class="form-group">
+                <label for="paymentMethod">Payment Method:</label>
+                <select class="form-control" id="paymentMethod" name="paymentMethod" required>
+                    <option value="" disabled selected>Select a payment method</option>
+                    <option value="Credit Card">Credit Card</option>
+                    <option value="Debit Card">Debit Card</option>
+                    <option value="UPI">UPI</option>
+                    <option value="Net Banking">Net Banking</option>
+                    <option value="Cash">Cash</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="amount">Amount (INR):</label>
+                <input type="number" class="form-control" id="amount" name="amount" required>
+            </div>
+            <button type="button" class="btn btn-primary mt-4" id="payButton">Pay Now</button>
+        </form>
+
+        <a href="/" class="btn btn-secondary mt-3">Back to Home</a>
+    </div>
+
+    <!-- Modal for Payment Status -->
+    <div class="modal fade" tabindex="-1" role="dialog" id="paymentModal">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Payment Status</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="paymentMessage"></p>
+                    <p id="paymentDetails"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+	<script>
+	        $(document).ready(function () {
+	            $("#payButton").on("click", function () {
+	                const billId = $("#billId").val();
+	                const paymentMethod = $("#paymentMethod").val();
+	                const amount = $("#amount").val();
+
+	                // Create a new payment order
+	                $.ajax({
+	                    url: "http://localhost:8081/api/payments/create",
+	                    type: "POST",
+	                    contentType: "application/json",
+	                    data: JSON.stringify({
+	                        bill: { billId: billId },
+	                        paymentMethod: paymentMethod,
+	                        amount: amount,
+	                        paymentStatus: "Pending",
+	                        paymentDate: new Date().toISOString(),
+	                        currency: "INR"
+	                    }),
+	                    success: function (payment) {
+	                        // Open Razorpay modal for payment
+	                        var options = {
+	                            "key": "rzp_test_73Og2QB6bRrFB9", 
+	                            "amount": payment.amount * 100, 
+	                            "currency": payment.currency,
+	                            "name": "CareAndCure",
+	                            "description": "Doctor Appointment",
+	                            "order_id": payment.razorpayOrderId,
+	                            "handler": function (response) {
+	                                // Step 3: Verify the payment
+	                                $.ajax({
+	                                    url: "http://localhost:8081/api/payments/verify",
+	                                    type: "POST",
+	                                    contentType: "application/json",
+	                                    data: JSON.stringify({
+	                                        razorpay_order_id: response.razorpay_order_id,
+	                                        razorpay_payment_id: response.razorpay_payment_id,
+	                                        razorpay_signature: response.razorpay_signature
+	                                    }),
+	                                    success: function (verificationResponse) {
+	                                        if (verificationResponse.status === "success") {
+	                                            showPaymentStatus('success', 'Payment successful and verified!', 'Payment details Sends via Mail');
+	                                            // Clear the input fields
+	                                            $("#paymentForm")[0].reset();
+	                                        } else {
+	                                            showPaymentStatus('failure', 'Payment verification failed!', verificationResponse.message);
+	                                            $("#paymentForm")[0].reset();
+	                                        }
+	                                    },
+	                                    error: function (error) {
+	                                        console.error("Verification error:", error);
+	                                        showPaymentStatus('failure', 'Error verifying payment!', 'Please try again.');
+	                                        // Clear the input fields in case of verification error
+	                                        $("#paymentForm")[0].reset();
+	                                    }
+	                                });
+	                            },
+	                            "prefill": {
+	                                "name": "Aathithya",
+	                                "email": "aathi@example.com",
+	                                "contact": "9342946326"
+	                            },
+	                            "notes": {
+	                                "address": "Razorpay Corporate Office"
+	                            },
+	                            "theme": {
+	                                "color": "#5F9EA0"
+	                            },
+	                            "modal": {
+	                                "ondismiss": function () {                                   
+	                                    showPaymentStatus('failure', 'Payment not completed!', 'You closed the Razorpay modal without completing the payment.');
+	                                    $.ajax({
+	                                        url: "http://localhost:8081/api/payments/notifyFailure",
+	                                        type: "POST",
+	                                        contentType: "application/json",
+	                                        data: JSON.stringify({
+	                                            billId: billId,
+	                                            status: "failed",
+	                                            message: "Payment not completed, Razorpay modal was closed."
+	                                        }),
+	                                        success: function (response) {
+	                                            console.log("Email notification sent successfully!");
+	                                        },
+	                                        error: function (error) {
+	                                            console.error("Error sending email notification:", error);
+	                                        }
+	                                    });
+										$("#paymentForm")[0].reset();
+	                                }
+	                            }
+	                        };
+	                        var rzp1 = new Razorpay(options);
+	                        rzp1.open();
+	                    },
+	                    error: function (error) {
+	                        console.error("Error:", error);
+	                        showPaymentStatus('failure', 'Error creating payment!', 'Please try again.');
+	                        $("#paymentForm")[0].reset();
+	                    }
+	                });
+	            });
+	        });
+	        function showPaymentStatus(status, message, details) {
+	            if (status === 'success') {
+	                $("#paymentMessage").html('<strong style="color: green;">' + message + '</strong>');
+	                $("#paymentDetails").text(details);
+	            } else {
+	                $("#paymentMessage").html('<strong style="color: red;">' + message + '</strong>');
+	                $("#paymentDetails").text(details);
+	            }
+
+	            $('#paymentModal').modal('show');
+	        }
+	    </script>
+</body>
+</html>

@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Add Doctor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        .container {
+            width: 50%;
+            margin: 50px auto;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+        }
+
+        form {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        label {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 5px;
+        }
+
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        select {
+            width: 100%;
+            padding: 10px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 5px;
+        }
+
+        button {
+            padding: 10px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #007BFF;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #c3e6cb;
+            border-radius: 4px;
+        }
+
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 4px;
+        }
+
+        .error-text {
+            color: #e3342f;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-actions {
+            text-align: center;
+        }
+
+        .back-button {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            text-decoration: none;
+        }
+
+        .back-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+    <script>
+        function showSuccessMessage() {
+            alert('Doctor added successfully!');
+        }
+
+        function showErrorMessage() {
+            alert('Error submitting form. Please correct the highlighted fields.');
+        }
+		function validateDate() {
+		       const dateInput = document.getElementById('dateOfJoining');
+		       const selectedDate = new Date(dateInput.value);
+		       const today = new Date();
+		       today.setHours(0, 0, 0, 0); // Set time to midnight for accurate comparison
+
+		       const errorDiv = document.getElementById('dateError');
+
+		       if (selectedDate > today) {
+		           errorDiv.textContent = 'Date of Joining cannot be in the future.';
+		           errorDiv.style.display = 'block';
+		       } else {
+		           errorDiv.style.display = 'none'; // Hide error message if date is valid
+		       }
+		   }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <!-- Back Button -->
+        <a href="http://localhost:8081/adminPage" class="back-button">Back</a>
+
+        <h1>Add Doctor</h1>
+
+        <!-- Success and Error Messages -->
+        <div th:if="${successMessage}" class="success-message">
+            <p th:text="${successMessage}"></p>
+        </div>
+        <div th:if="${errorMessage}" class="error-message">
+            <p th:text="${errorMessage}"></p>
+        </div>
+
+        <form th:action="@{/addDoctor}" th:object="${doctor}" method="post">
+            <!-- Doctor ID Field -->
+            <div class="form-group">
+                <label for="doctorId">Doctor ID:</label>
+                <input type="number" id="doctorId" name="doctorId" th:field="*{doctorId}" />
+                <div th:if="${#fields.hasErrors('doctorId')}" class="error-text" th:errors="*{doctorId}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="doctorName">Doctor Name:</label>
+                <input type="text" id="doctorName" name="doctorName" th:field="*{doctorName}" />
+                <div th:if="${#fields.hasErrors('doctorName')}" class="error-text" th:errors="*{doctorName}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="emailId">Email ID:</label>
+                <input type="email" id="emailId" name="emailId" th:field="*{emailId}" />
+                <div th:if="${#fields.hasErrors('emailId')}" class="error-text" th:errors="*{emailId}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="contactNumber">Contact Number:</label>
+                <input type="text" id="contactNumber" name="contactNumber" th:field="*{contactNumber}" />
+                <div th:if="${#fields.hasErrors('contactNumber')}" class="error-text" th:errors="*{contactNumber}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="gender">Gender:</label>
+                <select id="gender" name="gender" th:field="*{gender}">
+                    <option value="" disabled>Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                </select>
+                <div th:if="${#fields.hasErrors('gender')}" class="error-text" th:errors="*{gender}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="location">Location:</label>
+                <input type="text" id="location" name="location" th:field="*{location}" />
+                <div th:if="${#fields.hasErrors('location')}" class="error-text" th:errors="*{location}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="qualification">Qualification:</label>
+                <input type="text" id="qualification" name="qualification" th:field="*{qualification}" />
+                <div th:if="${#fields.hasErrors('qualification')}" class="error-text" th:errors="*{qualification}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="specialization">Specialization:</label>
+                <select name="specialization" id="specialization" th:field="*{specialization}">
+                    <option value="" disabled selected>Select Specialization</option>
+                    <option value="Cardiology">Cardiology</option>
+                    <option value="Dermatology">Dermatology</option>
+                    <option value="Neurology">Neurology</option>
+                    <option value="Pediatrics">Pediatrics</option>
+                    <option value="Orthopedics">Orthopedics</option>
+                    <option value="Gynecology">Gynecology</option>
+                    <option value="Oncology">Oncology</option>
+                    <option value="Psychiatry">Psychiatry</option>
+                    <option value="Ophthalmology">Ophthalmology</option>
+                    <option value="ENT">ENT (Ear, Nose, Throat)</option>
+                    <option value="Endocrinology">Endocrinology</option>
+                    <option value="Nephrology">Nephrology</option>
+                    <option value="Gastroenterology">Gastroenterology</option>
+                    <option value="Pulmonology">Pulmonology</option>
+                    <option value="Radiology">Radiology</option>
+                    <option value="General Medicine">General Medicine</option>
+                    <option value="Anesthesiology">Anesthesiology</option>
+                    <option value="Rheumatology">Rheumatology</option>
+                    <option value="Urology">Urology</option>
+                    <option value="Hematology">Hematology</option>
+                    <option value="Plastic Surgery">Plastic Surgery</option>
+                    <option value="Critical Care">Critical Care</option>
+                </select>
+                <div th:if="${#fields.hasErrors('specialization')}" class="error-text" th:errors="*{specialization}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="consultationFees">Consultation Fees:</label>
+                <input type="number" step="0.01" id="consultationFees" name="consultationFees" th:field="*{consultationFees}" />
+                <div th:if="${#fields.hasErrors('consultationFees')}" class="error-text" th:errors="*{consultationFees}"></div>
+            </div>
+
+			<div class="form-group">
+			    <label for="dateOfJoining">Date of Joining:</label>
+			    <input type="date" id="dateOfJoining" name="dateOfJoining" th:field="*{dateOfJoining}" onchange="validateDate()" />
+			    <div th:if="${#fields.hasErrors('dateOfJoining')}" class="error-text" th:errors="*{dateOfJoining}"></div>
+			    <div id="dateError" class="error-text" style="display: none;"></div> <!-- New error message div -->
+			</div>
+
+            <div class="form-group">
+                <label for="surgeon">Surgeon:</label>
+                <input type="checkbox" id="surgeon" name="surgeon" th:field="*{surgeon}" />
+                <div th:if="${#fields.hasErrors('surgeon')}" class="error-text" th:errors="*{surgeon}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="status">Status:</label>
+                <select id="status" name="status" th:field="*{status}">
+                    <option value="" disabled>Select Status</option>
+                    <option value="true">Active</option>
+                    <option value="false">Inactive</option>
+                </select>
+                <div th:if="${#fields.hasErrors('status')}" class="error-text" th:errors="*{status}"></div>
+            </div>
+
+            <div class="form-group">
+                <label for="yearsOfExperience">Years of Experience:</label>
+                <input type="number" id="yearsOfExperience" name="yearsOfExperience" th:field="*{yearsOfExperience}" />
+                <div th:if="${#fields.hasErrors('yearsOfExperience')}" class="error-text" th:errors="*{yearsOfExperience}"></div>
+            </div>
+
+            <div class="form-actions">
+                <button type="submit" onclick="return confirm('Do you want to submit this form?')">Add Doctor</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
+
