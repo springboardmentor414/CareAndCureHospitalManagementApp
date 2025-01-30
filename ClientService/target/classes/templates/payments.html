@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Payments</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            margin-top: 40px;
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        .container:hover {
+            transform: translateY(-5px);
+        }
+
+        h1 {
+            color: #007bff;
+            font-size: 2.5rem;
+            margin-bottom: 25px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+        .form-inline {
+            justify-content: center;
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            width: 280px;
+            border-radius: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ced4da;
+            padding: 10px 15px;
+            font-size: 1rem;
+        }
+
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+        }
+
+        .btn-outline-success, .btn-outline-primary {
+            border-radius: 30px;
+            padding: 10px 20px;
+            font-size: 1rem;
+            font-weight: 500;
+        }
+
+        .btn-outline-success:hover {
+            background-color: #28a745;
+            color: white;
+        }
+
+        .btn-outline-primary:hover {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .table thead {
+            background-color: #007bff;
+            color: white;
+        }
+
+        .table th, .table td {
+            text-align: center;
+            vertical-align: middle;
+            padding: 15px;
+            font-size: 1rem;
+        }
+
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f8f9fa;
+        }
+
+        .table-striped tbody tr:hover {
+            background-color: #e9ecef;
+            cursor: pointer;
+        }
+
+        .status-success {
+            color: #28a745;
+            font-weight: bold;
+        }
+
+        .status-failed {
+            color: #dc3545;
+            font-weight: bold;
+        }
+
+        .no-data-message {
+            color: #6c757d;
+            font-style: italic;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-top: 1px solid #ddd;
+            font-size: 0.9rem;
+        }
+
+        .footer p {
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .footer a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .footer a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Payments Management</h1>
+      <form method="get" th:action="@{/search}" class="form-inline">
+            <!-- Bill ID Search -->
+            <input class="form-control mr-sm-2" type="search" name="billId" placeholder="Search by Bill ID" aria-label="Search">
+            
+            <!-- Payment Method Search -->
+            <input class="form-control mr-sm-2" type="search" name="paymentMethod" placeholder="Search by Payment Method" aria-label="Search">
+
+            <!-- Date Range Filters -->
+            <input class="form-control mr-sm-2" type="date" name="startDate" placeholder="Start Date" aria-label="Start Date">
+            <input class="form-control mr-sm-2" type="date" name="endDate" placeholder="End Date" aria-label="End Date">
+            
+            <!-- Search Button -->
+            <button class="btn btn-outline-success" type="submit">Search</button>
+
+            <!-- Show All Payments Button -->
+            <a th:href="@{/payments}" class="btn btn-outline-primary ml-2">Show All</a>
+        </form>
+
+        <!-- Payments Table -->
+        <table class="table table-striped mt-4" th:if="${payments != null and !payments.isEmpty()}">
+            <thead>
+                <tr>
+                    <th>Bill ID</th>
+                    <th>Payment Method</th>
+                    <th>Amount</th>
+                    <th>Payment Date</th>
+                    <th>Payment Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.bill.billId}"></td>
+                    <td th:text="${payment.paymentMethod}"></td>
+                    <td th:text="${payment.amount}"></td>
+                    <td th:text="${payment.paymentDate}"></td>
+                    <td th:class="${payment.paymentStatus == 'Success' ? 'status-success' : 'status-failed'}" th:text="${payment.paymentStatus}"></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- No Data Message -->
+        <div class="no-data-message" th:if="${payments == null or payments.isEmpty()}">
+            No payments found. Please try different search criteria.
+        </div>
+
+        <!-- Back to Home Button -->
+        <a th:href="@{/}" class="btn btn-outline-secondary mt-4">Back to Home</a>
+    </div>
+
+    <div class="footer">
+        <p>&copy; 2025 Payment System. All Rights Reserved. | <a th:href="@{/}">Home</a></p>
+    </div>
+</body>
+</html>

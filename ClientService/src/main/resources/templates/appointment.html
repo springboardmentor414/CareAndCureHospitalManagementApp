@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Active Doctors List</title>
+    <style>
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        table, th, td {
+            border: 1px solid black;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+        .disable-button {
+            background-color: #f44336; /* Red color */
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .disable-button:hover {
+            background-color: #e7e7e7;
+        }
+    </style>
+    <link href="https://calendar.google.com/calendar/scheduling-button-script.css" rel="stylesheet">
+    <script src="https://calendar.google.com/calendar/scheduling-button-script.js" async></script>
+</head>
+<body>
+<h1>List of Active Doctors</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Doctor ID</th>
+        <th>Doctor Name</th>
+        <th>Specialization</th>
+        <th>Consultation Fees</th>
+        <th>Date of Joining</th>
+        <th>Years of Experience</th>
+        <th>Contact Number</th>
+        <th>Email ID</th>
+        <th>Gender</th>
+        <th>Location</th>
+        <th>Qualification</th>
+        <th>Surgeon</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <!-- Loop through the active doctors list and display each doctor's details -->
+    <tr th:each="doctor : ${doctors}">
+        <td th:text="${doctor.doctorId}"></td>
+        <td th:text="${doctor.doctorName}"></td>
+        <td th:text="${doctor.specialization}"></td>
+        <td th:text="${doctor.consultationFees}"></td>
+        <td th:text="${doctor.dateOfJoining}"></td>
+        <td th:text="${doctor.yearsOfExperience}"></td>
+        <td th:text="${doctor.contactNumber}"></td>
+        <td th:text="${doctor.emailId}"></td>
+        <td th:text="${doctor.gender}"></td>
+        <td th:text="${doctor.location}"></td>
+        <td th:text="${doctor.qualification}"></td>
+        <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
+        <td>
+            <!-- Shared Google Calendar Appointment Scheduling Button -->
+            <div class="calendar-scheduling-button"
+                 data-url="https://calendar.google.com/calendar/appointments/schedules/AcZssZ1qlUa5FjU8L126SwYYENqfQH_JKMCWDG9Ufg8Q9MFL5ESFFJUf1-f7L3dTT4qrCfhgzaxa0Tue?gv=true" 
+                 data-color="#039BE5" 
+                 data-label="Book an appointment"></div>
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script>
+    // Initialize Google Calendar scheduling buttons after page load
+    window.addEventListener('load', function () {
+        const buttons = document.querySelectorAll('.calendar-scheduling-button');
+        buttons.forEach(button => {
+            const url = button.getAttribute('data-url');
+            const color = button.getAttribute('data-color');
+            const label = button.getAttribute('data-label');
+            calendar.schedulingButton.load({
+                url,
+                color,
+                label,
+                target: button
+            });
+        });
+    });
+</script>
+</body>
+</html>
