@@ -12,6 +12,8 @@ import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
 
+import com.cac.validation.NotFutureDate;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 @Entity
@@ -30,7 +32,6 @@ public class Doctor {
     @NotBlank(message = "Qualification is required")
     private String qualification;
 
-   // @NotBlank(message = "Contact number cannot be blank")
     @Size(min = 10, max = 10, message = "Contact number must be 10 digits")
     private String contactNumber;
 
@@ -48,6 +49,7 @@ public class Doctor {
     private double consultationFees;
 
     @NotNull(message = "Date of joining is required")
+    @NotFutureDate(message = "Date of joining cannot be a future date")
     private LocalDate dateOfJoining;
 
     @NotNull(message = "Surgeon status must be specified")
@@ -58,6 +60,15 @@ public class Doctor {
 
     @Positive(message = "Years of experience must be positive")
     private int yearsOfExperience;
+
+    // New fields: username and password
+    @NotBlank(message = "Username cannot be blank")
+    @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
+    private String username;
+
+    @NotBlank(message = "Password cannot be blank")
+    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+    private String password;
 
     // One-to-many relationship with Appointment using doctorId
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
@@ -167,6 +178,22 @@ public class Doctor {
 
     public void setYearsOfExperience(int yearsOfExperience) {
         this.yearsOfExperience = yearsOfExperience;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 
     public List<Appointment> getAppointments() {
