@@ -58,38 +58,36 @@ public class AppointmentController {
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(appointments);
     }
-// I have commented the below portion too
-    
-    
+
     // Create a new appointment
-//    @PostMapping(value = "/schedule", consumes = "application/json", produces = "application/json")
-//public ResponseEntity<?> createAppointment(@PathVariable int patientId, @RequestBody @Validated Appointment appointment) throws UserNotFoundException, MessagingException {
-//    Patient patient = patientService.getPatientById(patientId)
-//            .orElseThrow(() -> new IllegalArgumentException("Patient with ID " + patientId + " not found"));
-//
-//    Optional<Doctor> doctorOptional = doctorService.getDoctorById(appointment.getDoctorId());
-//    if (!doctorOptional.isPresent()) {
-//        return ResponseEntity.badRequest().body("Doctor with ID " + appointment.getDoctorId() + " not found.");
-//    }
-//
-//    Doctor doctor = doctorOptional.get();
-//
-//    boolean isAvailable = appointmentService.isTimeSlotAvailable(appointment.getDoctorId(),
-//            appointment.getAppointmentDate(), appointment.getAppointmentTime());
-//    if (!isAvailable) {
-//        return ResponseEntity.badRequest().body("The selected time slot is already booked. Please choose another time.");
-//    }
-//
-//
-//
-//    appointment.setPatient(patient);
-//    appointment.setStatus("Scheduled");
-//    appointment.setDoctor(doctor);
-//    appointment.setDoctorName(doctor.getDoctorName());
-//    Appointment savedAppointment = appointmentService.createAppointment(appointment);
-//     System.out.println(savedAppointment.getStatus());
-//    return ResponseEntity.status(HttpStatus.CREATED).body(savedAppointment);
-//}
+    @PostMapping(value = "/schedule", consumes = "application/json", produces = "application/json")
+public ResponseEntity<?> createAppointment(@PathVariable int patientId, @RequestBody @Validated Appointment appointment) throws UserNotFoundException, MessagingException {
+    Patient patient = patientService.getPatientById(patientId);
+    if (patient == null) {
+        throw new IllegalArgumentException("Patient with ID " + patientId + " not found");
+    }
+
+    Doctor doctor = doctorService.getDoctorById(appointment.getDoctorId());
+    if (doctor == null) {
+        return ResponseEntity.badRequest().body("Doctor with ID " + appointment.getDoctorId() + " not found.");
+    }
+
+    boolean isAvailable = appointmentService.isTimeSlotAvailable(appointment.getDoctorId(),
+            appointment.getAppointmentDate(), appointment.getAppointmentTime());
+    if (!isAvailable) {
+        return ResponseEntity.badRequest().body("The selected time slot is already booked. Please choose another time.");
+    }
+
+
+
+    appointment.setPatient(patient);
+    appointment.setStatus("Scheduled");
+    appointment.setDoctor(doctor);
+    appointment.setDoctorName(doctor.getDoctorName());
+    Appointment savedAppointment = appointmentService.createAppointment(appointment);
+     System.out.println(savedAppointment.getStatus());
+    return ResponseEntity.status(HttpStatus.CREATED).body(savedAppointment);
+}
 
 @GetMapping("/{id:\\d+}")
 public ResponseEntity<Appointment> getAppointmentById(@PathVariable int patientId, @PathVariable int id) {
@@ -99,44 +97,44 @@ public ResponseEntity<Appointment> getAppointmentById(@PathVariable int patientI
 }
 
 
-// Please check the below part. I have commented the below code due to error because i have used 1st team's doctor service where hey have returned DOctor object. SO please change accordingly 
 
-    // Update an appointment
+
    // Update an appointment
-//@PutMapping("/{id}")
-//public ResponseEntity<?> updateAppointment(@PathVariable int patientId, @PathVariable int id,
-//                                           @RequestBody Appointment updatedAppointment) throws MessagingException {
-//    Patient patient = patientService.getPatientById(patientId)
-//            .orElseThrow(() -> new IllegalArgumentException("Patient with ID " + patientId + " not found"));
-//
-//    Appointment existingAppointment = appointmentService.getAppointmentById(id)
-//            .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + id + " not found"));
-//
-//    // Check if doctorId is valid in the request body
-//    if (updatedAppointment.getDoctorId() == null) {
-//        return ResponseEntity.badRequest().body("Doctor information is missing or invalid.");
-//    }
-//
-//    // Fetch the doctor using doctorId
-//    Optional<Doctor> doctorOptional = doctorService.getDoctorById(updatedAppointment.getDoctorId());
-//    if (!doctorOptional.isPresent()) {
-//        return ResponseEntity.badRequest().body("Doctor with ID " + updatedAppointment.getDoctorId() + " not found.");
-//    }
-//
-//    // Update the appointment with the correct doctor
-//    Doctor doctor = doctorOptional.get();
-//    existingAppointment.setDoctor(doctor);
-//
-//    // Update other appointment details
-//    existingAppointment.setPatient(patient);
-//    existingAppointment.setAppointmentDate(updatedAppointment.getAppointmentDate());
-//    existingAppointment.setAppointmentTime(updatedAppointment.getAppointmentTime());
-//    existingAppointment.setReason(updatedAppointment.getReason());
-//
-//    Appointment updated = appointmentService.updateAppointment(existingAppointment);
-//    return ResponseEntity.ok(updated);
-//}
-//
+@PutMapping("/{id}")
+public ResponseEntity<?> updateAppointment(@PathVariable int patientId, @PathVariable int id,
+                                           @RequestBody Appointment updatedAppointment) throws MessagingException {
+    Patient patient = patientService.getPatientById(patientId);
+    if (patient == null) {
+        throw new IllegalArgumentException("Patient with ID " + patientId + " not found");
+    }
+
+    Appointment existingAppointment = appointmentService.getAppointmentById(id)
+            .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + id + " not found"));
+
+    // Check if doctorId is valid in the request body
+    if (updatedAppointment.getDoctorId() == null) {
+        return ResponseEntity.badRequest().body("Doctor information is missing or invalid.");
+    }
+
+    // Fetch the doctor using doctorId
+    Doctor doctor = doctorService.getDoctorById(updatedAppointment.getDoctorId());
+    if (doctor == null) {
+        return ResponseEntity.badRequest().body("Doctor with ID " + updatedAppointment.getDoctorId() + " not found.");
+    }
+
+    // Update the appointment with the correct doctor
+    existingAppointment.setDoctor(doctor);
+
+    // Update other appointment details
+    existingAppointment.setPatient(patient);
+    existingAppointment.setAppointmentDate(updatedAppointment.getAppointmentDate());
+    existingAppointment.setAppointmentTime(updatedAppointment.getAppointmentTime());
+    existingAppointment.setReason(updatedAppointment.getReason());
+
+    Appointment updated = appointmentService.updateAppointment(existingAppointment);
+    return ResponseEntity.ok(updated);
+}
+
 
 
     // Cancel an appointment

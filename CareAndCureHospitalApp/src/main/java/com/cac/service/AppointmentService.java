@@ -1,6 +1,6 @@
 package com.cac.service;
 
-import com.cac.exception.*;
+import com.cac.exception.UserNotFoundException;
 import com.cac.model.Appointment;
 import com.cac.model.Doctor;
 import com.cac.model.Patient;
@@ -8,9 +8,10 @@ import com.cac.repository.AppointmentRepository;
 import com.cac.repository.DoctorRepository;
 import com.cac.repository.PatientRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -111,6 +112,7 @@ public class AppointmentService {
     }
 
     // Cancel an appointment
+   
     public void cancelAppointment(int appointmentId, String reason) throws UserNotFoundException, MessagingException {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + appointmentId + " not found"));
@@ -137,7 +139,7 @@ public class AppointmentService {
     public Appointment rescheduleAppointment(int appointmentId, LocalDate newDate, LocalTime newTime) throws UserNotFoundException, MessagingException {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + appointmentId + " not found"));
-        
+
         validateAppointmentDetails(appointment);
 
         boolean isAvailable = isTimeSlotAvailable(appointment.getDoctor().getDoctorId(), newDate, newTime);
@@ -192,5 +194,17 @@ public class AppointmentService {
                 appointment.getDoctor().getDoctorName(),
                 appointment.getAppointmentDate().toString(),
                 appointment.getAppointmentTime().toString());
+    }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate appointmentDate) {
+        return null;
+    }
+
+    public List<Patient> getNoShowPatients(LocalDate start, LocalDate end) {
+        return null;
+    }
+
+    public List<Appointment> getDoctorAppointmentsInRange(int doctorId, LocalDate start, LocalDate end) {
+        return null;
     }
 }

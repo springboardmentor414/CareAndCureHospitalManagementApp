@@ -1,8 +1,13 @@
 package com.cac.model;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.CollectionTable;
+import jakarta.persistence.Column;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -11,8 +16,8 @@ import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
 
-import com.cac.validation.NotFutureDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -49,7 +54,7 @@ public class Doctor {
     private double consultationFees;
 
     @NotNull(message = "Date of joining is required")
-    @NotFutureDate(message = "Date of joining cannot be a future date")
+    // @NotFutureDate(message = "Date of joining cannot be a future date")
     private LocalDate dateOfJoining;
 
     @NotNull(message = "Surgeon status must be specified")
@@ -74,6 +79,23 @@ public class Doctor {
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
     @JsonManagedReference
     private List<Appointment> appointments;
+
+    // New Mapping Added By Team-03 For Availability
+    // Simplified Map handling for availability (Optional)
+    @ElementCollection
+    @CollectionTable(name = "doctor_availability", joinColumns = @JoinColumn(name = "doctor_id"))
+    @MapKeyColumn(name = "day_of_week")
+    @Column(name = "availability_slot")
+    @JsonIgnore
+    private Map<String, List<String>> availability;
+
+    public Map<String, List<String>> getAvailability() {
+        return availability;
+    }
+
+    public void setAvailability(Map<String, List<String>> availability) {
+        this.availability = availability;
+    }
 
     // Getters and setters
     public int getDoctorId() {
