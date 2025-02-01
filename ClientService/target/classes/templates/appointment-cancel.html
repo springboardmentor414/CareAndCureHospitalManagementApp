@@ -20,28 +20,25 @@
             <h2>Cancel Appointment</h2>
 
 			<div id="errorMessage" class="error-message" style="display: none;">
-				
+
 				<p>An error occurred. Please try again later.</p>
 			</div>
-            <!-- <form id="cancelAppointmentForm" 
-                th:action="@{/patient/{patientId}/appointments/cancel/{appointmentId}(patientId=${patientId}, appointmentId=${cancelAppointmentDTO.appointmentId})}" 
-                th:object="${cancelAppointmentDTO}" 
-                method="post"> -->
-				<form id="cancelAppointmentForm" 
-					th:action="@{/patient/{patientId}/appointments/cancel/{appointmentId}(patientId=${patientId}, appointmentId=${cancelAppointmentDTO.appointmentId})}" 
-					th:object="${cancelAppointmentDTO}" 
-					method="post" 
+            
+				<form id="cancelAppointmentForm"
+					th:action="@{/patient/{patientId}/appointments/cancel/{appointmentId}(patientId=${patientId}, appointmentId=${cancelAppointmentDTO.appointmentId})}"
+					th:object="${cancelAppointmentDTO}"
+					method="post"
 					onsubmit="return confirm('Are you sure you want to cancel this appointment?');">
- 
+
                 <div class="form-group">
                     <label for="appointmentId">Appointment ID:</label>
-                    <input type="number" id="appointmentId" name="appointmentId" 
+                    <input type="number" id="appointmentId" name="appointmentId"
                         th:field="*{appointmentId}" readonly required />
                 </div>
 
                 <div class="form-group">
                     <label for="cancelReason">Reason for Cancellation:</label>
-                    <textarea id="cancelReason" name="reasonOfCancellation" 
+                    <textarea id="cancelReason" name="reasonOfCancellation"
                         th:field="*{reasonOfCancellation}" placeholder="Enter reason for cancellation" required></textarea>
                 </div>
 
@@ -52,291 +49,165 @@
 
     <style>
         /* General Styling */
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f8f9fa;
-        }
+       /* General Styling */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
 
-        .container {
-            display: flex;
-            min-height: 100vh;
-            flex-wrap: wrap;
-        }
+/* Main Container for Sidebar and Content */
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    max-width: 1200px;
+    width: 100%;
+    gap: 20px;
+    padding: 20px;
+}
 
-        h2 {
-            color: #d9534f;
-            text-align: center;
-            margin-bottom: 20px;
-        }
+/* Sidebar Styling */
+.sidebar {
+    flex: 1;
+    background-color: #d9534f;
+    color: white;
+    padding: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
 
-        .sidebar {
-            flex: 1 1 250px;
-            background-color: #d9534f;
-            color: white;
-            padding: 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
+.sidebar-button {
+    background-color: #c9302c;
+    color: white;
+    font-size: 1.2em;
+    padding: 12px 20px;
+    border: none;
+    border-radius: 8px;
+    text-align: center;
+    cursor: pointer;
+    width: 90%;
+    transition: background-color 0.3s;
+}
 
-        .sidebar-button {
-            background-color: #c9302c;
-            color: white;
-            font-size: 1.1em;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            width: 90%;
-            text-align: center;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+.sidebar-button:hover {
+    background-color: #ac2925;
+}
 
-        .sidebar-button:hover {
-            background-color: #ac2925;
-        }
+/* Content Section Styling */
+.content {
+    flex: 2;
+    padding: 30px;
+    background-color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    width: 100%;
+}
 
-        .content {
-            flex: 2 1 600px;
-            padding: 20px;
-            background-color: white;
-            margin: 0 auto;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
+h2 {
+    font-size: 2em;
+    color: #d9534f;
+    text-align: center;
+    margin-bottom: 30px;
+}
 
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
 
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
+.form-group {
+    display: flex;
+    flex-direction: column;
+}
 
-        label {
-            font-size: 1em;
-            margin-bottom: 5px;
-        }
+label {
+    font-size: 1.1em;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
 
-        input, textarea {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1em;
-        }
+input, textarea {
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+    background-color: #f9f9f9;
+    transition: border 0.3s;
+}
 
-        .submit-button {
-            background-color: #d9534f;
-            color: white;
-            font-size: 1.1em;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
+input:focus, textarea:focus {
+    border-color: #007bff;
+    outline: none;
+}
 
-        .submit-button:hover {
-            background-color: #c9302c;
-        }
+textarea {
+    resize: vertical;
+    min-height: 120px;
+}
 
-		.error-message {
-        background-color: #f8d7da;
-        color: #721c24;
-        border: 1px solid #f5c6cb;
-        padding: 10px 15px;
-        margin-bottom: 20px;
-        border-radius: 5px;
-        font-size: 1em;
-        text-align: center;
+.submit-button {
+    background-color: #d9534f;
+    color: white;
+    font-size: 1.2em;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.submit-button:hover {
+    background-color: #c9302c;
+}
+
+/* Error Message Styling */
+.error-message {
+    background-color: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+    padding: 15px 20px;
+    margin-bottom: 30px;
+    border-radius: 8px;
+    font-size: 1.1em;
+    text-align: center;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        flex-direction: column;
     }
+
+    .sidebar, .content {
+        width: 100%;
+        margin-bottom: 20px;
+    }
+
+    .sidebar-button {
+        font-size: 1em;
+        padding: 10px 15px;
+    }
+
+    h2 {
+        font-size: 1.8em;
+    }
+
+    .submit-button {
+        font-size: 1em;
+        padding: 12px 15px;
+    }
+}
+
     </style>
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-<!-- <!DOCTYPE html>
-<html lang="en">
-
-<head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Cancel Appointment</title>
-	<link rel="stylesheet" href="/css/style.css">
-</head>
-
-<body>
-	<div class="container">
-
-		<div class="sidebar">
-			<button id="backButton" class="sidebar-button"
-				th:onclick="|window.location.href='/patient/${patientId}/appointments'|">Back to Management</button>
-		</div>
-
-
-		<div class="content">
-			<h2>Cancel Appointment</h2>
-			<form id="cancelAppointmentForm" th:action="@{/patient/{patientId}/appointments/cancel(patientId=${patientId})}" th:object="${cancelAppointmentDTO}" method="post">
-				<div class="form-group">
-					<label for="appointmentId">Appointment ID:</label>
-					<input type="number" id="appointmentId" name="appointmentId" th:field="*{appointmentId}" placeholder="Enter appointment ID"
-						required />
-				</div>
-
-				<div class="form-group">
-					<label for="cancelReason">Reason for Cancellation:</label>
-					<textarea id="cancelReason" name="reasonOfCancellation" th:field="*{reasonOfCancellation}" placeholder="Enter reason for cancellation"
-						required></textarea>
-				</div>
-
-				<button type="submit" class="submit-button">Cancel Appointment</button>
-			</form>
-		</div>
-	</div>
-
-
-	<style>
-		/* General Styling */
-		body {
-			font-family: Arial, sans-serif;
-			margin: 0;
-			padding: 0;
-			background-color: #f8f9fa;
-		}
-
-		.container {
-			display: flex;
-			min-height: 100vh;
-			flex-wrap: wrap;
-		}
-
-		h2 {
-			color: #d9534f;
-			text-align: center;
-			margin-bottom: 20px;
-		}
-
-		/* Sidebar Styling */
-		.sidebar {
-			flex: 1 1 250px;
-			background-color: #d9534f;
-			color: white;
-			padding: 20px;
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-		}
-
-		.sidebar-button {
-			background-color: #c9302c;
-			color: white;
-			font-size: 1.1em;
-			padding: 10px 15px;
-			border: none;
-			border-radius: 5px;
-			width: 90%;
-			text-align: center;
-			cursor: pointer;
-			transition: background-color 0.3s;
-		}
-
-		.sidebar-button:hover {
-			background-color: #ac2925;
-		}
-
-		/* Content Styling */
-		.content {
-			flex: 2 1 600px;
-			padding: 20px;
-			background-color: white;
-			margin: 0 auto;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-		}
-
-		form {
-			display: flex;
-			flex-direction: column;
-			gap: 15px;
-		}
-
-		.form-group {
-			display: flex;
-			flex-direction: column;
-			gap: 5px;
-		}
-
-		label {
-			font-weight: bold;
-			color: #333;
-		}
-
-		input,
-		textarea {
-			padding: 10px;
-			border: 1px solid #ddd;
-			border-radius: 5px;
-			outline: none;
-			transition: border-color 0.3s;
-		}
-
-		input:focus,
-		textarea:focus {
-			border-color: #d9534f;
-		}
-
-		textarea {
-			resize: none;
-			height: 80px;
-		}
-
-		.submit-button {
-			background-color: #d9534f;
-			color: white;
-			font-size: 1.1em;
-			padding: 10px 15px;
-			border: none;
-			border-radius: 5px;
-			cursor: pointer;
-			transition: background-color 0.3s, transform 0.2s;
-		}
-
-		.submit-button:hover {
-			background-color: #c9302c;
-			transform: translateY(-2px);
-		}
-
-		/* Responsive Design */
-		@media (max-width: 768px) {
-			.container {
-				flex-direction: column;
-			}
-
-			.sidebar {
-				width: 100%;
-			}
-
-			.content {
-				width: 100%;
-			}
-		}
-	</style>
-</body>
-
-</html> -->

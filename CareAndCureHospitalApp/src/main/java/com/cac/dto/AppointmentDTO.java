@@ -4,7 +4,6 @@ import lombok.Data;
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-import jakarta.validation.constraints.Future;
 
 @Data
 public class AppointmentDTO {
@@ -12,9 +11,7 @@ public class AppointmentDTO {
     private int doctorId;
     private String patientName;
     private String doctorName;
-    @Future(message = "Appointment date must be in future")
     private LocalDate appointmentDate;
-    @Future(message = "Appointment time must be in future")
     private LocalTime appointmentTime;
     private String status;
 

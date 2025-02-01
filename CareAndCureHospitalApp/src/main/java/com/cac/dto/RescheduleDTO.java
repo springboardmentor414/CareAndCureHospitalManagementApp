@@ -27,3 +27,4 @@ public class RescheduleDTO{
     @FutureOrPresent(message = "Appointment time must be in present or future")
     private  String newTime;
 }
+

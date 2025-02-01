@@ -1,6 +1,6 @@
 package com.cac.service;
 
-import com.cac.exception.*;
+import com.cac.exception.UserNotFoundException;
 import com.cac.model.Appointment;
 import com.cac.model.Doctor;
 import com.cac.model.Patient;
@@ -8,14 +8,18 @@ import com.cac.repository.AppointmentRepository;
 import com.cac.repository.DoctorRepository;
 import com.cac.repository.PatientRepository;
 import jakarta.mail.MessagingException;
+import jakarta.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -111,6 +115,7 @@ public class AppointmentService {
     }
 
     // Cancel an appointment
+   
     public void cancelAppointment(int appointmentId, String reason) throws UserNotFoundException, MessagingException {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + appointmentId + " not found"));
@@ -137,7 +142,7 @@ public class AppointmentService {
     public Appointment rescheduleAppointment(int appointmentId, LocalDate newDate, LocalTime newTime) throws UserNotFoundException, MessagingException {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new IllegalArgumentException("Appointment with ID " + appointmentId + " not found"));
-        
+
         validateAppointmentDetails(appointment);
 
         boolean isAvailable = isTimeSlotAvailable(appointment.getDoctor().getDoctorId(), newDate, newTime);
@@ -193,4 +198,86 @@ public class AppointmentService {
                 appointment.getAppointmentDate().toString(),
                 appointment.getAppointmentTime().toString());
     }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate appointmentDate) {
+        return null;
+    }
+
+    public List<Patient> getNoShowPatients(LocalDate start, LocalDate end) {
+        return null;
+    }
+
+    public List<Appointment> getDoctorAppointmentsInRange(int doctorId, LocalDate start, LocalDate end) {
+        return null;
+    }
+    
+    public List<Appointment> getFilteredAppointments(int doctorId, LocalDate fromDate, LocalDate toDate) {
+        // Fetch all appointments for the doctor
+        List<Appointment> allAppointments = appointmentRepository.findByDoctor_DoctorId(doctorId);
+
+        // Filter appointments by date range
+        return allAppointments.stream()
+                .filter(appointment -> !appointment.getAppointmentDate().isBefore(fromDate) &&
+                                       !appointment.getAppointmentDate().isAfter(toDate))
+                .collect(Collectors.toList());
+    }
+    public List<Appointment> getAppointmentsByDoctorId(int doctorId) {
+        return appointmentRepository.findByDoctor_DoctorId(doctorId);
+    }
+    
+    public List<Appointment> findAppointmentsByIssueFaced(String reason) {
+        try {
+            return appointmentRepository.findByReasonContainingIgnoreCase(reason);
+        } catch (Exception e) {
+            // Log and rethrow the exception for debugging
+            e.printStackTrace();
+            throw new RuntimeException("Error fetching appointments for issue: " + reason, e);
+        }
+    }
+    
+    public Appointment addAppointment(Appointment appointment) {
+        // Save the appointment to the database and return the saved entity
+        return appointmentRepository.save(appointment);
+    }
+    public List<Map<String, Object>> getAppointmentsCountByDoctor(LocalDate fromDate, LocalDate toDate) {
+        List<Appointment> appointments = appointmentRepository.findAll();
+
+        // Filter appointments by the given date range
+        if (fromDate != null) {
+            appointments = appointments.stream()
+                    .filter(a -> !a.getAppointmentDate().isBefore(fromDate))
+                    .collect(Collectors.toList());
+        }
+        if (toDate != null) {
+            appointments = appointments.stream()
+                    .filter(a -> !a.getAppointmentDate().isAfter(toDate))
+                    .collect(Collectors.toList());
+        }
+
+        // Group appointments by doctor and count the number of appointments
+        Map<Doctor, Long> doctorAppointmentCounts = appointments.stream()
+                .collect(Collectors.groupingBy(Appointment::getDoctor, Collectors.counting()));
+
+        // Create a list of maps containing the required data, including consultation fee and revenue
+        List<Map<String, Object>> result = doctorAppointmentCounts.entrySet().stream()
+                .map(entry -> {
+                    Doctor doctor = entry.getKey();
+                    long appointmentCount = entry.getValue();
+                    double consultationFee = doctor.getConsultationFees();
+                    double revenue = consultationFee * appointmentCount; // Calculate revenue
+                    Map<String, Object> doctorData = new HashMap<>();
+                    doctorData.put("id", doctor.getDoctorId());
+                    doctorData.put("name", doctor.getDoctorName());
+                    doctorData.put("specialization", doctor.getSpecialization());
+                    doctorData.put("count", appointmentCount);
+                    doctorData.put("consultationFee", consultationFee);
+                    doctorData.put("revenue", revenue);
+                    return doctorData;
+                })
+                .sorted((d1, d2) -> Long.compare((Long) d2.get("count"), (Long) d1.get("count"))) // Sort by count in descending order
+                .collect(Collectors.toList());
+
+        return result;
+    }
+
 }

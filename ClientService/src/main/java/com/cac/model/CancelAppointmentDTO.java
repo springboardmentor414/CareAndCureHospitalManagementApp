@@ -1,23 +1,23 @@
 package com.cac.model;
 
 public class CancelAppointmentDTO {
-    private Long appointmentId;
+    private int appointmentId;
     private String reasonOfCancellation;
     
 	public CancelAppointmentDTO() {
 		//TODO
 	}
 
-	public CancelAppointmentDTO(Long appointmentId, String reasonOfCancellation) {
+	public CancelAppointmentDTO(int appointmentId, String reasonOfCancellation) {
 		this.appointmentId = appointmentId;
 		this.reasonOfCancellation = reasonOfCancellation;
 	}
 
-	public Long getAppointmentId() {
+	public int getAppointmentId() {
 		return appointmentId;
 	}
 
-	public void setAppointmentId(Long appointmentId2) {
+	public void setAppointmentId(int appointmentId2) {
 		this.appointmentId = appointmentId2;
 	}
 

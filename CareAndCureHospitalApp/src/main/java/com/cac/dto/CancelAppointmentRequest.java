@@ -31,3 +31,4 @@ public class CancelAppointmentRequest {
         this.reasonOfCancellation = reasonOfCancellation;
     }
 }
+

@@ -1,209 +1,351 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Schedule Appointment</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Doctor Appointment Booking</title>
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+
+	<style>
+		/* Reset and General Styles */
+body {
+    font-family: 'Poppins', sans-serif;
+    margin: 0;
+    padding: 0;
+    background: linear-gradient(to right, #2c3e50, #4ca1af);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+/* Main Container */
+.container {
+    display: flex;
+    max-width: 1000px;
+    margin: 50px auto;
+    background: pink;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    animation: fadeIn 0.8s ease-in-out;
+}
+
+/* Left Section: Doctor Profile */
+.doctor-profile {
+    flex: 1;
+    background: #e3f2fd; /* Light Blue */
+    padding: 25px;
+    border-right: 2px solid #eee;
+}
+
+
+/* Profile Header */
+.profile-header {
+    display: flex;
+    align-items: center;
+    animation: slideInLeft 1s ease-in-out;
+}
+
+.profile-image {
+    width: 80px;
+    height: 80px;
+    background: #007bff;
+    color: white;
+    font-size: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin-right: 20px;
+    transition: transform 0.3s;
+}
+
+.profile-image:hover {
+    transform: scale(1.1);
+}
+
+/* Profile Info */
+.profile-info h2 {
+    margin: 0;
+    font-size: 22px;
+    color: #2c3e50;
+}
+
+#specialty {
+    background: #007bff;
+    color: white;
+    padding: 5px 12px;
+    border-radius: 6px;
+    font-size: 14px;
+    display: inline-block;
+    margin-top: 5px;
+}
+
+/* Doctor Details */
+.details {
+    list-style: none;
+    padding: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+.details li {
+    margin: 6px 0;
+    display: flex;
+    align-items: center;
+    transition: transform 0.3s ease-in-out;
+}
+
+.details li:hover {
+    transform: translateX(8px);
+}
+
+.details i {
+    margin-right: 10px;
+    color: #007bff;
+}
+
+/* Right Section: Appointment Booking */
+.appointment-section {
+    flex: 1;
+    padding: 25px;
+    background: #f9f9f9;
+    animation: slideInRight 1s ease-in-out;
+}
+
+.fee-box {
+    background: rgba(0, 123, 255, 0.1);
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: bold;
+    color: #007bff;
+    text-align: center;
+    margin-bottom: 15px;
+    transition: transform 0.3s;
+}
+
+.fee-box:hover {
+    transform: scale(1.05);
+}
+
+/* Form Fields */
+.form-group {
+    margin-bottom: 20px;
+}
+
+label {
+    font-size: 14px;
+    font-weight: bold;
+    display: block;
+    margin-bottom: 5px;
+    color: #2c3e50;
+}
+
+/* Date Selection */
+.date-container {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 10px;
+}
+
+.date-item {
+    text-align: center;
+    background: white;
+    padding: 10px;
+    border-radius: 6px;
+    cursor: pointer;
+    border: 1px solid #ddd;
+    font-size: 14px;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.date-item:hover {
+    background: #007bff;
+    color: white;
+    transform: scale(1.1);
+}
+
+.selected {
+    background: #007bff;
+    color: white;
+}
+
+/* Buttons */
+.btn, .btn-back {
+    background: #007bff;
+    color: white;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+    text-align: center;
+    transition: background 0.3s, transform 0.2s;
+}
+
+.btn:hover, .btn-back:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+.btn-back {
+    width: 10%;
+    margin: 10px;
+}
+
+/* Textarea */
+textarea {
+    width: 95%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 768px) {
+    .container {
+        flex-direction: column;
+        margin: 20px;
+    }
+
+    .date-container {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+	</style>
 </head>
+
 <body>
-    <div class="container">
-        
-        <div class="sidebar">
-            <button id="backButton" class="sidebar-button" th:onclick="|window.location.href='/patient/${patientId}/appointments'|">Back to Management</button>
-        </div>
+<!--	<button class="btn-back"-->
+<!--		th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">Back</button>-->
+	<div class="container">
+		<!-- Left Section: Doctor Profile -->
+		<div class="doctor-profile">
+			<div class="profile-header">
+				<div class="profile-image">
+					<i class="fas fa-user"></i>
+				</div>
+				<div class="profile-info">
+					<h2 th:text="${doctor.name}"></h2>
+					<span id="specialty" th:text="${doctor.specialty}">Cardiologist</span>
+					<ul class="details">
+						<li><i class="fas fa-graduation-cap"></i> <span th:text="${doctor.qualification}"></span></li>
+						<li><i class="fas fa-briefcase"></i> <span th:text="${doctor.yearsOfExperience}"></span> Years
+							Experience</li>
+						<li><i class="fas fa-language"></i> English, Spanish</li>
+						<li><i class="fas fa-map-marker-alt"></i> <span th:text="${doctor.location}"></span></li>
+						<li><i class="fas fa-envelope"></i> <span th:text="${doctor.emailId}"></span></li>
+					</ul>
+				</div>
+			</div>
+			<div class="profile-about">
+				<h3>About</h3>
+                <label for="profileAbout">About</label>
+                <textarea id="profileAbout" rows="6" placeholder="Write about the doctor..."></textarea>
+			</div>
+		</div>
 
-        <div class="content">
-            <h2>Schedule Appointment</h2>
+		<!-- Right Section: Booking Appointment -->
+		<div class="appointment-section">
+			<h3>Book Appointment</h3>
+			<div class="fee-box">
+				<span>$ Consultation Fee: <span th:text="${doctor.consultationFees}"></span></span>
+			</div>
 
-            <!-- <div id="errorMessage" class="error-message" th:if="${errorMessage}">
-                <p th:text="${errorMessage}"></p>
-            </div> -->
+			<form id="dateSelectionForm"
+				th:action="@{/patient/{patientId}/appointments/{doctorId}/schedule-timeslots(patientId=${patientId}, doctorId=${doctorId})}"
+				th:object="${scheduleAppointmentDTO}" method="get" th:if="${availableTimeslots == null}">
+				<input type="hidden" id="selectedDoctorId" th:field="*{doctorId}" th:value="${doctorId}">
+				<!-- Date Selection -->
+				<div class="form-group">
+					<label>Select Date</label>
+					<div class="date-container">
+						<input type="hidden" th:field="*{appointmentDate}" />
+						<div th:each="date : ${nextSevenDaysFormatted}">
+                            <button type="submit" th:value="${date}" th:text="${date}" th:attr="data-date=${date}" title="Select date ${date}"
+								onclick="this.form.querySelector('input[name=appointmentDate]').value=this.dataset.date;">
+							</button>
+						</div>
+					</div>
+				</div>
+			</form>
 
-            <form id="appointmentForm" th:action="@{/patient/{patientId}/appointments/schedule(patientId=${patientId})}" th:object="${scheduleAppointmentDTO}" method="post">
-                <div class="form-group">
-                    <label for="patientId">Patient ID:</label>
-                    <input type="number" id="patientId" name="patientId" th:value="${patientId}" readonly />
-                </div>
+			<form th:if="${availableTimeslots != null}"
+				th:action="@{/patient/{patientId}/appointments/{doctorId}/schedule(patientId=${patientId}, doctorId=${doctorId})}"
+				th:object="${scheduleAppointmentDTO}" method="post">
+				<input type="hidden" id="selectedDoctorId" th:field="*{doctorId}" th:value="${doctorId}">
+				<input type="hidden" th:field="*{appointmentDate}"
+					th:value="${scheduleAppointmentDTO.appointmentDate}" />
+				<div class="form-group">
+					<label>Select Date</label>
+					<div class="date-container">
+						<div th:each="date : ${nextSevenDaysFormatted}">
+                            <button type="button" th:name="appointmentDate" th:value="${date}" th:text="${date}" title="Select date ${date}"
+								th:classappend="${scheduleAppointmentDTO.appointmentDate == date} ? 'selected' : ''">
+							</button>
+						</div>
+					</div>
+				</div>
 
-                <div class="form-group">
-                    <label for="reason">Reason for Appointment:</label>
-                    <input type="text" id="reason" name="reason" th:field="*{reason}" placeholder="Enter reason" required />
-                </div>
+				<div class="form-group">
+					<label for="appointmentTime">Available Time Slots:</label>
+                    <select th:field="*{appointmentTime}" title="Select a Time Slot">
+						<option value="">Select a Time Slot</option>
+						<option th:each="slot : ${availableTimeslots}" th:value="${slot}" th:text="${slot}"></option>
+					</select>
+				</div>
 
-                <!-- Hidden input to store doctorId -->
-                <!-- <input type="hidden" id="doctorId" name="doctorId" />  Hidden field to store doctorId -->
+				<div class="form-group">
+					<label for="appointmentReason">Reason for Visit:</label>
+					<textarea id="appointmentReason" rows="4" th:field="*{reason}" required></textarea>
+				</div>
 
-                <div class="form-group">
-                    <label for="doctorSelect">Select Doctor:</label>
-                    <select id="doctorSelect" name="doctorId" th:field="*{doctorId}" required>
-                        <option value="" disabled selected>Select a doctor</option>
-						<option th:each="doctor : ${doctors}" 
-						                th:value="${doctor.id}" 
-						                th:text="${doctor.name}">Doctor</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="appointmentDate">Appointment Date:</label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" th:field="*{appointmentDate}" required />
-                </div>
-
-                <div class="form-group">
-                    <label for="appointmentTime">Appointment Time:</label>
-                    <input type="time" id="appointmentTime" name="appointmentTime" th:field="*{appointmentTime}" required />
-                </div>
-
-                <!-- <input type="hidden" name="status" th:field="*{status}" th:value="Scheduled" />   Default to Scheduled -->
-                <!-- <input type="hidden" name="reasonOfCancellation" th:field="*{reasonOfCancellation}" /> Default to null -->
-
-                <button type="submit" class="submit-button">Book Appointment</button>
-            </form>
-        </div>
-    </div>
-
-    <style>
-        /* General Styling */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: Arial, sans-serif;
-            background-color: #f8f9fa;
-        }
-
-        .container {
-            display: flex;
-            min-height: 100vh;
-        }
-
-        h2 {
-            color: #6b5b95;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        /* Sidebar Styling */
-        .sidebar {
-            flex: 1;
-            background-color: #6b5b95;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        }
-
-        .sidebar-button {
-            background-color: #805ad5;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-
-        .sidebar-button:hover {
-            background-color: #6b46c1;
-        }
-
-        /* Content Styling */
-        .content {
-            flex: 2;
-            padding: 20px;
-            background-color: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            margin: auto;
-        }
-
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        label {
-            font-weight: bold;
-            color: #333;
-        }
-
-        input,
-        select {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            transition: border-color 0.3s;
-        }
-
-        input:focus,
-        select:focus {
-            border-color: #6b5b95;
-        }
-
-        input[readonly] {
-            background-color: #f0f4f8;
-            cursor: not-allowed;
-        }
-
-        .submit-button {
-            background-color: #6b5b95;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.2s;
-        }
-
-        .submit-button:hover {
-            background-color: #805ad5;
-            transform: translateY(-2px);
-        }
-
-        /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-            }
-
-            .content {
-                padding: 15px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            h2 {
-                font-size: 1.5em;
-            }
-
-            label {
-                font-size: 0.9em;
-            }
-
-            input,
-            select {
-                font-size: 0.85em;
-            }
-
-            .submit-button {
-                font-size: 0.9em;
-            }
-        }
-    </style>
+				<button type="submit" class="btn">Book Appointment</button>
+			</form>
+		</div>
+		<button class="btn-back"
+				th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">Back</button>
+	</div>
 </body>
+
 </html>
+
