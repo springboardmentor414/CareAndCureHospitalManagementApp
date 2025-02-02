@@ -265,8 +265,8 @@ textarea {
 					<i class="fas fa-user"></i>
 				</div>
 				<div class="profile-info">
-					<h2 th:text="${doctor.name}"></h2>
-					<span id="specialty" th:text="${doctor.specialty}">Cardiologist</span>
+					<h2 th:text="${doctor.doctorName}"></h2>
+					<span id="specialty" th:text="${doctor.specialization}">Cardiologist</span>
 					<ul class="details">
 						<li><i class="fas fa-graduation-cap"></i> <span th:text="${doctor.qualification}"></span></li>
 						<li><i class="fas fa-briefcase"></i> <span th:text="${doctor.yearsOfExperience}"></span> Years

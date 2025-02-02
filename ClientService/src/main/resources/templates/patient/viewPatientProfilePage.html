@@ -1,9 +1,11 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Profile</title>
+    <link rel="stylesheet" href="css/style.css">
+    <title>Patient Profile</title>
     <style>
         /* Base Reset */
         * {
@@ -40,7 +42,6 @@
                 opacity: 0;
                 transform: translateY(-20px);
             }
-
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -85,7 +86,7 @@
         .back-button,
         .edit-button {
             display: inline-block;
-            padding: 10px 20px;
+            padding: 10px 10px;
             font-size: 16px;
             font-weight: bold;
             border: none;
@@ -98,7 +99,8 @@
         .back-button {
             background: linear-gradient(135deg, #3498db, #85d7f4);
             color: #ffffff;
-            margin-right: 10px;
+            font-size: 16px;
+            /* margin-right: 10px; */
         }
 
         .back-button:hover {
@@ -134,25 +136,66 @@
 </head>
 
 <body>
+
     <div class="profile-container">
 
-         <!-- Profile Header -->
+            <div th:if="${successMessage}" class="success-message" th:text="${successMessage}"></div>
+            <div th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></div>
+       
+        <!-- Profile Header -->
         <div class="profile-header">
-            <h1>Admin Profile</h1>
+            <h1>Patient Profile</h1>
         </div>
-        <p class="error-message" th:if="${errorMessage}" th:text="${errorMessage}"></p>
 
-         <!-- Profile Details -->
-
+        <!-- Profile Details -->
         <div class="profile-details">
-            <div><strong>Name:</strong> [[${admin.name}]]</div>
-            <div><strong>Username:</strong> [[${admin.username}]]</div>
-            <div><strong>Email:</strong> [[${admin.email}]]</div>
+            <div><strong>Patient ID:</strong> [[${patient.patientId}]]</div>
+            <div><strong>Name:</strong> [[${patient.patientName}]]</div>
+            <div><strong>Age:</strong> [[${patient.age}]]</div>
+            <div><strong>Gender:</strong> [[${patient.gender}]]</div>
+            <div><strong>DOB:</strong> [[${#temporals.format(patient.dateOfBirth, 'd MMMM yyyy')}]] (<span>[[${#temporals.format(patient.dateOfBirth, 'dd/MM/yyyy')}]]</span>)<div>
+            <div><strong>Email:</strong> [[${patient.emailId}]]</div>
+            <div><strong>Phone:</strong> [[${patient.contactNumber}]]</div>
+            <div><strong>Address:</strong> [[${patient.address}]]</div>
+            <div><strong>Allergies:</strong> [[${patient.allergies}]]</div>
+            <div><strong>Medications:</strong> [[${patient.medications}]]</div>
+            <div><strong>Treatments:</strong> [[${patient.treatments}]]</div>
+            <div><strong>Has Insurance ? : </strong><span th:text="${patient.hasInsurance ? 'Yes' : 'No Insurance'}"></span></div>
+
+            <div>
+                <strong>Status:</strong> 
+                <span th:text="${patient.isActive ? 'Active' : 'Not Active'}"></span>
+            </div>
+
+            <div th:if="${patient.hasInsurance && userRole=='patient'}"><strong>Insurance Details:</strong>
+                <p><strong>Insurance Provider :</strong> [[${patient.insuranceProvider}]] </p>
+                <p><strong>Insurance Policy Number :</strong> [[${patient.insurancePolicyNumber}]] </p>
+                <p><strong>Insurance Expiry Date :</strong> [[${#temporals.format(patient.insuranceExpiryDate, 'd MMMM yyyy')}]] (<span>[[${#temporals.format(patient.insuranceExpiryDate, 'dd/MM/yyyy')}]]</span>) </p>
+                <p><strong>Insurance Coverage Details :</strong> [[${patient.insuranceCoverageDetails}]] </p>
+                <p><strong>Insurance Amount Limit : (&#8377;)</strong> [[${patient.insuranceAmountLimit}]] </p>
+            </div>
             
         </div>
-        <div class="button-container"> <button class="back-button"
-                onclick="window.location.href='/adminPatientPage'">Back</button> </div>
+
+        <!-- Buttons -->
+        <div class="button-container">
+            <div th:if="${userRole=='admin'}">
+                <!-- <a th:href="@{'/deactivatePatient?patientId=' + ${patient.patientId} + '&searchType=viewProfile'}" 
+                        class="edit-button">
+                            <th:block th:if="${patient.isActive}">Deactivate</th:block>
+                            <th:block th:unless="${patient.isActive}">Activate</th:block>
+                </a>
+                <a th:href="@{'/updatePatient?id='+${patient.patientId}}" class="edit-button">Update Profile</a>-->
+
+                <button class="back-button" onclick="history.back()">Back</button>
+            </div>
+            <div th:if="${userRole=='patient'}">
+                <button class="back-button" onclick="window.location.href='/patientPage'">Back</button>
+                <a th:href="@{'/updatePatient}" class="edit-button">Update Profile</a>
+            </div>
+        </div>
     </div>
+
 </body>
 
 </html>

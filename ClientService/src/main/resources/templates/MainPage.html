@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Care and Cure - Homepage</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      /* Base Reset */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      /* Body Styling */
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #f4f4f9;
+        color: #333;
+        line-height: 1.6;
+        overflow-x: hidden;
+      }
+
+      /* Header */
+      header {
+        background: linear-gradient(90deg, #4faaf5, #044373);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        font-size: 2rem;
+        font-weight: bold;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+      }
+
+      .nav-links {
+        display: flex;
+        justify-content: center;
+        gap: 20px;
+        margin-top: 10px;
+      }
+
+      .nav-links a {
+        color: white;
+        text-decoration: none;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 8px 15px;
+        border-radius: 8px;
+        transition: background-color 0.3s ease;
+      }
+
+      .nav-links a:hover {
+        background-color: rgba(255, 255, 255, 0.2);
+      }
+
+      /* Hero Section */
+      .hero {
+        position: relative;
+        height: 90vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: url("https://images.unsplash.com/photo-1478476868527-002ae3f3e159?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D")
+          no-repeat center center/cover;
+      }
+
+      .hero-overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        z-index: 1;
+        transition: background 0.5s ease-in-out, transform 0.5s ease;
+      }
+
+      .hero:hover .hero-overlay {
+        background: rgba(0, 0, 0, 0.4);
+        /* transform: scale(1.02); */
+      }
+
+      .hero-content {
+        position: relative;
+        z-index: 2;
+        text-align: center;
+        color: white;
+        padding: 2rem;
+      }
+
+      .hero-content h1 {
+        font-size: 3.5rem;
+        font-weight: 600;
+        margin-bottom: 1rem;
+        animation: fadeInDown 1s ease-in-out;
+      }
+
+      .hero-content p {
+        font-size: 1.3rem;
+        margin-bottom: 2rem;
+        animation: fadeInUp 1.5s ease-in-out;
+      }
+
+      .cta-button {
+        display: inline-block;
+        padding: 10px 20px;
+        font-size: 1rem;
+        margin-top: 1rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: white;
+        background: linear-gradient(90deg, #53b0fc, #0b79d0);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s ease-in-out,
+          box-shadow 0.3s;
+        text-decoration: none;
+      }
+
+      .cta-button:hover {
+        background: linear-gradient(90deg, #0b79d0, #53b0fc);
+        transform: translateY(-5px);
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      /* Features Section */
+      #features {
+        padding: 4rem 2rem;
+        text-align: center;
+        background-color: #f8f9fa;
+      }
+
+      .features {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 2rem;
+      }
+
+      .feature-card {
+        background: white;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        padding: 2rem;
+        width: 300px;
+        transition: transform 0.3s, box-shadow 0.3s;
+      }
+
+      .feature-card:hover {
+        transform: translateY(-10px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .feature-card i {
+        font-size: 3rem;
+        color: #4faaf5;
+        margin-bottom: 1rem;
+      }
+
+      .feature-card h3 {
+        font-size: 1.5rem;
+        margin-bottom: 0.5rem;
+      }
+
+      .feature-card p {
+        font-size: 1rem;
+        color: #555;
+      }
+
+      /* About Us Section */
+      #about {
+        padding: 4rem 2rem;
+        text-align: center;
+        background-color: #ffffff;
+      }
+
+      #about h2 {
+        font-size: 2.5rem;
+        margin-bottom: 2rem;
+        color: #4faaf5;
+      }
+
+      #about p {
+        font-size: 1.2rem;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      /* Testimonials Section */
+      #testimonials {
+        background: #f8f9fa;
+        padding: 60px 20px;
+      }
+
+      .testimonial-container {
+        max-width: 1200px;
+        margin: 0 auto;
+        display: flex;
+        justify-content: space-around;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .testimonial {
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 30%;
+        text-align: center;
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .testimonial:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .testimonial p {
+        font-size: 1.1rem;
+        color: #555;
+        margin-bottom: 15px;
+      }
+
+      .testimonial span {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #4faaf5;
+      }
+
+      /* Footer */
+      footer {
+        background: linear-gradient(90deg, #333, #111);
+        color: white;
+        padding: 1.5rem 0;
+        text-align: center;
+        font-size: 0.9rem;
+        box-shadow: 0 -4px 8px rgba(0, 0, 0, 0.1);
+      }
+
+      footer a {
+        color: #53b0fc;
+        text-decoration: none;
+        font-weight: bold;
+      }
+
+      footer a:hover {
+        text-decoration: underline;
+      }
+
+      /* Contact Us Section Styling */
+      #contact {
+        padding: 60px 20px;
+        background-color: #ffffff;
+        text-align: center;
+      }
+
+      #contact h2 {
+        font-size: 2.5rem;
+        color: #4faaf5;
+        margin-bottom: 20px;
+      }
+
+      #testimonials h2 {
+        font-size: 2.0rem;
+        /* color: #4faaf5; */
+        margin-bottom: 15px;
+        text-align: center;
+      }
+      #contact p {
+        font-size: 1.2rem;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto;
+        margin-bottom: 40px;
+      }
+
+      .contact-form-container {
+        max-width: 800px;
+        margin: 0 auto;
+        text-align: left;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+      }
+
+      form label {
+        font-size: 1rem;
+        font-weight: bold;
+        color: #333;
+      }
+
+      form input,
+      form textarea {
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+        outline: none;
+        transition: border-color 0.3s ease;
+      }
+
+      form input:focus,
+      form textarea:focus {
+        border-color: #4faaf5;
+        box-shadow: 0 0 5px rgba(79, 170, 245, 0.2);
+      }
+
+      form textarea {
+        resize: vertical;
+      }
+
+      form button {
+        background: linear-gradient(90deg, #4faaf5, #044373);
+        color: white;
+        font-size: 1rem;
+        font-weight: bold;
+        padding: 12px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.3s ease, transform 0.2s ease;
+      }
+
+      form button:hover {
+        background: linear-gradient(90deg, #044373, #4faaf5);
+        transform: translateY(-3px);
+      }
+
+      .contact-info {
+        margin-top: 40px;
+      }
+
+      .contact-info p {
+        font-size: 1rem;
+        color: #333;
+      }
+
+      /* Animations */
+      @keyframes fadeInDown {
+        from {
+          opacity: 0;
+          transform: translateY(-20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @keyframes fadeInUp {
+        from {
+          opacity: 0;
+          transform: translateY(20px);
+        }
+
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      @media (max-width: 768px) {
+        .hero-content h1 {
+          font-size: 2.5rem;
+        }
+
+        .hero-content p {
+          font-size: 1rem;
+        }
+
+        .feature-card {
+          width: 90%;
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <!-- Header -->
+    <header>
+      <h1>Care and Cure Web App</h1>
+      <div class="nav-links">
+        <a href="#features">Features</a>
+        <a href="#about">About Us</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#contact">Contact</a>
+      </div>
+    </header>
+
+    <!-- Hero Section -->
+    <div class="hero">
+      <div class="hero-overlay"></div>
+      <div class="hero-content">
+        <h1>Welcome to Care and Cure</h1>
+        <p>
+          Your health is our priority. Experience seamless healthcare services
+          today.
+        </p>
+        <!-- <a href="#features" class="cta-button">Get Started</a> -->
+      </div>
+    </div>
+
+    <!-- Features Section -->
+    <section id="features">
+      <h2>Our Features</h2>
+      <div class="features">
+        <div class="feature-card">
+          <i class="fas fa-user-md"></i>
+          <h3>Doctor Management</h3>
+          <p>Effortlessly manage doctor schedules and availability.</p>
+          <a href="" class="cta-button">Our Doctors</a>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-procedures"></i>
+          <h3>Patient Services</h3>
+          <p>Book appointments and access medical records easily.</p>
+          <a href="/patientHomePage" class="cta-button">Patient Portal</a>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-hospital"></i>
+          <h3>Billing & Payments</h3>
+          <p>Streamline your billing and payment processes securely.</p>
+        </div>
+        <div class="feature-card">
+          <i class="fas fa-hospital"></i>
+          <h3>Management</h3>
+          <a href="/adminLoginForm" class="cta-button">Admin Portal</a>
+          <a href="/doctorLoginForm" class="cta-button">Doctor Portal</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about">
+      <h2>About Us</h2>
+      <p>
+        Care and Cure Hospital is dedicated to delivering high-quality
+        healthcare services with professionalism, compassion, and advanced
+        technology.
+      </p>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section id="testimonials">
+        <h2>Testimonials</h2>
+      <div class="testimonial-container">
+        <div class="testimonial">
+          <p>
+            "Care and Cure made booking appointments so easy and efficient!
+            Highly recommend to anyone looking for quality care."
+          </p>
+          <span>Mr. ABC</span>
+        </div>
+        <div class="testimonial">
+          <p>
+            "The staff is amazing and the appointment scheduling system is
+            seamless. My experience was fantastic!"
+          </p>
+          <span>Mrs. XYZ</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact">
+      <h2>Contact Us</h2>
+      <p>
+        Have questions or need assistance? We're here to help. Get in touch with
+        us today!
+      </p>
+      
+    </section>
+
+    <!-- Footer -->
+    <footer>
+      <p>
+        &copy; 2025 Care and Cure. All rights reserved. |
+        <a href="#top">Back to Top</a>
+      </p>
+    </footer>
+  </body>
+</html>

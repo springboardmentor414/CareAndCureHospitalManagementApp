@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Patient List</title>
+    <title>Patient List By Insurance Provider</title>
     <style>
         /* General Reset */
         * {
@@ -208,7 +208,7 @@
 
 <body>
     <!-- Page Title -->
-    <h2>Patient List</h2>
+    <h2>Patient List By Insurance Provider</h2>
 
     <!-- Display Error or Success Messages -->
     <div class="container">
@@ -225,7 +225,7 @@
                         <th>Patient ID</th>
                         <th>Patient Name</th>
                         <th>Email ID</th>
-                        <th>Action</th>
+                        <th>Insurance</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -235,18 +235,9 @@
                         <td th:text="${patient.patientName}"></td>
                         <td th:text="${patient.emailId}"></td>
                         <td class="action-buttons">
-                            <a th:href="@{'/admin/viewPatientProfile?patientId='+${patient.patientId}}"
-                                class="next-button">view Details</a>
-                            <a th:href="@{'/updatePatient?patientId='+ ${patient.patientId}}"
-                                class="next-button">Update</a>
-                            <a th:href="@{'/deactivatePatient?patientId=' + ${patient.patientId} + '&searchType=' + ${searchType} + '&searchValue=' + ${searchValue}}"
-                                class="next-button" th:text="${patient.isActive} ? 'Deactivate' : 'Activate'"></a>
-
-                            <a th:href="@{'/patient/'+${patient.patientId}+'/appointments'}"
-                                class="next-button">Appointment</a>
                             <a th:if="${patient.hasInsurance}"
                                 th:href="@{'/viewPatientInsuranceDetails?patientId='+${patient.patientId}}"
-                                class="next-button">Insurance Details</a>
+                                class="next-button">Details</a>
 
                         </td>
                 </tbody>
