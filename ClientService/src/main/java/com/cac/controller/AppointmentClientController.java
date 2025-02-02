@@ -4,18 +4,26 @@ import com.cac.model.Appointment;
 import com.cac.model.AppointmentDTO;
 import com.cac.model.CancelAppointmentDTO;
 import com.cac.model.DoctorDTO;
+import com.cac.model.Patient;
 import com.cac.model.RescheduleAppointmentDTO;
 import com.cac.model.ScheduleAppointmentDTO;
+import com.cac.model.SelectSearchDate;
+
+import jakarta.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -40,9 +48,45 @@ public class AppointmentClientController {
 	@Autowired
 	private RestTemplate restTemplate;
 
+	@Value("${base.url}")
+    private String baseUrl;
+
+    DoctorDTO doctorSession = null;
+
+    Patient patientSession = null;
+
+    String role = null;
+
+    @ModelAttribute
+    public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj) {
+        patientSession = patObj;
+
+    }
+
+    @ModelAttribute
+    public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
+        role = userRole;
+        model.addAttribute("userRole", userRole);
+    }
+
+    @ModelAttribute
+    public String checkLogin() {
+        if (role == null)
+            return "redirect:/";
+        return null;
+    }
+
+    private boolean isAuthPatient(int patientId) {
+        if (role == null)
+            return false;
+        if (role.equalsIgnoreCase("patient") && patientSession != null && patientId != patientSession.getPatientId())
+            return false;
+        return true;
+    }
+
 	@GetMapping("/{patientId}/appointments")
 	public String showAppointmentsForPatient(@PathVariable Long patientId, Model model) {
-		String url = "http://localhost:8082/patient/" + patientId + "/appointments";
+		String url = baseUrl + "/patient/" + patientId + "/appointments";
 		try {
 			ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null,
 					new ParameterizedTypeReference<List<AppointmentDTO>>() {
@@ -76,7 +120,7 @@ public class AppointmentClientController {
 			@RequestParam(required = false) String specialty, @RequestParam(required = false) String experience,
 			@RequestParam(required = false) String gender, Model model) {
 
-		String url = "http://localhost:8082/api/doctors";
+		String url = baseUrl + "/api/doctors";
 		try {
 			// Make GET request to fetch doctors
 			ResponseEntity<List<DoctorDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null,
@@ -86,7 +130,7 @@ public class AppointmentClientController {
 
 			// Extract unique specialties from active doctors
 			List<String> specialties = doctors.stream().filter(DoctorDTO::getStatus) // Filter only active doctors
-					.map(DoctorDTO::getSpecialty) // Extract specialties
+					.map(DoctorDTO::getSpecialization) // Extract specialties
 					.distinct() // Get unique specialties
 					.sorted() // Sort the specialties alphabetically
 					.collect(Collectors.toList());
@@ -120,13 +164,13 @@ public class AppointmentClientController {
 
 	// Helper method for name filtering (partial match, case-insensitive)
 	private boolean filterByName(DoctorDTO doctor, String name) {
-		return name == null || name.isEmpty() || doctor.getName().toLowerCase().contains(name.toLowerCase());
+		return name == null || name.isEmpty() || doctor.getDoctorName().toLowerCase().contains(name.toLowerCase());
 	}
 
 	// Helper method for specialty filtering (partial match, case-insensitive)
 	private boolean filterBySpecialty(DoctorDTO doctor, String specialty) {
 		return specialty == null || specialty.isEmpty()
-				|| doctor.getSpecialty().toLowerCase().contains(specialty.toLowerCase());
+				|| doctor.getSpecialization().toLowerCase().contains(specialty.toLowerCase());
 	}
 
 	// Helper method for experience filtering (range handling, e.g., "10-15" or
@@ -162,7 +206,7 @@ public class AppointmentClientController {
 	@GetMapping("/{patientId}/appointments/{doctorId}/schedule")
 	public String scheduleAppointment(@PathVariable Long patientId, @PathVariable Long doctorId, Model model) {
 
-		String url = "http://localhost:8082/api/doctors/" + doctorId;
+		String url = baseUrl + "/api/doctors/" + doctorId;
 		try {
 			// Make GET request to fetch doctors
 			ResponseEntity<DoctorDTO> response = restTemplate.exchange(url, HttpMethod.GET, null,
@@ -208,8 +252,8 @@ public class AppointmentClientController {
 	public String timeslotAppointment(@PathVariable Long patientId, @PathVariable Long doctorId,
 			@ModelAttribute ScheduleAppointmentDTO scheduleAppointmentDTO, Model model) {
 
-		String url = "http://localhost:8082/api/availability/time-slots";
-		String url1 = "http://localhost:8082/api/doctors/" + doctorId;
+		String url = baseUrl + "/api/availability/time-slots";
+		String url1 = baseUrl + "/api/doctors/" + doctorId;
 		try {
 			String appointmentDateString = scheduleAppointmentDTO.getAppointmentDate();
 			System.out.println("Appointment Date String: " + appointmentDateString);
@@ -285,8 +329,8 @@ public class AppointmentClientController {
 	@PostMapping("/{patientId}/appointments/{doctorId}/schedule")
 	public String scheduleAppointment(@PathVariable int patientId, @PathVariable int doctorId,
 			@ModelAttribute ScheduleAppointmentDTO scheduleAppointmentDTO, Model model) {
-		String url = "http://localhost:8082/patient/" + patientId + "/appointments/schedule";
-		String url1 = "http://localhost:8082/api/availability/schedule";
+		String url = baseUrl + "/patient/" + patientId + "/appointments/schedule";
+		String url1 = baseUrl + "/api/availability/schedule";
 
 		System.out.println("scheduleAppointmentDTO Date : " + scheduleAppointmentDTO.getAppointmentDate());
 		System.out.println("scheduleAppointmentDTO Time : " + scheduleAppointmentDTO.getAppointmentTime());
@@ -312,9 +356,15 @@ public class AppointmentClientController {
 			appointmentTime = LocalTime.parse(scheduleAppointmentDTO.getAppointmentTime().toUpperCase(), timeFormatter);
 			System.out.println("Converted appointmentTime: " + appointmentTime);
 		} catch (DateTimeParseException e) {
-			model.addAttribute("errorMessage",
+
+			try{
+				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mma", Locale.ENGLISH);
+			appointmentTime = LocalTime.parse(scheduleAppointmentDTO.getAppointmentTime().toUpperCase(), timeFormatter);
+			} catch(DateTimeParseException e1){
+				model.addAttribute("errorMessage",
 					"Invalid date or time format. Please use MMM dd, yyyy for the date and hh:mma for the time.");
 			return "error";
+			}
 		}
 
 		// Map DTO to backend Appointment entity
@@ -416,9 +466,9 @@ public class AppointmentClientController {
 		System.out.println("ID: " + cancelAppointmentDTO.getAppointmentId());
 		System.out.println("Reason: " + cancelAppointmentDTO.getReasonOfCancellation());
 
-		String url = "http://localhost:8082/patient/" + patientId + "/appointments/cancel";
-		String url1 = "http://localhost:8082/patient/" + patientId + "/appointments/" + appointmentId;
-		String url2 = "http://localhost:8082/api/availability/cancel";
+		String url = baseUrl + "/patient/" + patientId + "/appointments/cancel";
+		String url1 = baseUrl + "/patient/" + patientId + "/appointments/" + appointmentId;
+		String url2 = baseUrl + "/api/availability/cancel";
 
 		try {
 			HttpHeaders headers = new HttpHeaders();
@@ -511,8 +561,8 @@ public class AppointmentClientController {
 	public String rescheduleTimeslotAppointment(@PathVariable int patientId, @PathVariable int appointmentId,
 			@ModelAttribute RescheduleAppointmentDTO rescheduleAppointmentDTO, Model model) {
 
-		String url = "http://localhost:8082/api/availability/time-slots";
-		String url1 = "http://localhost:8082/patient/" + patientId + "/appointments/" + appointmentId;
+		String url = baseUrl + "/api/availability/time-slots";
+		String url1 = baseUrl + "/patient/" + patientId + "/appointments/" + appointmentId;
 		try {
 			String appointmentDateString = rescheduleAppointmentDTO.getNewDate();
 			System.out.println("Appointment Date String: " + appointmentDateString);
@@ -591,9 +641,9 @@ public class AppointmentClientController {
 	@PostMapping("/{patientId}/appointments/reschedule/{appointmentId}")
 	public String rescheduleAppointment(@PathVariable int patientId, @PathVariable int appointmentId,
 			@ModelAttribute RescheduleAppointmentDTO rescheduleAppointmentDTO, Model model) {
-		String url = "http://localhost:8082/patient/" + patientId + "/appointments/reschedule/" + appointmentId;
-		String url1 = "http://localhost:8082/patient/" + patientId + "/appointments/" + appointmentId;
-		String url2 = "http://localhost:8082/api/availability/schedule";
+		String url = baseUrl + "/patient/" + patientId + "/appointments/reschedule/" + appointmentId;
+		String url1 = baseUrl + "/patient/" + patientId + "/appointments/" + appointmentId;
+		String url2 = baseUrl + "/api/availability/schedule";
 		try {
 			HttpHeaders headers = new HttpHeaders();
 			headers.set("Content-Type", "application/json");
@@ -616,9 +666,22 @@ public class AppointmentClientController {
 	        String time12Hour = rescheduleAppointmentDTO.getNewTime(); // Example: "06:00pm"
 
 	        DateTimeFormatter inputFormatterTime = DateTimeFormatter.ofPattern("hh:mma");
+			
 	        DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
+			
+	        LocalTime parsedTime = null;
+			try{
+				parsedTime= LocalTime.parse(time12Hour, inputFormatterTime);
+			}catch(DateTimeParseException e){
+				try{
+					DateTimeFormatter inputFormatterTime2 = DateTimeFormatter.ofPattern("h:mma");
+				parsedTime = LocalTime.parse(time12Hour, inputFormatterTime2);
+				} catch (DateTimeParseException e1){
+					model.addAttribute("errorMessage", "Invalid time format. Please use hh:mma for the time.");
+					return "error";
+				}
 
-	        LocalTime parsedTime = LocalTime.parse(time12Hour, inputFormatterTime);
+			}
 	        String formattedTime = parsedTime.format(outputFormatterTime);
 
 	        // Set the formatted time back into the DTO
@@ -685,6 +748,73 @@ public class AppointmentClientController {
 			model.addAttribute("errorMessage", "Failed to schedule the appointment. Please try again.");
 			return "error";
 		}
+
+		
 	}
+
+	@GetMapping("/dailyAppointments")
+    public String viewAppointmentsByDate(@RequestParam(value = "date", required = false) String date,
+            HttpSession session, Model model) {
+        if (role == null || !role.equalsIgnoreCase("ADMIN"))
+            return "unauthorized";
+        LocalDate selectedDate = date != null ? LocalDate.parse(date) : LocalDate.now();
+        String url = baseUrl+"/patient/0/appointments/date/" + selectedDate;
+        try {
+            ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<AppointmentDTO>>() {
+                    });
+            List<AppointmentDTO> appointments = response.getBody();
+            model.addAttribute("appointments", appointments);
+            model.addAttribute("selectedDate", selectedDate);
+        } catch (HttpStatusCodeException e) {
+            model.addAttribute("errorMessage", "Unable to fetch daily appointments: " + e.getResponseBodyAsString());
+            return "statusPage";
+        }
+
+        return "dailyAppointments";
+    }
+
+	@GetMapping("/no-show-patients")
+    public String viewNoShowAppointments(@ModelAttribute("selectSearchDate") SelectSearchDate searchDate, HttpSession session, Model model) {
+        if (role == null || !role.equalsIgnoreCase("admin"))
+            return "unauthorized";
+
+			if(searchDate.getStartDate()==null && searchDate.getEndDate()==null) {
+				model.addAttribute("errorMessage", "Select Date.");
+				return "noShowAppointments";
+			}
+
+			if(searchDate.getStartDate()==null){
+				model.addAttribute("errorMessage", "Select Start Date.");
+				return "noShowAppointments";
+			} 
+			if(searchDate.getEndDate()==null){
+				model.addAttribute("errorMessage", "Select end Date.");
+				return "noShowAppointments";
+			}
+
+        String url = baseUrl+ "/patient/0/appointments/no-show/"+searchDate.getStartDate()+"/"+searchDate.getEndDate();
+
+        try {
+            ResponseEntity<List<Patient>> response = restTemplate.exchange(
+                    url,
+                    HttpMethod.GET,
+              null,
+                    new ParameterizedTypeReference<List<Patient>>() {
+                    });
+                    System.out.println("hello");
+            List<Patient> noShowAppointments = response.getBody();
+			System.out.println(noShowAppointments);
+            model.addAttribute("noShowAppointments", noShowAppointments);
+			model.addAttribute("selectSearchDate", searchDate);
+			return "noShowAppointments";
+        } catch (HttpStatusCodeException e) {
+            model.addAttribute("errorMessage", "Unable to fetch no-show appointments: " + e.getResponseBodyAsString());
+        }
+		return "statusPage";
+    }
 
 }

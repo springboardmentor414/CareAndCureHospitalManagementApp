@@ -10,6 +10,14 @@ public class AppointmentDTO {
     private String reason;
     private String reasonOfCancellation;
     private String doctorName;
+    private Patient patient;
+
+    public Patient getPatient() {
+        return patient;
+    }
+    public void setPatient(Patient patient) {
+        this.patient = patient;
+    }
     public String getReason() {
 		return reason;
 	}

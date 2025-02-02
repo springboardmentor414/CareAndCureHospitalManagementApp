@@ -22,10 +22,10 @@ public class PaymentClientController {
     private static final Logger logger = Logger.getLogger(PaymentClientController.class.getName());
     private final String backendUrl = "http://localhost:8081/api/payments";
 
-    @GetMapping("/")
-    public String home() {
-        return "index";
-    }
+    // @GetMapping("/")
+    // public String home() {
+    //     return "index";
+    // }
 
     @GetMapping("/payments")
     public String getAllPayments(Model model) {

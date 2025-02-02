@@ -1,7 +1,7 @@
 package com.cac.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -12,8 +12,11 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cac.model.AdminDto;
+import com.cac.model.SelectSearchDate;
 
 import jakarta.servlet.http.HttpSession;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @Controller
 public class AdminCleintController {
@@ -21,11 +24,8 @@ public class AdminCleintController {
 	@Autowired
 	public RestTemplate restTemplate;
 
-	// @GetMapping("/adminRegistration")
-	// public String adminRegistrationPage(Model model) {
-	// 	model.addAttribute("admin", new AdminDto());
-	// 	return "adminRegistration";
-	// }
+	@Value("${base.url}")
+	private String baseUrl;
 
 	private String role=null;
 
@@ -68,16 +68,7 @@ public class AdminCleintController {
 		}
 	}
 
-	
-
-	// @GetMapping("/adminHomePage")
-	// public String adminHomePage(HttpSession session, Model model) {
-
-	// 	cleanUpSessionAttributes(session, model);
-	// 	session.setAttribute("userRole", "admin");
-	// 	return "adminHomePage";
-	// }
-
+	// admin home page after login
 	@GetMapping("/adminPage")
 	public String adminPage(HttpSession session, Model model) {
 		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
@@ -94,12 +85,30 @@ public class AdminCleintController {
 		}
 	}
 
+	// Patient View By Admin 
+	@GetMapping("/adminPatientPage")
+	public String viewAdminPatientPage(HttpSession session, Model model) {
+		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+		cleanUpSessionAttributes(session, model);
+		model.addAttribute("selectSearchDate", new SelectSearchDate());
+		return "admin/adminPatientPage";
+	}
+
+	// Doctor View By Admin
+	@GetMapping("/adminDoctorPage")
+	public String viewAdminDoctorPage(HttpSession session, Model model) {
+		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+		cleanUpSessionAttributes(session, model);
+		return "adminDoctorPage";
+	}
+	
+
 	@GetMapping("/viewAdminProfile")
 	public String viewProfile(HttpSession session, Model model) {
 		if(!role.equalsIgnoreCase("admin")) return "redirect:/adminLoginForm";
 		if(adminSession==null) return "redirect:/adminLoginForm";
 		AdminDto dto = null;
-		String url = "http://localhost:8080/api/admin/viewAdminInfo/" + adminSession.getUsername();
+		String url = baseUrl + "/api/admin/viewAdminInfo/" + adminSession.getUsername();
 		try {
 			ResponseEntity<AdminDto> response = restTemplate.getForEntity(
 					url,

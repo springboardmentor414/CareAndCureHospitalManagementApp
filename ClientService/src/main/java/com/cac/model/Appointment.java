@@ -12,7 +12,8 @@ public class Appointment {
     private LocalTime appointmentTime;
     private String status;
     private String reasonOfCancellation;
-    
+    private Patient patient;
+	
     // Getters and setters
 	public int getAppointmentId() {
 		return appointmentId;
@@ -46,6 +47,12 @@ public class Appointment {
 	}
 	public LocalTime getAppointmentTime() {
 		return appointmentTime;
+	}
+	public Patient getPatient() {
+		return patient;
+	}
+	public void setPatient(Patient patient) {
+		this.patient = patient;
 	}
 	public void setAppointmentTime(LocalTime appointmentTime) {
 		this.appointmentTime = appointmentTime;

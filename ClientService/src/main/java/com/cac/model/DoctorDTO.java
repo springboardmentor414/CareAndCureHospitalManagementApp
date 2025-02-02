@@ -8,11 +8,10 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class DoctorDTO {
 	
-	@JsonProperty("doctorId")
-	private int id;
+	private int doctorId;
 	 
-	private String name;
-	private String specialty;
+	private String doctorName;
+	private String specialization;
 	private String qualification;
 	private String contactNumber;
 	private String emailId;
@@ -30,8 +29,8 @@ public class DoctorDTO {
 
 	// Constructor to initialize DoctorDTO with only id and name
 	public DoctorDTO(int doctorId, String name) {
-		this.id = doctorId;
-		this.name = name;
+		this.doctorId = doctorId;
+		this.doctorName = name;
 	}
 
 	public DoctorDTO() {
@@ -39,32 +38,33 @@ public class DoctorDTO {
 	}
 
 	// Getters and setters for the fields
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
-
-	public String getName() {
-		return name;
-	}
-
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public String getSpecialty() {
-		return specialty;
-	}
-
-	public void setSpecialty(String specialty) {
-		this.specialty = specialty;
-	}
 
 	public String getQualification() {
 		return qualification;
+	}
+
+	public int getDoctorId() {
+		return doctorId;
+	}
+
+	public void setDoctorId(int doctorId) {
+		this.doctorId = doctorId;
+	}
+
+	public String getDoctorName() {
+		return doctorName;
+	}
+
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+
+	public String getSpecialization() {
+		return specialization;
+	}
+
+	public void setSpecialization(String specialization) {
+		this.specialization = specialization;
 	}
 
 	public void setQualification(String qualification) {
