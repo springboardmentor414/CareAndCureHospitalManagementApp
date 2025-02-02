@@ -13,5 +13,17 @@ public interface AppointmentRepository extends JpaRepository<Appointment, Intege
     List<Appointment> findByDoctor(Doctor doctor);
 
     List<Appointment> findByPatient(Patient patient);
+
+    List<Appointment> findByAppointmentDate(LocalDate date);
+
+    List<Appointment> findByReasonOfCancellationIgnoreCase(String reasonOfCancellation);
+    
+    List<Appointment> findByReasonContainingIgnoreCase(String reason);
+
+    List<Appointment> findByAppointmentDateBetween(LocalDate starDate, LocalDate endDate);
+
     boolean existsByDoctorAndAppointmentDateAndAppointmentTime(Doctor doctor, LocalDate date, LocalTime time);
+
+    List<Appointment> findByDoctor_DoctorId(int doctorId);
+    
 }

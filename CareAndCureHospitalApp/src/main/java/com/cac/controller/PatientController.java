@@ -17,21 +17,14 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/patient")
-// @CrossOrigin(origins = "http://localhost:8081")
 public class PatientController {
 
-    @Autowired
+	@Autowired
     private PatientService patientService;
 
-    
     @PostMapping("/registerPatient") 
 	public ResponseEntity<Patient> registerPatient(@Valid @RequestBody Patient patient) throws UserNotFoundException{
 		return new ResponseEntity<Patient>(patientService.createPatient(patient), HttpStatus.CREATED);
-	}
-	
-	@PutMapping("/updatePatientName/{id}/{name}")
-	public ResponseEntity<Patient> updatePatientName(@PathVariable int id, @PathVariable String name ) throws Exception{
-		return new ResponseEntity<Patient>(patientService.updatePatientName(id,name), HttpStatus.ACCEPTED);
 	}
 	
 	@PutMapping("/updatePatient/{id}")
@@ -62,27 +55,12 @@ public class PatientController {
 		return new ResponseEntity<List<Patient>>(patientList, HttpStatus.OK);
 	}
 	
+
 	@GetMapping("/viewAllPatientByStatus")
 	public ResponseEntity<List<Patient>> getAllPatientByStatus(@RequestParam boolean active){
 		List<Patient> patientList = patientService.getAllPatientByStatus(active);
 		return new ResponseEntity<List<Patient>>(patientList, HttpStatus.OK);
 	}
-
-    // Get patients by age range
-    @GetMapping("/age")
-    public ResponseEntity<List<Patient>> getPatientsByAgeRange(
-            @RequestParam int minAge,
-            @RequestParam int maxAge) {
-        List<Patient> patients = patientService.getPatientsByAgeRange(minAge, maxAge);
-        return ResponseEntity.ok(patients);
-    }
-
-    // Get patients by gender
-    @GetMapping("/gender")
-    public ResponseEntity<List<Patient>> getPatientsByGender(@RequestParam String gender) {
-        List<Patient> patients = patientService.getPatientsByGender(gender);
-        return ResponseEntity.ok(patients);
-    }
 
     // Get patient details for display
     @GetMapping("/{patientId}/details")
@@ -93,4 +71,10 @@ public class PatientController {
         }
         return ResponseEntity.notFound().build();
     }
+
+	//get patient lisit by insuranceprovider
+	@GetMapping("/viewAllByInsuranceProvider")
+	public ResponseEntity<List<Patient>> getPatientsByInsuranceProvider(@RequestParam String insuranceProvider) {
+		return new ResponseEntity<>(patientService.getPatientsByInsuranceProvider(insuranceProvider), HttpStatus.OK);
+	}
 }

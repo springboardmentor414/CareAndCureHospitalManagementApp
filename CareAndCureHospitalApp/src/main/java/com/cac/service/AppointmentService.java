@@ -15,10 +15,13 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -173,7 +176,7 @@ public class AppointmentService {
     // Email notifications
     private void sendAppointmentConfirmationEmail(Appointment appointment) throws MessagingException {
         emailService.sendAppointmentConfirmationEmail(
-                appointment.getPatient().getEmail(),
+                appointment.getPatient().getEmailId(),
                 appointment.getPatient().getPatientName(),
                 appointment.getDoctor().getDoctorName(),
                 appointment.getAppointmentDate().toString(),
@@ -182,7 +185,7 @@ public class AppointmentService {
 
     private void sendAppointmentCancellationEmail(Appointment appointment) throws MessagingException {
         emailService.sendAppointmentCancellationEmail(
-                appointment.getPatient().getEmail(),
+                appointment.getPatient().getEmailId(),
                 appointment.getPatient().getPatientName(),
                 appointment.getDoctor().getDoctorName(),
                 appointment.getAppointmentDate().toString(),
@@ -192,19 +195,11 @@ public class AppointmentService {
 
     private void sendAppointmentRescheduleEmail(Appointment appointment) throws MessagingException {
         emailService.sendAppointmentRescheduleEmail(
-                appointment.getPatient().getEmail(),
+                appointment.getPatient().getEmailId(),
                 appointment.getPatient().getPatientName(),
                 appointment.getDoctor().getDoctorName(),
                 appointment.getAppointmentDate().toString(),
                 appointment.getAppointmentTime().toString());
-    }
-
-    public List<Appointment> getAppointmentsByDate(LocalDate appointmentDate) {
-        return null;
-    }
-
-    public List<Patient> getNoShowPatients(LocalDate start, LocalDate end) {
-        return null;
     }
 
     public List<Appointment> getDoctorAppointmentsInRange(int doctorId, LocalDate start, LocalDate end) {
@@ -278,6 +273,32 @@ public class AppointmentService {
                 .collect(Collectors.toList());
 
         return result;
+    }
+
+    public List<Appointment> getAppointmentsByDate(LocalDate date) {
+        return appointmentRepository.findByAppointmentDate(date);
+    }
+
+    public List<Patient> getNoShowAppointments(LocalDate starDate, LocalDate endDate) {
+        Set<Patient> notPresentAppointments = new HashSet<>();
+        List<Appointment> allAppointments = appointmentRepository.findByAppointmentDateBetween(starDate, endDate);
+
+        // LocalDate currentDate = LocalDate.now();
+        // LocalTime currentTime = LocalTime.now();
+
+        for (Appointment appointment : allAppointments) {
+            if(appointment.getStatus().equalsIgnoreCase("Scheduled") && appointment.getAppointmentDate().isAfter(starDate) && appointment.getAppointmentDate().isBefore(endDate)) {
+                notPresentAppointments.add(appointment.getPatient());
+            }
+            if(appointment.getStatus().equalsIgnoreCase("ReScheduled") && appointment.getAppointmentDate().isAfter(starDate) && appointment.getAppointmentDate().isBefore(endDate)) {
+                notPresentAppointments.add(appointment.getPatient());
+            }
+            if(appointment.getStatus().equalsIgnoreCase("Cancelled") && appointment.getAppointmentDate().isAfter(starDate) && appointment.getAppointmentDate().isBefore(endDate)) {
+                notPresentAppointments.add(appointment.getPatient());
+            }
+        }
+
+        return new ArrayList<>(notPresentAppointments);
     }
 
 }

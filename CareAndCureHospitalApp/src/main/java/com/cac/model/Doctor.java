@@ -5,6 +5,7 @@ import jakarta.persistence.CollectionTable;
 import jakarta.persistence.Column;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.MapKeyColumn;
@@ -76,8 +77,8 @@ public class Doctor {
     private String password;
 
     // One-to-many relationship with Appointment using doctorId
-    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL)
-    @JsonManagedReference
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @JsonIgnore
     private List<Appointment> appointments;
 
     // New Mapping Added By Team-03 For Availability

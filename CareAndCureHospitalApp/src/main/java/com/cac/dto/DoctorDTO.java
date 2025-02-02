@@ -7,9 +7,9 @@ import java.util.List;
 import java.util.Map;
 
 public class DoctorDTO {
-    private int id;
-    private String name;
-    private String specialty;
+    private int doctorId;
+    private String doctorName;
+    private String specialization;
     private String qualification;
     private String contactNumber;
     private String emailId;
@@ -24,9 +24,9 @@ public class DoctorDTO {
 
     // Constructor to convert Doctor entity to DTO (excluding appointments)
     public DoctorDTO(Doctor doctor) {
-        this.id = doctor.getDoctorId();
-        this.name = doctor.getDoctorName();
-        this.specialty = doctor.getSpecialization();
+        this.doctorId = doctor.getDoctorId();
+        this.doctorName = doctor.getDoctorName();
+        this.specialization = doctor.getSpecialization();
         this.qualification = doctor.getQualification();
         this.contactNumber = doctor.getContactNumber();
         this.emailId = doctor.getEmailId();
@@ -41,38 +41,33 @@ public class DoctorDTO {
     }
 
     // Constructor to initialize DoctorDTO with only id and name
-    public DoctorDTO(int doctorId, String name) {
-        this.id = doctorId;
-        this.name = name;
-    }
-
-    // Getters and setters for the fields
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getSpecialty() {
-        return specialty;
-    }
-
-    public void setSpecialty(String specialty) {
-        this.specialty = specialty;
-    }
 
     public String getQualification() {
         return qualification;
+    }
+
+    public int getDoctorId() {
+        return doctorId;
+    }
+
+    public void setDoctorId(int doctorId) {
+        this.doctorId = doctorId;
+    }
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
+
+    public String getSpecialization() {
+        return specialization;
+    }
+
+    public void setSpecialization(String specialization) {
+        this.specialization = specialization;
     }
 
     public void setQualification(String qualification) {

@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cac.exception.UserNotFoundException;
 import com.cac.model.Doctor;
 import com.cac.repository.DoctorRepository;
 
@@ -43,7 +44,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctorById(int doctorId) {
-        return doctorRepository.findById(doctorId).orElse(null);
+        return doctorRepository.findById(doctorId).orElseThrow(()->new UserNotFoundException("Doctor not found with id : "+doctorId));
     }
 
     public void saveDoctor(Doctor doctor) {

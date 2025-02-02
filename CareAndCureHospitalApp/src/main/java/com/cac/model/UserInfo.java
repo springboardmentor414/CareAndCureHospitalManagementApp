@@ -15,11 +15,11 @@ public class UserInfo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(length = 50)
+    @Column(length = 50, nullable = false)
     private String username;
 
     @Size(min = 4, max = 10, message = "Password should be between 4 and 10.")
-    @Column(length=10)
+    @Column(length=10, nullable = false)
     private String password;
 
     @Column(nullable = false, length = 10)

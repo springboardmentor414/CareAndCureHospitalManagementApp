@@ -26,12 +26,11 @@ public class Appointment {
   @Size(min = 10, message = "Reason must be at least 10 characters long")
   private String reason;
   
-  @Size(min = 10, message = "Reason of cancellation must be at least 10 characters long")
+  @Size(min = 5, message = "Reason of cancellation must be at least 10 characters long")
   private String reasonOfCancellation;
 
   @ManyToOne(fetch = FetchType.EAGER) 
   @JoinColumn(name = "patient_id", nullable = false)
-  @JsonIgnore
   private Patient patient;
 
   @ManyToOne(fetch = FetchType.EAGER)

@@ -9,9 +9,6 @@ import java.util.List;
 
 public interface PatientRepository extends JpaRepository<Patient, Integer> {
 
-
-    // List<Patient> findByPaNameContainingIgnoreCase(String name);
-
     List<Patient> findByAgeBetween(int minAge, int maxAge);
 
     List<Patient> findByGenderIgnoreCase(String gender);
@@ -20,6 +17,7 @@ public interface PatientRepository extends JpaRepository<Patient, Integer> {
 	
 	List<Patient> findByIsActive(boolean active);
 
-    
+    List<Patient> findByInsuranceProviderContainingAllIgnoreCase(String insuranceProvider);
+
     
 }

@@ -48,13 +48,9 @@ public class AdminDoctorController {
    	private EmailService emailService;
     
     @Autowired
-    private UserService adminService;
-
-   
+    private UserService userService;
 
  
-    
-  
     @GetMapping("/appointments/{doctorId}/filtered")
     public ResponseEntity<List<Appointment>> getFilteredAppointments(
             @PathVariable int doctorId,
@@ -88,10 +84,9 @@ public class AdminDoctorController {
         // Save doctor details
         Doctor savedDoctor = doctorService.addDoctor(doctor);
         
-        savedDoctor.getUsername();
-        savedDoctor.getPassword();
+        UserInfo userInfo = new UserInfo(savedDoctor.getUsername(), savedDoctor.getPassword(), "doctor");
         
-        adminService.addDoctor( savedDoctor.getUsername(), savedDoctor.getPassword());
+        userService.createUser(userInfo);
 
         // Send email notification
         String subject = "Welcome to the Hospital Directory";
@@ -267,28 +262,25 @@ public class AdminDoctorController {
         return appointmentService.getAppointmentsCountByDoctor(from, to);
     }
     
-    @PostMapping("/api/admin/login")
-    public ResponseEntity<?> login(@RequestBody UserInfo user, HttpSession session) throws InvalidEntityException {
-        UserInfo authenticatedUser = adminService.authenticate(user);
+    // @PostMapping("/api/admin/login")
+    // public ResponseEntity<?> login(@RequestBody UserInfo user, HttpSession session) throws InvalidEntityException {
+    //     UserInfo authenticatedUser = adminService.authenticate(user);
 
-        if (authenticatedUser != null) {
-            // Create session and store user info
-            session.setAttribute("user", authenticatedUser);
-            System.out.println("User added to session: " + authenticatedUser);
-            return ResponseEntity.ok(authenticatedUser); // Send successful response
+    //     if (authenticatedUser != null) {
+    //         // Create session and store user info
+    //         session.setAttribute("user", authenticatedUser);
+    //         System.out.println("User added to session: " + authenticatedUser);
+    //         return ResponseEntity.ok(authenticatedUser); // Send successful response
             
            
 
-        } else {
-            // Return invalid credentials response
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                    .body("Invalid credentials");
-        }
+    //     } else {
+    //         // Return invalid credentials response
+    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    //                 .body("Invalid credentials");
+    //     }
         
-
-        
-    }
-    
+    // }
     
     
     @PostMapping("/api/admin/logout")
