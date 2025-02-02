@@ -48,7 +48,7 @@ public class AdminDoctorController {
    	private EmailService emailService;
     
     @Autowired
-    private UserService adminService;
+    private UserService userService;
 
    
 
@@ -91,7 +91,7 @@ public class AdminDoctorController {
         savedDoctor.getUsername();
         savedDoctor.getPassword();
         
-        adminService.addDoctor( savedDoctor.getUsername(), savedDoctor.getPassword());
+        userService.addDoctor( savedDoctor.getUsername(), savedDoctor.getPassword());
 
         // Send email notification
         String subject = "Welcome to the Hospital Directory";
@@ -269,7 +269,7 @@ public class AdminDoctorController {
     
     @PostMapping("/api/admin/login")
     public ResponseEntity<?> login(@RequestBody UserInfo user, HttpSession session) throws InvalidEntityException {
-        UserInfo authenticatedUser = adminService.authenticate(user);
+        UserInfo authenticatedUser = userService.authenticate(user);
 
         if (authenticatedUser != null) {
             // Create session and store user info

@@ -1,13 +1,15 @@
+
 package com.cac.model;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class Doctor {
 
     private int doctorId;
     private double consultationFees;
     private LocalDate dateOfJoining;
-     private Boolean surgeon;
+    private Boolean surgeon;
     private Boolean status;
     private int yearsOfExperience;
     private String contactNumber;
@@ -17,6 +19,11 @@ public class Doctor {
     private String location;
     private String qualification;
     private String specialization;
+    private String username;
+    private String password;
+
+    // List of appointments associated with the doctor
+    private List<Appointment> appointments;
 
     // Getters and setters
     public int getDoctorId() {
@@ -43,22 +50,6 @@ public class Doctor {
         this.dateOfJoining = dateOfJoining;
     }
 
-//    public Boolean getSurgeon() {
-//        return isSurgeon;
-//    }
-//
-//    public void setSurgeon(Boolean isSurgeon) {
-//        this.isSurgeon = isSurgeon;
-//    }
-
-    public Boolean getStatus() {
-        return status;
-    }
-
-    public void setStatus(Boolean status) {
-        this.status = status;
-    }
-    
     public Boolean getSurgeon() {
         return surgeon;
     }
@@ -67,6 +58,13 @@ public class Doctor {
         this.surgeon = surgeon;
     }
 
+    public Boolean getStatus() {
+        return status;
+    }
+
+    public void setStatus(Boolean status) {
+        this.status = status;
+    }
 
     public int getYearsOfExperience() {
         return yearsOfExperience;
@@ -131,4 +129,28 @@ public class Doctor {
     public void setSpecialization(String specialization) {
         this.specialization = specialization;
     }
+
+    public List<Appointment> getAppointments() {
+        return appointments;
+    }
+
+    public void setAppointments(List<Appointment> appointments) {
+        this.appointments = appointments;
+    }
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 }
+
