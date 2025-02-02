@@ -50,7 +50,11 @@ public class AdminDoctorController {
     @Autowired
     private UserService userService;
 
+   
+
  
+    
+  
     @GetMapping("/appointments/{doctorId}/filtered")
     public ResponseEntity<List<Appointment>> getFilteredAppointments(
             @PathVariable int doctorId,
@@ -84,9 +88,8 @@ public class AdminDoctorController {
         // Save doctor details
         Doctor savedDoctor = doctorService.addDoctor(doctor);
         
-        UserInfo userInfo = new UserInfo(savedDoctor.getUsername(), savedDoctor.getPassword(), "doctor");
         
-        userService.createUser(userInfo);
+        userService.addDoctor( savedDoctor.getUsername(), savedDoctor.getPassword());
 
         // Send email notification
         String subject = "Welcome to the Hospital Directory";
@@ -264,21 +267,21 @@ public class AdminDoctorController {
     
     // @PostMapping("/api/admin/login")
     // public ResponseEntity<?> login(@RequestBody UserInfo user, HttpSession session) throws InvalidEntityException {
-    //     UserInfo authenticatedUser = adminService.authenticate(user);
+    //     UserInfo authenticatedUser = userService.authenticate(user);
 
-    //     if (authenticatedUser != null) {
-    //         // Create session and store user info
-    //         session.setAttribute("user", authenticatedUser);
-    //         System.out.println("User added to session: " + authenticatedUser);
-    //         return ResponseEntity.ok(authenticatedUser); // Send successful response
+    // //     if (authenticatedUser != null) {
+    // //         // Create session and store user info
+    // //         session.setAttribute("user", authenticatedUser);
+    // //         System.out.println("User added to session: " + authenticatedUser);
+    // //         return ResponseEntity.ok(authenticatedUser); // Send successful response
             
            
 
-    //     } else {
-    //         // Return invalid credentials response
-    //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-    //                 .body("Invalid credentials");
-    //     }
+    // //     } else {
+    // //         // Return invalid credentials response
+    // //         return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+    // //                 .body("Invalid credentials");
+    // //     }
         
     // }
     

@@ -99,6 +99,10 @@ public class UserClientController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session, Model model) {
 		session.invalidate();
+
+		// Now send a request to the backend to invalidate the backend session
+        restTemplate.postForEntity(baseUrl+ "/api/admin/logout", null, String.class);
+
 		model.asMap().clear();
 		return "redirect:/";
 	}
@@ -231,4 +235,7 @@ public class UserClientController {
 		}
 
 	}
+
+
+	
 }

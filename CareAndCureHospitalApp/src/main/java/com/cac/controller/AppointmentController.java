@@ -212,25 +212,6 @@ public ResponseEntity<?> updateAppointment(@PathVariable int patientId, @PathVar
         // Return the updated appointment
         return ResponseEntity.ok(updatedAppointment);
     }
-
-    @GetMapping("/date/{date}")
-    public ResponseEntity<List<Appointment>> getAppointments(@PathVariable String date) {
-        LocalDate appointmentDate = LocalDate.parse(date); // This will be handled by global exception handler
-        List<Appointment> appointments = appointmentService.getAppointmentsByDate(appointmentDate);
-
-        if (appointments.isEmpty()) {
-            return new ResponseEntity<>(HttpStatus.NO_CONTENT); // Return 204 No Content if no appointments
-        }
-
-        return new ResponseEntity<>(appointments, HttpStatus.OK); // Return 200 OK with appointments
-    }
-
-    @GetMapping("/no-show/{startDate}/{endDate}")
-    public ResponseEntity<List<Patient>> getNoShowAppointments(@PathVariable String startDate, @PathVariable String endDate) {
-        List<Patient> noShows = appointmentService.getNoShowAppointments(LocalDate.parse(startDate), LocalDate.parse(endDate));
-
-        return new ResponseEntity<>(noShows, HttpStatus.OK);
-    }
     
 }
 

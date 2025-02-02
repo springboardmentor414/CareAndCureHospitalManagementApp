@@ -203,6 +203,8 @@ public class AppointmentClientController {
 		return gender == null || gender.isEmpty() || doctor.getGender().equalsIgnoreCase(gender);
 	}
 
+	
+
 	@GetMapping("/{patientId}/appointments/{doctorId}/schedule")
 	public String scheduleAppointment(@PathVariable Long patientId, @PathVariable Long doctorId, Model model) {
 
@@ -758,7 +760,7 @@ public class AppointmentClientController {
         if (role == null || !role.equalsIgnoreCase("ADMIN"))
             return "unauthorized";
         LocalDate selectedDate = date != null ? LocalDate.parse(date) : LocalDate.now();
-        String url = baseUrl+"/patient/0/appointments/date/" + selectedDate;
+        String url = baseUrl+"/api/admin/date/" + selectedDate;
         try {
             ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(
                     url,
@@ -784,19 +786,21 @@ public class AppointmentClientController {
 
 			if(searchDate.getStartDate()==null && searchDate.getEndDate()==null) {
 				model.addAttribute("errorMessage", "Select Date.");
-				return "noShowAppointments";
+				return "patientNoShowReport";
 			}
 
 			if(searchDate.getStartDate()==null){
 				model.addAttribute("errorMessage", "Select Start Date.");
-				return "noShowAppointments";
+				model.addAttribute("selectSearchDate", searchDate);
+				return "patientNoShowReport";
 			} 
 			if(searchDate.getEndDate()==null){
 				model.addAttribute("errorMessage", "Select end Date.");
-				return "noShowAppointments";
+				model.addAttribute("selectSearchDate", searchDate);
+				return "patientNoShowReport";
 			}
 
-        String url = baseUrl+ "/patient/0/appointments/no-show/"+searchDate.getStartDate()+"/"+searchDate.getEndDate();
+        String url = baseUrl+ "/api/admin/no-show/"+searchDate.getStartDate()+"/"+searchDate.getEndDate();
 
         try {
             ResponseEntity<List<Patient>> response = restTemplate.exchange(
@@ -810,7 +814,7 @@ public class AppointmentClientController {
 			System.out.println(noShowAppointments);
             model.addAttribute("noShowAppointments", noShowAppointments);
 			model.addAttribute("selectSearchDate", searchDate);
-			return "noShowAppointments";
+			return "patientNoShowReport";
         } catch (HttpStatusCodeException e) {
             model.addAttribute("errorMessage", "Unable to fetch no-show appointments: " + e.getResponseBodyAsString());
         }

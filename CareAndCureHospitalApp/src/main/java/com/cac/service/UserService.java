@@ -3,6 +3,7 @@ package com.cac.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.cac.exception.InvalidEntityException;
 import com.cac.exception.UserNotFoundException;
 import com.cac.dto.LoginDetails;
 import com.cac.model.Patient;
@@ -57,6 +58,20 @@ public class UserService {
 
     public void deleteUser(UserInfo userInfo) {
         userRepository.delete(userInfo);
+    }
+    
+    public UserInfo addDoctor(String username, String password) {
+        UserInfo user = new UserInfo(username, password, "doctor");
+        return userRepository.save(user);
+    }
+    
+    public UserInfo authenticate(UserInfo admin) throws InvalidEntityException {
+        // Check if the user exists with the given username and password
+        UserInfo result = userRepository.findByUsernameAndPassword(admin.getUsername(), admin.getPassword());
+        if (result == null) {
+            throw new InvalidEntityException("Invalid credentials");
+        }
+        return result;
     }
 
 }

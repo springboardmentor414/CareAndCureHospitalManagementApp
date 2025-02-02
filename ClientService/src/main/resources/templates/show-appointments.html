@@ -90,9 +90,9 @@
     <!-- Loop through the appointments list -->
     <tr th:each="appointment : ${appointments}">
         <td th:text="${appointment.appointmentId}"></td>
-        <td th:text="${appointment.appointmentDateTime}"></td>
-        <td th:text="${appointment.patientName}"></td>
-        <td th:text="${appointment.patientContactNumber}"></td>
+        <td th:text="${appointment.appointmentDate}"></td>
+        <td th:text="${appointment.patient.patientName}"></td>
+        <td th:text="${appointment.patient.contactNumber}"></td>
     </tr>
     </tbody>
 </table>
