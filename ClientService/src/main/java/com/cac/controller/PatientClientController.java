@@ -27,6 +27,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cac.model.UserInfo;
+import com.cac.model.Doctor;
 import com.cac.model.DoctorDTO;
 import com.cac.model.Patient;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -46,18 +47,15 @@ public class PatientClientController {
 	@Value("${base.url}")
 	private String baseUrl;
 
-	DoctorDTO doctorSession = null;
+	Doctor doctorSession = null;
 
 	Patient patientSession = null;
-
-	UserInfo userSession = null;
 
 	String role = null;
 
 	@ModelAttribute
-	public void getDoc(@SessionAttribute(name = "docObj", required = false)
-	DoctorDTO docObj) {
-	// System.out.println("Session obj doc "+docObj);
+	public void getDoc(@SessionAttribute(name = "doctorObj", required = false)
+	Doctor docObj) {
 	if (docObj != null) {
 	doctorSession = docObj;
 	}
@@ -69,22 +67,9 @@ public class PatientClientController {
 	}
 
 	@ModelAttribute
-	public void getUser(@SessionAttribute(name = "userObj", required = false) UserInfo userObj) {
-
-			userSession = userObj;
-	}
-
-	@ModelAttribute
 	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
 			this.role = userRole;
 			model.addAttribute("userRole", userRole);
-	}
-
-	@ModelAttribute
-	public String checkLogin(){
-		if(role==null)
-		return "redirect:/";
-		return null;
 	}
 
 	public boolean isAuthorized() {
@@ -93,8 +78,6 @@ public class PatientClientController {
 		}
 		return true;
 	}
-
-	
 
 	@GetMapping("/searchPatient")
 	public String searchPatient() {
@@ -165,6 +148,10 @@ public class PatientClientController {
 
 	@RequestMapping(value = "/findPatientById", method = RequestMethod.GET)
 	public String findPatientById(@RequestParam("patientId") int patientId, Model model) {
+
+		if (!isAuthorized())
+			return "unauthorized";
+
 		Patient patient = null;
 		String url = baseUrl + "/api/patient/viewPatient/" + patientId;
 
@@ -337,7 +324,9 @@ public class PatientClientController {
 			@RequestParam(value = "searchValue", required = false) String searchValue,
 			Model model) {
 		Patient patient = null;
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+
+		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+
 		String url = baseUrl + "/api/patient/deactivatePatient/" + patientId;
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/json");
@@ -373,7 +362,9 @@ public class PatientClientController {
 
 	@RequestMapping(value = "/viewAllPatient", method = RequestMethod.GET)
 	public String getAllPatient(Model model) {
+
 		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllPatient";
 		HttpHeaders headers = new HttpHeaders();
@@ -401,54 +392,11 @@ public class PatientClientController {
 		}
 	}
 
-	// @SuppressWarnings("unchecked")
-	// @PostMapping("/patientLogin")
-	// public String patientLogin(@RequestParam String username, @RequestParam String password, Model model,
-	// 		HttpSession session) {
-	// 	if (username.isEmpty()) {
-	// 		session.setAttribute("errorMessage", "Please enter Patient Id");
-	// 		return "redirect:/patientLoginForm";
-	// 	}
-	// 	if (password.isEmpty()) {
-	// 		session.setAttribute("errorMessage", "Please enter name as password");
-	// 		return "redirect:/patientLoginForm";
-	// 	}
-	// 	UserInfo details = new UserInfo(username, password, "patient");
-
-	// 	HttpHeaders headers = new HttpHeaders();
-	// 	headers.set("Content-Type", "application/json");
-
-	// 	HttpEntity<UserInfo> requestEntity = new HttpEntity<>(details, headers);
-
-	// 	String requestUrl = baseUrl + "/login";
-
-	// 	try {
-	// 		ResponseEntity<String> response = restTemplate.exchange(requestUrl, HttpMethod.POST, requestEntity,
-	// 				String.class);
-	// 		String message = response.getBody();
-	// 		session.setAttribute("message", message);
-	// 		session.setAttribute("patientId", Integer.parseInt(username));
-	// 		session.setAttribute("userRole", "patient");
-	// 		return "redirect:/patientPage"; // Admin-specific page
-
-	// 	} catch (HttpStatusCodeException e) {
-	// 		System.out.println(e.getMessage());
-	// 		try {
-	// 			ObjectMapper objectMapper = new ObjectMapper();
-	// 			Map<String, String> errorMessage = objectMapper.readValue(e.getResponseBodyAsString(), Map.class);
-
-	// 			session.setAttribute("errorMessage", errorMessage.get("error"));
-	// 		} catch (Exception parseException) {
-
-	// 			session.setAttribute("errorMessage", "An error occurred while parsing the validation errors.");
-	// 		}
-	// 	}
-	// 	return "redirect:/patientLoginForm"; // Redirect back to the login page in case of failure
-	// }
-
 	@GetMapping("/viewAllActivePatient")
 	public String getAllPatientByStatus(@RequestParam boolean active, Model model) {
+
 		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllPatientByStatus?active=" + active;
 		HttpHeaders headers = new HttpHeaders();
@@ -476,9 +424,12 @@ public class PatientClientController {
 		}
 	}
 
+	//view insurance details of patient
 	@GetMapping("/viewPatientInsuranceDetails")
 	public String ViewPatientInsurance(@RequestParam("patientId") int patientId, Model model) {
+
 		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+
 		Patient patient = null;
 		String url = baseUrl + "/api/patient/viewPatient/" + patientId;
 
@@ -510,7 +461,9 @@ public class PatientClientController {
 	//Get PatientList by InsuranceProvider
 	@GetMapping("/viewAllPatientByInsuranceProvider")
 	public String viewAllPatientByInsuranceProvider(@RequestParam String insuranceProvider, Model model) {
+
 		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllByInsuranceProvider?insuranceProvider=" + insuranceProvider;
 		HttpHeaders headers = new HttpHeaders();

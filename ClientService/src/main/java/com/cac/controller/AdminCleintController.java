@@ -34,7 +34,6 @@ public class AdminCleintController {
 	@ModelAttribute
 	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
 		if (userRole != null) {
-			System.out.println(role);
 			role = userRole;
 			model.addAttribute("userRole", userRole);
 		} 
@@ -51,7 +50,6 @@ public class AdminCleintController {
 	public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj){
 		if(adminObj!=null) {
 			this.adminSession=adminObj;
-			System.out.println(adminSession);
 		}
 	}
 

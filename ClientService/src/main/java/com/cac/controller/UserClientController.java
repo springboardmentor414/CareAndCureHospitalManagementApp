@@ -2,12 +2,10 @@ package com.cac.controller;
 
 import java.util.Map;
 
-import org.apache.catalina.connector.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,13 +13,11 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cac.model.AdminDto;
-import com.cac.model.DoctorDTO;
+import com.cac.model.Doctor;
 import com.cac.model.Patient;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -71,7 +67,6 @@ public class UserClientController {
 	public String adminLoginForm(HttpSession session, Model model) {
 		cleanUpSessionAttributes(session, model);
 		model.addAttribute("userInfo", new UserInfo());
-		model.addAttribute("userRole", "admin");
 		return "admin/adminLoginForm";
 	}
 
@@ -79,7 +74,6 @@ public class UserClientController {
 	public String doctorLoginForm(HttpSession session, Model model) {
 		cleanUpSessionAttributes(session, model);
 		model.addAttribute("userInfo", new UserInfo());
-		model.addAttribute("userRole", "doctor");
 		return "doctor/doctorLoginForm";
 	}
 
@@ -89,19 +83,12 @@ public class UserClientController {
 		return "patient/patientHomePage";
 	}
 
-	@GetMapping("/doctorHomePage")
-	public String doctorHomePage(HttpSession session, Model model) {
-		session.setAttribute("userRole", "doctor");
-		cleanUpSessionAttributes(session, model);
-		return "doctorHomePage";
-	}
-
 	@GetMapping("/logout")
 	public String logout(HttpSession session, Model model) {
 		session.invalidate();
 
 		// Now send a request to the backend to invalidate the backend session
-        restTemplate.postForEntity(baseUrl+ "/api/admin/logout", null, String.class);
+		restTemplate.postForEntity(baseUrl + "/api/admin/logout", null, String.class);
 
 		model.asMap().clear();
 		return "redirect:/";
@@ -125,12 +112,12 @@ public class UserClientController {
 
 			if (user.getRole().equalsIgnoreCase("doctor")) {
 
-				ResponseEntity<DoctorDTO> doctorObj = restTemplate.getForEntity(
-						baseUrl + "/api/doctors/" + Integer.parseInt(userInfo.getUsername()), DoctorDTO.class);
+				ResponseEntity<Doctor> doctorObj = restTemplate.getForEntity(
+						baseUrl + "/api/doctors/searchByUsername/" + user.getUsername(), Doctor.class);
 
-				session.setAttribute("message", "Welcome " + user.getUsername());
+				session.setAttribute("message", "Welcome " + doctorObj.getBody().getDoctorName());
 				session.setAttribute("userRole", "doctor");
-				session.setAttribute("doctorObj", doctorObj);
+				session.setAttribute("doctorObj", doctorObj.getBody());
 				return "redirect:/doctorHomePage";
 
 			} else if (user.getRole().equalsIgnoreCase("patient")) {
@@ -184,9 +171,6 @@ public class UserClientController {
 			model.addAttribute("message", message);
 			session.removeAttribute("message");
 		}
-		// session.removeAttribute("userRole");
-		// session.removeAttribute("userInfo");
-		// session.removeAttribute("object");
 	}
 
 	@GetMapping("/patientRegistration")
@@ -222,7 +206,7 @@ public class UserClientController {
 						});
 				model.addAttribute("validationErrors", errors);
 				return "patient/registration";
-			} else if(e.getStatusCode()==HttpStatus.NOT_FOUND){
+			} else if (e.getStatusCode() == HttpStatus.NOT_FOUND) {
 				Map<String, String> errors = objectMapper.readValue(e.getResponseBodyAsString(),
 						new TypeReference<Map<String, String>>() {
 						});
@@ -236,6 +220,4 @@ public class UserClientController {
 
 	}
 
-
-	
 }

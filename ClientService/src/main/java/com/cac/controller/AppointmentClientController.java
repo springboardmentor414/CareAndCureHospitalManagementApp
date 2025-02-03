@@ -3,6 +3,7 @@ package com.cac.controller;
 import com.cac.model.Appointment;
 import com.cac.model.AppointmentDTO;
 import com.cac.model.CancelAppointmentDTO;
+import com.cac.model.Doctor;
 import com.cac.model.DoctorDTO;
 import com.cac.model.Patient;
 import com.cac.model.RescheduleAppointmentDTO;
@@ -16,7 +17,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Controller;
@@ -34,8 +34,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -51,7 +49,7 @@ public class AppointmentClientController {
 	@Value("${base.url}")
     private String baseUrl;
 
-    DoctorDTO doctorSession = null;
+    Doctor doctorSession = null;
 
     Patient patientSession = null;
 
@@ -60,6 +58,12 @@ public class AppointmentClientController {
     @ModelAttribute
     public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj) {
         patientSession = patObj;
+
+    }
+
+	@ModelAttribute
+    public void getPatient(@SessionAttribute(name = "docObj", required = false) Doctor docObj) {
+        doctorSession = docObj;
 
     }
 

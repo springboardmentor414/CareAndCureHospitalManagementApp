@@ -42,15 +42,6 @@ import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpMethod;
-import org.springframework.util.LinkedMultiValueMap;
-import org.springframework.util.MultiValueMap;
-
-
-
-
-
 
 @Controller
 public class DoctorClientController {
@@ -61,37 +52,42 @@ public class DoctorClientController {
     @Autowired
     private RestTemplate restTemplate;
 
-    private String role =null;
+    private String role = null;
 
     private AdminDto adminSession = null;
 
+    private Doctor doctorSession = null;
+
     @ModelAttribute
-	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
-		if (userRole != null) {
-			role = userRole;
-			model.addAttribute("userRole", userRole);
-		} 
-	}
+    public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
+        if (userRole != null) {
+            role = userRole;
+            model.addAttribute("userRole", userRole);
+        }
+    }
 
-	@ModelAttribute
-	public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj){
-		if(adminObj!=null) {
-			this.adminSession=adminObj;
-		}
-	}
+    @ModelAttribute
+    public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj) {
+        if (adminObj != null) {
+            this.adminSession = adminObj;
+        }
+    }
 
-    //home for doctor management
+    @ModelAttribute
+    public void checkDoctorObject(@SessionAttribute(name = "doctorObj", required = false) Doctor doctor) {
+        if (doctor != null) {
+            this.doctorSession = doctor;
+        }
+    }
+
+    // home for doctor management
     @GetMapping("/doctorManagement")
     public String showLandingPage() {
         return "index"; // This maps to index.html
     }
 
-    // @GetMapping("/admin")
-    // public String showAdmin() {
-    //     return "admin"; // This maps to index.html
-    // }
-
-    //comment by nomit for patient and doctor integration don't uncomment until you need
+    // comment by nomit for patient and doctor integration don't uncomment until you
+    // need
 
     // @GetMapping("/adminPage")
     // public String showAdminPage() {
@@ -100,26 +96,24 @@ public class DoctorClientController {
 
     @GetMapping("/appointment")
     public String showDoctorsss(Model model) {
-    try {
-    // Fetch active doctors from backend API
-    ResponseEntity<Doctor[]> response =
-    restTemplate.getForEntity(backendUrl+"/showDoctors", Doctor[].class);
-    
-    // Check if the response is successful and has a body
-    if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null)
-    {
-    List<Doctor> doctors = Arrays.asList(response.getBody());
+        try {
+            // Fetch active doctors from backend API
+            ResponseEntity<Doctor[]> response = restTemplate.getForEntity(backendUrl + "/showDoctors", Doctor[].class);
 
-    model.addAttribute("doctors", doctors); // Pass doctors to the view
-    return "appointment"; // This maps to show-doctors.html
-    } else {
-    model.addAttribute("errorMessage", "Unable to fetch doctors. Please try againlater.");
-    }
-    } catch (Exception e) {
-    model.addAttribute("errorMessage", "Error occurred while fetching doctors: "
-    + e.getMessage());
-    }
-    return "error";
+            // Check if the response is successful and has a body
+            if (response.getStatusCode().is2xxSuccessful() && response.getBody() != null) {
+                List<Doctor> doctors = Arrays.asList(response.getBody());
+
+                model.addAttribute("doctors", doctors); // Pass doctors to the view
+                return "appointment"; // This maps to show-doctors.html
+            } else {
+                model.addAttribute("errorMessage", "Unable to fetch doctors. Please try againlater.");
+            }
+        } catch (Exception e) {
+            model.addAttribute("errorMessage", "Error occurred while fetching doctors: "
+                    + e.getMessage());
+        }
+        return "error";
     }
 
     @GetMapping("/admin")
@@ -127,53 +121,52 @@ public class DoctorClientController {
         return "admin"; // This maps to index.html
     }
 
-    //comment by nomit for patient and doctor integration don't uncomment
-    
+    // comment for patient and doctor integration don't uncomment doctor page can accessible from main page
+
     // @GetMapping("/adminPage")
     // public String showAdminPage(HttpSession session) {
-    //     // Check if the session contains an 'admin' attribute
-    //     Object admin = session.getAttribute("admin");
-        
-    //     if (admin == null) {
-    //         // If admin is not in session, redirect to login page
-    //         return "redirect:/admin";
-    //     }
+    // // Check if the session contains an 'admin' attribute
+    // Object admin = session.getAttribute("admin");
 
-    //     // Log session attributes for debugging (optional)
-    //     System.out.println("Admin session attribute: " + admin);
-
-    //     return "adminPage"; // Render adminPage.html if session is valid
+    // if (admin == null) {
+    // // If admin is not in session, redirect to login page
+    // return "redirect:/admin";
     // }
 
-    
+    // // Log session attributes for debugging (optional)
+    // System.out.println("Admin session attribute: " + admin);
+
+    // return "adminPage"; // Render adminPage.html if session is valid
+    // }
 
     // @PostMapping("/login")
-    // public String login(@RequestParam String username, @RequestParam String password, HttpSession session, Model model) {
-    //     // Create a request payload for Admin login
-    //     UserInfo admin = new UserInfo(username, password, "admin");
+    // public String login(@RequestParam String username, @RequestParam String
+    // password, HttpSession session, Model model) {
+    // // Create a request payload for Admin login
+    // UserInfo admin = new UserInfo(username, password, "admin");
 
-    //     // Send POST request to backend /api/admin/login endpoint
-    //     ResponseEntity<UserInfo> response = restTemplate.postForEntity("http://localhost:8082/api/admin/login", admin, UserInfo.class);
+    // // Send POST request to backend /api/admin/login endpoint
+    // ResponseEntity<UserInfo> response =
+    // restTemplate.postForEntity("http://localhost:8082/api/admin/login", admin,
+    // UserInfo.class);
 
-    //     if (response.getStatusCode().is2xxSuccessful()) {
-    //         // Successfully authenticated
-    //         session.setAttribute("admin", response.getBody()); // Set admin in session with the name "admin"
-    //         return "redirect:/adminPage"; // Redirect to admin page
-    //     } else {
-    //         // Failed authentication
-    //         model.addAttribute("errorMessage", "Invalid username or password");
-    //         return "admin"; // Return to login page with error message
-    //     }
+    // if (response.getStatusCode().is2xxSuccessful()) {
+    // // Successfully authenticated
+    // session.setAttribute("admin", response.getBody()); // Set admin in session
+    // with the name "admin"
+    // return "redirect:/adminPage"; // Redirect to admin page
+    // } else {
+    // // Failed authentication
+    // model.addAttribute("errorMessage", "Invalid username or password");
+    // return "admin"; // Return to login page with error message
+    // }
     // }
 
-    
     @GetMapping("/appointment-schedule")
     public String show() {
         return "redirect:https://calendar.google.com/calendar/u/0/r/week/2025/1/6?pli=1";
     }
-    
 
-    
     @GetMapping("/appointments/{doctorId}/filtered")
     public String showFilteredAppointments(
             @PathVariable int doctorId,
@@ -182,16 +175,16 @@ public class DoctorClientController {
             Model model) {
 
         // Construct the backend API URL
-        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate=" 
-                               + fromDate + "&toDate=" + toDate;
+        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
+                + fromDate + "&toDate=" + toDate;
 
         // Fetch filtered appointments from the backend API
-        Appointment[] filteredAppointmentsArray = 
-            restTemplate.getForObject(backendApiUrl, Appointment[].class);
+        Appointment[] filteredAppointmentsArray = restTemplate.getForObject(backendApiUrl, Appointment[].class);
 
         // Convert to a List
-        List<Appointment> filteredAppointments = 
-            filteredAppointmentsArray != null ? Arrays.asList(filteredAppointmentsArray) : List.of();
+        List<Appointment> filteredAppointments = filteredAppointmentsArray != null
+                ? Arrays.asList(filteredAppointmentsArray)
+                : List.of();
 
         // Add filtered appointments to the model
         model.addAttribute("appointments", filteredAppointments);
@@ -200,8 +193,6 @@ public class DoctorClientController {
         return "show-appointments";
     }
 
-    
-    
     @GetMapping("/appointments/{doctorId}")
     public String showAppointmentsByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
         // Check if the session contains an 'admin' attribute
@@ -215,9 +206,9 @@ public class DoctorClientController {
         String backendApiUrl = backendUrl + "/appointments/" + doctorId;
 
         // Fetch appointments from the backend API
-        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl,HttpMethod.GET,null,new ParameterizedTypeReference<List<Appointment>>() {
-					});
-
+        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Appointment>>() {
+                });
 
         // Add the appointments to the model
         model.addAttribute("appointments", appointmentsArray.getBody());
@@ -226,7 +217,6 @@ public class DoctorClientController {
         return "show-appointments";
     }
 
-    
     @GetMapping("/admin-add-doctor")
     public String showAddDoctorPage(Model model, HttpSession session) {
         // Check if the session contains an 'admin' attribute
@@ -245,12 +235,12 @@ public class DoctorClientController {
         model.addAttribute("doctor", doctor);
         return "admin-add-doctor"; // This maps to admin-add-doctor.html
     }
-    
+
     @PostMapping("/addDoctor")
-    public String handleAddDoctor(@ModelAttribute @Valid Doctor doctor, 
-                                   BindingResult result, 
-                                   Model model, 
-                                   HttpSession session) {
+    public String handleAddDoctor(@ModelAttribute @Valid Doctor doctor,
+            BindingResult result,
+            Model model,
+            HttpSession session) {
         // Check if the session contains an 'admin' attribute
         if (role == null || !role.equalsIgnoreCase("admin")) {
             // If admin is not in session, redirect to the login page
@@ -286,8 +276,6 @@ public class DoctorClientController {
 
         return "admin-add-doctor";
     }
-
-    
 
     @GetMapping("/showDoctorsforpats")
     public String showDoctorss(Model model) {
@@ -337,7 +325,7 @@ public class DoctorClientController {
 
     @GetMapping("/showAppointments")
     public String showAppointments(Model model, HttpSession session) {
-        
+
         if (role == null || !role.equalsIgnoreCase("admin")) {
             // If admin is not in session, redirect to the login page
             return "redirect:/adminLoginForm";
@@ -361,8 +349,6 @@ public class DoctorClientController {
         return "showAppointments"; // This maps to show-appointments.html
     }
 
-    
-    
     @GetMapping("/show-doctors-for-editing")
     public String showAllDoctors(Model model) {
         String backendUrll = "http://localhost:8082/api/doctors/all"; // Backend service URL
@@ -377,13 +363,6 @@ public class DoctorClientController {
 
         return "show-doctors-for-editing"; // Corresponding HTML template
     }
-    
-    
-
-    
-    
-    
-    
 
     @GetMapping("/disableDoctor/{doctorId}")
     public String disableDoctor(@PathVariable int doctorId, RedirectAttributes redirectAttributes) {
@@ -405,9 +384,7 @@ public class DoctorClientController {
 
         return "redirect:/showDoctors"; // Redirect to the list of active doctors
     }
-    
-    
-    
+
     @GetMapping("/showDoctorsforpatsbyspec")
     public String showDoctors(@RequestParam(required = false) String specialization, Model model) {
         String url = backendUrl + "/doctors";
@@ -424,9 +401,10 @@ public class DoctorClientController {
         model.addAttribute("doctors", doctors);
         return "show-doctorsbyspec"; // Frontend template for displaying doctors
     }
-    
+
     @GetMapping("/appointment-by-issue")
-    public String searchAppointmentsByIssue(@RequestParam(required = false) String reason, Model model, HttpSession session) {
+    public String searchAppointmentsByIssue(@RequestParam(required = false) String reason, Model model,
+            HttpSession session) {
         // Check if the session contains an 'admin' attribute
         if (role == null || !role.equalsIgnoreCase("admin")) {
             // If admin is not in session, redirect to the login page
@@ -451,9 +429,6 @@ public class DoctorClientController {
         return "appointment-by-issue";
     }
 
-
-
-
     @GetMapping("/doctor-by-name")
     public String searchDoctorByName(
             @RequestParam(value = "doctorName", required = false, defaultValue = "") String name, Model model) {
@@ -468,8 +443,7 @@ public class DoctorClientController {
         model.addAttribute("doctors", doctors);
         return "doctorbyname"; // Thymeleaf template
     }
-    
-    
+
     @GetMapping("/appointments/filteredByDoctor")
     public String getAppointmentsByDoctor(
             @RequestParam(value = "fromDate", required = false) String fromDate,
@@ -510,19 +484,6 @@ public class DoctorClientController {
         return "show-appointments-by-doctor";
     }
 
-    
-    // @PostMapping("/logout")
-    // public String logout(HttpSession session) {
-    //     // Invalidate the frontend session
-    //     session.invalidate();
-        
-    //     // Now send a request to the backend to invalidate the backend session
-    //     restTemplate.postForEntity(backendUrl+ "/api/admin/logout", null, String.class);
-        
-    //     // Redirect to the login page after logging out
-    //     return "redirect:/"; // Redirect to login page after logout
-    // }
-    
     @GetMapping("/edit/{doctorId}")
     public String editDoctor(@PathVariable int doctorId, Model model) {
         // Pass the doctor ID to the edit page; details will be fetched via JavaScript
@@ -530,14 +491,38 @@ public class DoctorClientController {
         return "edit-doctor"; // Corresponds to the edit-doctor.html template
     }
 
-    
-    
-    
+    // doctor home page view
+    @GetMapping("/doctorHomePage")
+    public String doctorHomePage(HttpSession session, Model model) {
 
-    
+        if (role == null) {
+            model.addAttribute("errorMessage", "Login Required !.");
+            return "redirect:/doctorLoginForm";
+        }
+        if (doctorSession == null || !role.equalsIgnoreCase("doctor")) {
+            model.addAttribute("errorMessage", "Not authorized to access this page.");
+            return "unauthorized";
+        }
 
+        cleanUpSessionAttributes(session, model);
 
+        Doctor doctor = (Doctor) session.getAttribute("docObj");
+        model.addAttribute("doctor", doctor);
+        return "doctor/doctorHomePage";
+    }
 
-
+    // to clean errorMessage and message of session attributes
+    private void cleanUpSessionAttributes(HttpSession session, Model model) {
+        String errorMessage = (String) session.getAttribute("errorMessage");
+        if (errorMessage != null) {
+            model.addAttribute("errorMessage", errorMessage);
+            session.removeAttribute("errorMessage");
+        }
+        String message = (String) session.getAttribute("message");
+        if (message != null) {
+            model.addAttribute("message", message);
+            session.removeAttribute("message");
+        }
+    }
 
 }

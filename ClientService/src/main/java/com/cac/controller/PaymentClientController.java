@@ -2,6 +2,7 @@ package com.cac.controller;
 
 import com.cac.model.*;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,12 +21,15 @@ import java.util.logging.Logger;
 public class PaymentClientController {
 
     private static final Logger logger = Logger.getLogger(PaymentClientController.class.getName());
-    private final String backendUrl = "http://localhost:8081/api/payments";
 
-    // @GetMapping("/")
-    // public String home() {
-    //     return "index";
-    // }
+    @Value("${base.url}")
+    private String backendUrl;
+
+    //payment home page added in main page as payement portal
+    @GetMapping("/paymentManagement")
+    public String home() {
+        return "indexPayment.html";
+    }
 
     @GetMapping("/payments")
     public String getAllPayments(Model model) {
