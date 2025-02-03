@@ -4,173 +4,223 @@
     <title>Payments</title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            background: linear-gradient(to bottom, #e3f2fd, #ffffff);
-            font-family: 'Roboto', sans-serif;
-            margin: 0;
-            padding: 0;
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+	
 
-        .container {
-            margin-top: 40px;
-            background-color: #ffffff;
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-            transition: transform 0.3s ease-in-out;
-        }
+	<style>
+	        body {
+	            background: linear-gradient(to bottom, #e3f2fd, #ffffff);
+	            font-family: 'Roboto', sans-serif;
+	            margin: 0;
+	            padding: 0;
+	        }
 
-        .container:hover {
-            transform: translateY(-5px);
-        }
+	        .container {
+	            margin-top: 40px;
+	            background-color: #ffffff;
+	            padding: 30px;
+	            border-radius: 12px;
+	            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+	            transition: transform 0.3s ease-in-out;
+	        }
 
-        h1 {
-            color: #007bff;
-            font-size: 2.5rem;
-            margin-bottom: 25px;
-            text-align: center;
-            font-weight: 700;
-        }
+	        .container:hover {
+	            transform: translateY(-5px);
+	        }
 
-        .form-inline {
-            justify-content: center;
-            margin-bottom: 30px;
-        }
+	        h1 {
+	            color: #007bff;
+	            font-size: 2.5rem;
+	            margin-bottom: 25px;
+	            text-align: center;
+	            font-weight: 700;
+	        }
 
-        .form-control {
-            width: 280px;
-            border-radius: 30px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-            border: 1px solid #ced4da;
-            padding: 10px 15px;
-            font-size: 1rem;
-        }
+	        .form-inline {
+	            justify-content: center;
+	            margin-bottom: 20px;
+	            display: flex;
+	            flex-wrap: wrap;
+	            align-items: center;
+	            gap: 15px;
+	        }
 
-        .form-control:focus {
-            border-color: #007bff;
-            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
-        }
+	        .form-group {
+	            display: flex;
+	            flex-wrap: wrap;
+	            align-items: center;
+	            gap: 10px;
+	            justify-content: center;
+	        }
 
-        .btn-outline-success, .btn-outline-primary {
-            border-radius: 30px;
-            padding: 10px 20px;
-            font-size: 1rem;
-            font-weight: 500;
-        }
+	        .form-group label {
+	            font-weight: 500;
+	            margin-right: 5px;
+	        }
 
-        .btn-outline-success:hover {
-            background-color: #28a745;
-            color: white;
-        }
+	        .form-control {
+	            width: auto;
+	            min-width: 300px;
+	            border-radius: 30px;
+	            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+	            border: 1px solid #ced4da;
+	            padding: 10px 15px;
+	            font-size: 1rem;
+	        }
 
-        .btn-outline-primary:hover {
-            background-color: #007bff;
-            color: white;
-        }
+	        .form-control:focus {
+	            border-color: #007bff;
+	            box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+	        }
 
-        .table {
-            border-radius: 12px;
-            overflow: hidden;
-        }
+	        .btn {
+	            border-radius: 30px;
+	            padding: 10px 20px;
+	            font-size: 1rem;
+	            font-weight: 500;
+	        }
 
-        .table thead {
-            background-color: #007bff;
-            color: white;
-        }
+	        .btn-outline-success:hover {
+	            background-color: #28a745;
+	            color: white;
+	        }
 
-        .table th, .table td {
-            text-align: center;
-            vertical-align: middle;
-            padding: 15px;
-            font-size: 1rem;
-        }
+	        .btn-outline-primary:hover {
+	            background-color: #007bff;
+	            color: white;
+	        }
 
-        .table-striped tbody tr:nth-of-type(odd) {
-            background-color: #f8f9fa;
-        }
+	        .table {
+	            border-radius: 12px;
+	            overflow: hidden;
+	            margin-top: 20px;
+	        }
 
-        .table-striped tbody tr:hover {
-            background-color: #e9ecef;
-            cursor: pointer;
-        }
+	        .table thead {
+	            background-color: #007bff;
+	            color: white;
+	        }
 
-        .status-success {
-            color: #28a745;
-            font-weight: bold;
-        }
+	        .table th, .table td {
+	            text-align: center;
+	            vertical-align: middle;
+	            padding: 15px;
+	            font-size: 1rem;
+	        }
 
-        .status-failed {
-            color: #dc3545;
-            font-weight: bold;
-        }
+	        .table-striped tbody tr:nth-of-type(odd) {
+	            background-color: #f8f9fa;
+	        }
 
-        .no-data-message {
-            color: #6c757d;
-            font-style: italic;
-            text-align: center;
-            margin-top: 20px;
-        }
+	        .table-striped tbody tr:hover {
+	            background-color: #e9ecef;
+	            cursor: pointer;
+	        }
 
-        .footer {
-            text-align: center;
-            margin-top: 40px;
-            padding: 15px;
-            background-color: #f8f9fa;
-            border-top: 1px solid #ddd;
-            font-size: 0.9rem;
-        }
+	        .status-success {
+	            color: #28a745;
+	            font-weight: bold;
+	        }
 
-        .footer p {
-            margin: 0;
-            color: #6c757d;
-        }
+	        .status-failed {
+	            color: #dc3545;
+	            font-weight: bold;
+	        }
 
-        .footer a {
-            color: #007bff;
-            text-decoration: none;
-        }
+	        .footer {
+	            text-align: center;
+	            margin-top: 40px;
+	            padding: 15px;
+	            background-color: #f8f9fa;
+	            border-top: 1px solid #ddd;
+	            font-size: 0.9rem;
+	        }
+	    </style>
 
-        .footer a:hover {
-            text-decoration: underline;
+    <script>
+        function validateDateRange(event) {
+            const startDate = document.querySelector('input[name="startDate"]').value;
+            const endDate = document.querySelector('input[name="endDate"]').value;
+
+            if (startDate && endDate) {
+                const start = new Date(startDate);
+                const end = new Date(endDate);
+
+                if (end < start) {
+                    event.preventDefault();
+                    document.getElementById('dateError').textContent = "End date must be after or equal to the start date.";
+                    return false;
+                }
+            }
+            document.getElementById('dateError').textContent = "";
+            return true;
         }
-    </style>
+    </script>
 </head>
+
 <body>
     <div class="container">
-        <h1>Payments Management</h1>
-      <form method="get" th:action="@{/search}" class="form-inline">
-            <!-- Bill ID Search -->
-            <input class="form-control mr-sm-2" type="search" name="billId" placeholder="Search by Bill ID" aria-label="Search">
-            
-            <!-- Payment Method Search -->
-            <input class="form-control mr-sm-2" type="search" name="paymentMethod" placeholder="Search by Payment Method" aria-label="Search">
+        <h1><i class="fas fa-hospital"></i> Payment Dashboard</h1>
 
-            <!-- Date Range Filters -->
-            <input class="form-control mr-sm-2" type="date" name="startDate" placeholder="Start Date" aria-label="Start Date">
-            <input class="form-control mr-sm-2" type="date" name="endDate" placeholder="End Date" aria-label="End Date">
-            
-            <!-- Search Button -->
-            <button class="btn btn-outline-success" type="submit">Search</button>
+		<form class="form-inline" id="searchForm" method="get" action="/searchbypayment">
+		    <div class="form-group">
+		        <div class="position-relative">
+		            <input class="form-control pl-5" type="search" name="billId" placeholder="Search by Bill ID" aria-label="Search">
+		            <i class="fas fa-search position-absolute" style="left: 15px; top: 50%; transform: translateY(-50%);"></i>
+		        </div>
+		    </div>
 
-            <!-- Show All Payments Button -->
-            <a th:href="@{/payments}" class="btn btn-outline-primary ml-2">Show All</a>
-        </form>
+		    <div class="form-group">
+		        <label for="paymentMethod">Payment Method:</label>
+		        <select class="form-control" name="paymentMethod" id="paymentMethod">
+		            <option value="" selected>Select Payment Method</option>
+		            <option value="Credit Card">Credit Card</option>
+		            <option value="Debit Card">Debit Card</option>
+		            <option value="Net Banking">Net Banking</option>
+		            <option value="UPI">UPI</option>
+		        </select>
+		    </div>
 
-        <!-- Payments Table -->
-        <table class="table table-striped mt-4" th:if="${payments != null and !payments.isEmpty()}">
+		    <div class="form-group">
+		        <label for="paymentStatus">Payment Status:</label>
+		        <select class="form-control" name="paymentStatus" id="paymentStatus">
+		            <option value="" selected>Select Payment Status</option>
+		            <option value="Success">Success</option>
+		            <option value="UnSuccess">UnSuccess</option>
+		        </select>
+		    </div>
+
+		    <button class="btn btn-outline-success" type="submit">Search</button>
+		    <a th:href="@{/payments}" class="btn btn-outline-primary ml-2">Show All</a>
+		</form>
+
+		<form method="get" class="form-inline mt-3" onsubmit="return validateDateRange(event)" th:action="@{/searchByPaymentDate}">
+		    <div class="form-group">
+		        <label for="startDate">Start Date:</label>
+		        <input class="form-control" type="date" name="startDate" id="startDate">
+		    </div>
+
+		    <div class="form-group">
+		        <label for="endDate">End Date:</label>
+		        <input class="form-control" type="date" name="endDate" id="endDate">
+		    </div>
+
+		    <button class="btn btn-outline-info" type="submit">Filter</button>
+		</form>
+
+        <div id="dateError" class="error-message mt-2"></div>
+
+        <table class="table table-striped" th:if="${payments != null and !payments.isEmpty()}">
             <thead>
                 <tr>
-                    <th>Bill ID</th>
-                    <th>Payment Method</th>
-                    <th>Amount</th>
-                    <th>Payment Date</th>
-                    <th>Payment Status</th>
+                    <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                    <th><i class="fas fa-wallet"></i> Amount</th>
+                    <th><i class="fas fa-calendar-alt"></i> Payment Date</th>
+                    <th><i class="fas fa-check-circle"></i> Payment Status</th>
                 </tr>
             </thead>
             <tbody>
                 <tr th:each="payment : ${payments}">
-                    <td th:text="${payment.bill.billId}"></td>
                     <td th:text="${payment.paymentMethod}"></td>
                     <td th:text="${payment.amount}"></td>
                     <td th:text="${payment.paymentDate}"></td>
@@ -179,13 +229,15 @@
             </tbody>
         </table>
 
-        <!-- No Data Message -->
-        <div class="no-data-message" th:if="${payments == null or payments.isEmpty()}">
-            No payments found. Please try different search criteria.
+        <div class="alert alert-warning" th:if="${payments == null or payments.isEmpty()}">
+            No payments found for the given search criteria.
         </div>
 
-        <!-- Back to Home Button -->
-        <a th:href="@{/}" class="btn btn-outline-secondary mt-4">Back to Home</a>
+        <div class="alert alert-danger" th:if="${errorMessage != null}">
+            <strong>Error!</strong> <span th:text="${errorMessage}"></span>
+        </div>
+
+        <a th:href="@{/}" class="btn btn-outline-secondary mt-4"><i class="fas fa-home"></i> Back to Home</a>
     </div>
 
     <div class="footer">
