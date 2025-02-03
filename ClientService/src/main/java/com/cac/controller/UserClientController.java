@@ -118,7 +118,9 @@ public class UserClientController {
 				session.setAttribute("message", "Welcome " + doctorObj.getBody().getDoctorName());
 				session.setAttribute("userRole", "doctor");
 				session.setAttribute("doctorObj", doctorObj.getBody());
-				return "redirect:/doctorHomePage";
+				
+				return "redirect:/doctorHomePage/" + user.getUsername();
+
 
 			} else if (user.getRole().equalsIgnoreCase("patient")) {
 

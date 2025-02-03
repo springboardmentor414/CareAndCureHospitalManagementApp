@@ -5,28 +5,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Doctor</title>
     <style>
-		body {
-		    font-family: Arial, sans-serif;
-		    background-color: #ADD8E6; /* Light Blue */
-		    margin: 0;
-		    padding: 0;
-		    display: flex;
-		    justify-content: center;
-		    align-items: flex-start; /* Change to flex-start for top alignment */
-		    height: 100vh;
-		    overflow-y: auto; /* Enable scrolling */
-		}
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #ADD8E6; /* Light Blue */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start; /* Change to flex-start for top alignment */
+            height: 100vh;
+            overflow-y: auto; /* Enable scrolling */
+        }
 
-		.container {
-		    background-color: white;
-		    padding: 20px;
-		    border-radius: 8px;
-		    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-		    width: 100%;
-		    max-width: 600px;
-		    margin: 20px; /* Add margin for spacing from the top */
-		    box-sizing: border-box;
-		}
+        .container {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+            margin: 20px; /* Add margin for spacing from the top */
+            box-sizing: border-box;
+        }
 
 
         h1 {
@@ -134,6 +134,8 @@
             document.getElementById("location").value = doctor.location;
             document.getElementById("dateOfJoining").value = doctor.dateOfJoining;
             document.getElementById("yearsOfExperience").value = doctor.yearsOfExperience;
+			document.getElementById("username").value = doctor.username;
+			document.getElementById("password").value = doctor.password;
             document.getElementById("status").checked = doctor.status;
             document.getElementById("surgeon").checked = doctor.surgeon;
             document.getElementById("gender").value = doctor.gender;
@@ -154,6 +156,8 @@
                 location: document.getElementById("location").value,
                 dateOfJoining: document.getElementById("dateOfJoining").value,
                 yearsOfExperience: document.getElementById("yearsOfExperience").value,
+				username:  document.getElementById("username").value,
+				password:  document.getElementById("password").value,
                 status: document.getElementById("status").checked,
                 surgeon: document.getElementById("surgeon").checked,
                 gender: document.getElementById("gender").value,
@@ -193,83 +197,95 @@
     </script>
 </head>
 <body>
-    <div class="container">
-        <h1>Edit Doctor</h1>
-        <!-- Hidden input to pass the doctor ID -->
-        <input type="hidden" id="doctorIdHidden" th:value="${doctorId}">
+<div class="container">
+    <h1>Edit Doctor</h1>
+    <!-- Hidden input to pass the doctor ID -->
+    <input type="hidden" id="doctorIdHidden" th:value="${doctorId}">
 
-        <form id="editDoctorForm">
-            <div class="input-group">
-                <label for="doctorId">Doctor ID:</label>
-                <input type="number" id="doctorId" readonly><br>
-            </div>
+    <form id="editDoctorForm">
+        <div class="input-group">
+            <label for="doctorId">Doctor ID:</label>
+            <input type="number" id="doctorId" readonly><br>
+        </div>
 
-            <div class="input-group">
-                <label for="doctorName">Doctor Name:</label>
-                <input type="text" id="doctorName" placeholder="Enter Doctor Name"><br>
-            </div>
+        <div class="input-group">
+            <label for="doctorName">Doctor Name:</label>
+            <input type="text" id="doctorName" placeholder="Enter Doctor Name"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="specialization">Specialization:</label>
-                <input type="text" id="specialization" placeholder="Enter Specialization"><br>
-            </div>
+        <div class="input-group">
+            <label for="specialization">Specialization:</label>
+            <input type="text" id="specialization" placeholder="Enter Specialization"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="qualification">Qualification:</label>
-                <input type="text" id="qualification" placeholder="Enter Qualification"><br>
-            </div>
+        <div class="input-group">
+            <label for="qualification">Qualification:</label>
+            <input type="text" id="qualification" placeholder="Enter Qualification"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="consultationFees">Consultation Fees:</label>
-                <input type="number" id="consultationFees" placeholder="Enter Consultation Fees"><br>
-            </div>
+        <div class="input-group">
+            <label for="consultationFees">Consultation Fees:</label>
+            <input type="number" id="consultationFees" placeholder="Enter Consultation Fees"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="contactNumber">Contact Number:</label>
-                <input type="text" id="contactNumber" placeholder="Enter Contact Number"><br>
-            </div>
+        <div class="input-group">
+            <label for="contactNumber">Contact Number:</label>
+            <input type="text" id="contactNumber" placeholder="Enter Contact Number"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="emailId">Email ID:</label>
-                <input type="email" id="emailId" placeholder="Enter Email ID"><br>
-            </div>
+        <div class="input-group">
+            <label for="emailId">Email ID:</label>
+            <input type="email" id="emailId" placeholder="Enter Email ID"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="location">Location:</label>
-                <input type="text" id="location" placeholder="Enter Location"><br>
-            </div>
+        <div class="input-group">
+            <label for="location">Location:</label>
+            <input type="text" id="location" placeholder="Enter Location"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="dateOfJoining">Date of Joining:</label>
-                <input type="date" id="dateOfJoining"><br>
-            </div>
+        <div class="input-group">
+            <label for="dateOfJoining">Date of Joining:</label>
+            <input type="date" id="dateOfJoining"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="yearsOfExperience">Years of Experience:</label>
-                <input type="number" id="yearsOfExperience" placeholder="Enter Years of Experience"><br>
-            </div>
+        <div class="input-group">
+            <label for="yearsOfExperience">Years of Experience:</label>
+            <input type="number" id="yearsOfExperience" placeholder="Enter Years of Experience"><br>
+        </div>
 
-            <div class="status-checkbox">
-                <label for="status">Status:</label>
-                <input type="checkbox" id="status"><br>
-            </div>
 
-            <div class="surgeon-checkbox">
-                <label for="surgeon">Surgeon:</label>
-                <input type="checkbox" id="surgeon"><br>
-            </div>
+        <div class="input-group">
+            <label for="username">username:</label>
+            <input type="text" id="username" placeholder="Enter username"><br>
+        </div>
 
-            <div class="input-group">
-                <label for="gender">Gender:</label>
-                <select id="gender">
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                </select><br>
-            </div>
+        <div class="input-group">
+            <label for="password">password:</label>
+            <input type="text" id="password" placeholder="Enter password"><br>
+        </div>
 
-            <button type="submit">Save</button>
-        </form>
-    </div>
+
+        <div class="status-checkbox">
+            <label for="status">Status:</label>
+            <input type="checkbox" id="status"><br>
+        </div>
+
+        <div class="surgeon-checkbox">
+            <label for="surgeon">Surgeon:</label>
+            <input type="checkbox" id="surgeon"><br>
+        </div>
+
+        <div class="input-group">
+            <label for="gender">Gender:</label>
+            <select id="gender">
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+            </select><br>
+        </div>
+
+        <button type="submit">Save</button>
+    </form>
+</div>
 </body>
 </html>

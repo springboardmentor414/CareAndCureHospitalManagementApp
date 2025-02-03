@@ -39,6 +39,33 @@
             background-color: #0056b3;
         }
 
+        /* Filter Form Styling */
+        .filter-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-form input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .filter-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-form button:hover {
+            background-color: #45a049;
+        }
+
         /* Table Styling */
         table {
             width: 100%;
@@ -66,24 +93,51 @@
             background-color: #f1f1f1;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Get the base URL up to "/appointments/1"
+            const baseUrl = window.location.origin + window.location.pathname.split("/").slice(0, 3).join("/");
+
+            // Update the form action dynamically with the base URL
+            const form = document.querySelector(".filter-form form");
+            form.action = `${baseUrl}/filtered`;
+
+            // Debugging
+            console.log("Base URL for form action:", baseUrl);
+            console.log("Form action updated to:", form.action);
+        });
+    </script>
 </head>
 <body>
 
 <!-- Back Button (Top Left) -->
 <div class="back-button">
-    <a th:href="@{/showAppointments}">Back</a>
+    <a href="http://localhost:9093/showAppointments">Back</a>
 </div>
 
 <h1>Appointments for Doctor</h1>
+
+<!-- Filter Form -->
+<div class="filter-form">
+    <form method="get">
+        <label for="fromDate">From: </label>
+        <input type="date" id="fromDate" name="fromDate" required />
+        
+        <label for="toDate">To: </label>
+        <input type="date" id="toDate" name="toDate" required />
+        
+        <button type="submit">Filter</button>
+    </form>
+</div>
 
 <!-- Appointments Table -->
 <table>
     <thead>
     <tr>
         <th>Appointment ID</th>
-        <th>Appointment Date & Time</th>
-        <th>Patient Name</th>
-        <th>Patient Contact</th>
+        <th>Appointment Date</th>
+        <th>Appointment Time</th>
+        <th>Reason</th>
     </tr>
     </thead>
     <tbody>
@@ -91,10 +145,12 @@
     <tr th:each="appointment : ${appointments}">
         <td th:text="${appointment.appointmentId}"></td>
         <td th:text="${appointment.appointmentDate}"></td>
-        <td th:text="${appointment.patient.patientName}"></td>
-        <td th:text="${appointment.patient.contactNumber}"></td>
+        <td th:text="${appointment.appointmentTime}"></td>
+        <td th:text="${appointment.reason}"></td>
+     
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

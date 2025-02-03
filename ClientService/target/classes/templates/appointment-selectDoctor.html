@@ -311,8 +311,8 @@ body {
 			<!-- Iterate over doctors and apply filtering using Thymeleaf conditions -->
 			<div th:each="doctor : ${doctors}">
 				<div class="doctor-header">
-					<h3 th:text="${doctor.name}">Doctor Name</h3>
-					<p th:text="${doctor.specialty}">Specialty</p>
+					<h3 th:text="${doctor.doctorName}">Doctor Name</h3>
+					<p th:text="${doctor.specialization}">Specialty</p>
 				</div>
 				<div class="doctor-body">
 					<div class="doctor-info">
@@ -326,7 +326,7 @@ body {
 					</div>
 					<div class="doctor-actions">
 						<button class="btn btn-primary"
-							th:onclick="|window.location.href='/patient/${patientId}/appointments/${doctor.id}/schedule'|">
+							th:onclick="|window.location.href='/patient/${patientId}/appointments/${doctor.doctorId}/schedule'|">
 							<i class="fas fa-calendar-alt"></i> Book Appointment
 						</button>
 					</div>

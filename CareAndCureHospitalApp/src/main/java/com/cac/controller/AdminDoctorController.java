@@ -402,7 +402,97 @@ public class AdminDoctorController {
 
         return new ResponseEntity<>(savedDoctor, HttpStatus.OK);
     }
-
+    
+    @GetMapping("doctor-edit/{doctorId}")
+    public ResponseEntity<Doctor> getDoctorrrById(@PathVariable int doctorId) {
+        Doctor doctor = doctorService.getDoctorById(doctorId);
+        if (doctor != null) {
+            return ResponseEntity.ok(doctor);
+        }
+        return ResponseEntity.notFound().build();
+    }
+    
+   
+//    @PutMapping("/doctor-edit/{doctorId}")
+//    public ResponseEntity<?> updateeDoctor(@Valid @RequestBody Doctor updatedDoctor, @PathVariable int doctorId, BindingResult result) {
+//        // Validate input
+//        if (result.hasErrors()) {
+//            // Collect field-specific validation errors into a map
+//            Map<String, String> errors = result.getFieldErrors().stream()
+//                    .collect(Collectors.toMap(
+//                            FieldError::getField,
+//                            FieldError::getDefaultMessage
+//                    ));
+//
+//            return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
+//        }
+//
+//        // Fetch the existing doctor by ID
+//        Doctor existingDoctor = doctorService.getDoctorById(doctorId);
+//
+//        if (existingDoctor == null) {
+//            throw new DoctorNotFoundException("Doctor with ID " + doctorId + " not found!");
+//        }
+//
+//        // Prepare a string to collect details of updated fields
+//        StringBuilder updatedFields = new StringBuilder();
+//
+//        // Compare fields and update existingDoctor
+//        if (updatedDoctor.getDoctorName() != null && !updatedDoctor.getDoctorName().equals(existingDoctor.getDoctorName())) {
+//            existingDoctor.setDoctorName(updatedDoctor.getDoctorName());
+//            updatedFields.append("Doctor Name updated to: ").append(updatedDoctor.getDoctorName()).append("\n");
+//        }
+//       
+//        if (updatedDoctor.getContactNumber() != null && !updatedDoctor.getContactNumber().equals(existingDoctor.getContactNumber())) {
+//            existingDoctor.setContactNumber(updatedDoctor.getContactNumber());
+//            updatedFields.append("Contact Number updated to: ").append(updatedDoctor.getContactNumber()).append("\n");
+//        }
+//        if (updatedDoctor.getEmailId() != null && !updatedDoctor.getEmailId().equals(existingDoctor.getEmailId())) {
+//            existingDoctor.setEmailId(updatedDoctor.getEmailId());
+//            updatedFields.append("Email ID updated to: ").append(updatedDoctor.getEmailId()).append("\n");
+//        }
+//        if (updatedDoctor.getGender() != null && !updatedDoctor.getGender().equals(existingDoctor.getGender())) {
+//            existingDoctor.setGender(updatedDoctor.getGender());
+//            updatedFields.append("Gender updated to: ").append(updatedDoctor.getGender()).append("\n");
+//        }
+//        if (updatedDoctor.getLocation() != null && !updatedDoctor.getLocation().equals(existingDoctor.getLocation())) {
+//            existingDoctor.setLocation(updatedDoctor.getLocation());
+//            updatedFields.append("Location updated to: ").append(updatedDoctor.getLocation()).append("\n");
+//        }
+//       
+//       
+//       
+//        if (updatedDoctor.getPassword() != null && !updatedDoctor.getPassword().equals(existingDoctor.getPassword())) {
+//            existingDoctor.setPassword(updatedDoctor.getPassword());
+//            updatedFields.append("Password updated to: ").append(updatedDoctor.getPassword()).append("\n");
+//        }
+//       
+//
+//        // Save the updated doctor details
+//        Doctor savedDoctor = doctorService.updateDoctor(doctorId, existingDoctor);
+//
+//        // Send an email with the updated details
+//        String subject = "Hospital Directory Update";
+//        String body = "Dear Dr. " + savedDoctor.getDoctorName() + ",\n\n"
+//                    + "The following details in your profile have been updated:\n\n"
+//                    + updatedFields.toString()
+//                    + "\nRegards,\nHospital Management Team";
+//
+//        try {
+//            emailService.sendEmail(savedDoctor.getEmailId(), subject, body);
+//        } catch (Exception e) {
+//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+//                                 .body("Doctor details updated successfully, but failed to send notification email.");
+//        }
+//
+//        return new ResponseEntity<>(savedDoctor, HttpStatus.OK);
+//    }
+//
+//    @GetMapping("/details/{doctorId}")
+//    public ResponseEntity<Doctor> getDoctorrById(@PathVariable int doctorId) {
+//        Doctor doctor = doctorService.getDoctorById(doctorId); // Assume this always exists
+//        return ResponseEntity.ok(doctor); // Return HTTP 200 with doctor details
+//    }
     
     
     

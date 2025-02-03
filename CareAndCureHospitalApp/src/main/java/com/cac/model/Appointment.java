@@ -60,6 +60,78 @@ public class Appointment {
   public  void  setMyStatues(String s){
     this.status=s;
   }
+public int getAppointmentId() {
+	return appointmentId;
+}
+public void setAppointmentId(int appointmentId) {
+	this.appointmentId = appointmentId;
+}
+public LocalDate getAppointmentDate() {
+	return appointmentDate;
+}
+public void setAppointmentDate(LocalDate appointmentDate) {
+	this.appointmentDate = appointmentDate;
+}
+public LocalTime getAppointmentTime() {
+	return appointmentTime;
+}
+public void setAppointmentTime(LocalTime appointmentTime) {
+	this.appointmentTime = appointmentTime;
+}
+public String getStatus() {
+	return status;
+}
+public void setStatus(String status) {
+	this.status = status;
+}
+public String getReason() {
+	return reason;
+}
+public void setReason(String reason) {
+	this.reason = reason;
+}
+public String getReasonOfCancellation() {
+	return reasonOfCancellation;
+}
+public void setReasonOfCancellation(String reasonOfCancellation) {
+	this.reasonOfCancellation = reasonOfCancellation;
+}
+public Patient getPatient() {
+	return patient;
+}
+public void setPatient(Patient patient) {
+	this.patient = patient;
+}
+public Doctor getDoctor() {
+	return doctor;
+}
+public void setDoctor(Doctor doctor) {
+	this.doctor = doctor;
+}
+public String getDoctorName() {
+	return doctorName;
+}
+public void setDoctorName(String doctorName) {
+	this.doctorName = doctorName;
+}
+public Integer getDoctorId() {
+	return doctorId;
+}
+public void setDoctorId(Integer doctorId) {
+	this.doctorId = doctorId;
+}
+public String getDoctorPhoneNumber() {
+	return doctorPhoneNumber;
+}
+public void setDoctorPhoneNumber(String doctorPhoneNumber) {
+	this.doctorPhoneNumber = doctorPhoneNumber;
+}
+public String getSpecialty() {
+	return specialty;
+}
+public void setSpecialty(String specialty) {
+	this.specialty = specialty;
+}
 
 }
 

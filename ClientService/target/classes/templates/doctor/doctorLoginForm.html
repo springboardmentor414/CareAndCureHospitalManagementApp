@@ -186,15 +186,41 @@
 
             <form th:action="@{/login}" th:object="${userInfo}" th:method="post">
                 <label for="username">Username :</label>
-                <input type="text" id="username" name="username" th:field="*{username}" placeholder="Enter Your Username" required>
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter Your Password" th:field="*{password}" required>
-                <input type="hidden" th:field="*{role}" value="doctor">
-                <div style=" display: flex; gap: 10px;">
-                    <button type="submit">Login</button>
-                    <button type="button" onclick="window.location.href='/'">Back</button>
+                <input
+                  type="text"
+                  id="username"
+                  name="username"
+                  th:field="*{username}"
+                  placeholder="Enter here...."
+                  required
+                />
+                <div
+                  class="error-message"
+                  th:if="${validationErrors != null and validationErrors.containsKey('username')}"
+                >
+                  <p th:text="${validationErrors['username']}"></p>
                 </div>
-            </form>
+                <label for="password">Password:</label>
+                <input
+                  type="password"
+                  id="password"
+                  name="password"
+                  th:field="*{password}"
+                  placeholder="Enter here...."
+                  required
+                />
+                <div
+                  class="error-message"
+                  th:if="${validationErrors != null and validationErrors.containsKey('password')}"
+                >
+                  <p th:text="${validationErrors['password']}"></p>
+                </div>
+                <input type="hidden" name="role" value="doctor" />
+                <div style="display: flex; gap: 10px">
+                  <button type="submit">Login</button>
+                  <button type="button" onclick="history.back()">Back</button>
+                </div>
+              </form>
         </div>
     </div>
 </body>
