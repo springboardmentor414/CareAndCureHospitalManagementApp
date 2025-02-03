@@ -2,27 +2,37 @@ package com.cac.model;
 
 import java.sql.Date;
 
+import com.cac.model.Bill;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import jakarta.persistence.*;
 
 @Entity
 public class Payment {
 
+	 @Id
+	 private String razorpayOrderId;
+
 	@ManyToOne
     @JoinColumn(name = "billid", nullable = false)
+	@JsonBackReference
     private Bill bill;
+	
+	/*@OneToOne(mappedBy = "appointment")
+	@JsonBackReference
+	private Bill bill;*/
 
     private String paymentMethod;
     private Double amount;
     private String paymentStatus;
     private Date paymentDate;
-    @Id
-    private String razorpayOrderId;
+   
     private String currency;
 
     // Getters and setters
    
 
-    public Bill getBill() {
+   public Bill getBill() {
         return bill;
     }
 
@@ -77,4 +87,5 @@ public class Payment {
     public void setCurrency(String currency) {
         this.currency = currency;
     }
+
 }
