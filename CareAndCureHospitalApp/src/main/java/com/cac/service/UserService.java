@@ -3,11 +3,12 @@ package com.cac.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.cac.exception.InvalidEntityException;
 import com.cac.exception.UserNotFoundException;
 import com.cac.dto.LoginDetails;
+import com.cac.model.Doctor;
 import com.cac.model.Patient;
 import com.cac.model.UserInfo;
+import com.cac.repository.DoctorRepository;
 import com.cac.repository.PatientRepository;
 import com.cac.repository.UserRepository;
 
@@ -19,6 +20,9 @@ public class UserService {
 
     @Autowired
     private PatientRepository patientRepository;
+
+    @Autowired
+    private DoctorRepository doctorRepository;
 
     public UserInfo createUser(UserInfo userInfo) throws UserNotFoundException {
         userInfo.setRole(userInfo.getRole().toUpperCase());
@@ -48,6 +52,10 @@ public class UserService {
                 Patient patient = patientRepository.findById(Integer.parseInt(loginDetails.getUsername())).orElseThrow(()->new UserNotFoundException("Patient Not Found with Id : "+ loginDetails.getUsername()));
                 if(!patient.isActive()) throw new UserNotFoundException("Your account is deactivated .Please contact to Care and Cure.");
             } 
+            if(loginDetails.getRole().equalsIgnoreCase("doctor")){
+                Doctor doctor = doctorRepository.findByUsername(loginDetails.getUsername()).orElseThrow(()->new UserNotFoundException("Doctor Not Found with username : "+ loginDetails.getUsername()));
+                if(!doctor.getStatus()) throw new UserNotFoundException("Your account is deactivated .Please contact to Care and Cure.");
+            } 
 
             return userInfo;
         }
@@ -61,17 +69,8 @@ public class UserService {
     }
     
     public UserInfo addDoctor(String username, String password) {
-        UserInfo user = new UserInfo(username, password, "doctor");
+        UserInfo user = new UserInfo(username, password, "DOCTOR");
         return userRepository.save(user);
-    }
-    
-    public UserInfo authenticate(UserInfo admin) throws InvalidEntityException {
-        // Check if the user exists with the given username and password
-        UserInfo result = userRepository.findByUsernameAndPassword(admin.getUsername(), admin.getPassword());
-        if (result == null) {
-            throw new InvalidEntityException("Invalid credentials");
-        }
-        return result;
     }
 
 }

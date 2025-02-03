@@ -4,18 +4,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.cac.dto.DoctorDTO;
 import com.cac.model.Doctor;
 import com.cac.service.DoctorService;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.stream.Collectors;
+import org.springframework.web.bind.annotation.GetMapping;
+
 
 @RestController
 @RequestMapping("/api/doctors")
-// @CrossOrigin(origins = "http://localhost:8081")
 public class DoctorController {
 
     @Autowired
@@ -34,4 +31,11 @@ public class DoctorController {
 
         return ResponseEntity.ok(doctor);
     }
+
+    @GetMapping("/searchByUsername/{username}")
+    public ResponseEntity<Doctor> getMethodName(@PathVariable String username) {
+        Doctor doctor = doctorService.getDoctorByUsername(username);
+        return ResponseEntity.ok(doctor);
+    }
+    
 }

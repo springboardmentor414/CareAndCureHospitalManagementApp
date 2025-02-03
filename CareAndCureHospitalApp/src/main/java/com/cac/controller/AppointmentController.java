@@ -84,7 +84,6 @@ public ResponseEntity<?> createAppointment(@PathVariable int patientId, @Request
     appointment.setDoctor(doctor);
     appointment.setDoctorName(doctor.getDoctorName());
     Appointment savedAppointment = appointmentService.createAppointment(appointment);
-     System.out.println(savedAppointment.getStatus());
     return ResponseEntity.status(HttpStatus.CREATED).body(savedAppointment);
 }
 

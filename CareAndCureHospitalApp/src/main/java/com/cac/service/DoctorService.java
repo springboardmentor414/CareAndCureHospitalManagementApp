@@ -187,5 +187,10 @@ public class DoctorService {
 		return null; // Return null if doctor not found
 	}
 
+    public Doctor getDoctorByUsername(String username) {
+        
+      return doctorRepository.findByUsername(username).orElseThrow(()->new UserNotFoundException("Doctor not found with username : "+username));
+    }
+
     
 }

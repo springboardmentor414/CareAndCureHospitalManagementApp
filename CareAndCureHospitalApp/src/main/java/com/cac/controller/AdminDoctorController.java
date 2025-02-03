@@ -1,7 +1,6 @@
 package com.cac.controller;
 
 import com.cac.exception.DoctorNotFoundException;
-import com.cac.exception.InvalidEntityException;
 import com.cac.model.UserInfo;
 
 
@@ -22,7 +21,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
-import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.ui.Model;
 

@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import com.cac.exception.UserNotFoundException;
-import com.cac.model.Appointment;
 import com.cac.model.Patient;
 import com.cac.service.PatientService;
 

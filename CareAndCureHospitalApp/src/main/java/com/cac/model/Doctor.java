@@ -70,6 +70,7 @@ public class Doctor {
     // New fields: username and password
     @NotBlank(message = "Username cannot be blank")
     @Size(min = 4, max = 20, message = "Username must be between 4 and 20 characters")
+    @Column(unique = true)
     private String username;
 
     @NotBlank(message = "Password cannot be blank")
