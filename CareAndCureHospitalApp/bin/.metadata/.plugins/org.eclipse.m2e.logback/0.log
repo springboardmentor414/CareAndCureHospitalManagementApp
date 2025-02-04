@@ -1,0 +1,9 @@
+2025-02-01 17:52:00,738 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is not available. Remote download required.
+2025-02-01 17:52:32,984 [Worker-10: Building] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.cac:ClientService:0.0.1-SNAPSHOT @ /Users/dhruvsachdeva/Desktop/git_clone/CareAndCureHospitalApp/ClientService/pom.xml.
+2025-02-01 17:52:33,595 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src/main/resources to target/classes
+2025-02-01 17:52:33,602 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 43 resources from src/main/resources to target/classes
+2025-02-01 17:52:33,618 [Worker-10: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory /Users/dhruvsachdeva/Desktop/git_clone/CareAndCureHospitalApp/ClientService/src/test/resources
+2025-02-01 17:52:33,934 [Worker-2: Updating Maven Dependencies] INFO  o.e.m.c.i.l.LifecycleMappingFactory - Using org.eclipse.m2e.jdt.JarLifecycleMapping lifecycle mapping for MavenProject: com.cac:ClientService:0.0.1-SNAPSHOT @ /Users/dhruvsachdeva/Desktop/git_clone/CareAndCureHospitalApp/ClientService/pom.xml.
+2025-02-01 17:52:34,946 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src/main/resources to target/classes
+2025-02-01 17:52:34,952 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 43 resources from src/main/resources to target/classes
+2025-02-01 17:52:34,966 [Worker-20: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory /Users/dhruvsachdeva/Desktop/git_clone/CareAndCureHospitalApp/ClientService/src/test/resources

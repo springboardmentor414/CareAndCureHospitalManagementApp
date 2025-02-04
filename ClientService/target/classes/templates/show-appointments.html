@@ -39,6 +39,33 @@
             background-color: #0056b3;
         }
 
+        /* Filter Form Styling */
+        .filter-form {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-form input {
+            padding: 10px;
+            margin: 5px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        .filter-form button {
+            padding: 10px 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        .filter-form button:hover {
+            background-color: #45a049;
+        }
+
         /* Table Styling */
         table {
             width: 100%;
@@ -101,19 +128,32 @@
 
 <!-- Back Button (Top Left) -->
 <div class="back-button">
-    <a href="http://localhost:8081/showAppointments">Back</a>
+    <a href="http://localhost:9093/showAppointments">Back</a>
 </div>
 
 <h1>Appointments for Doctor</h1>
+
+<!-- Filter Form -->
+<div class="filter-form">
+    <form method="get">
+        <label for="fromDate">From: </label>
+        <input type="date" id="fromDate" name="fromDate" required />
+        
+        <label for="toDate">To: </label>
+        <input type="date" id="toDate" name="toDate" required />
+        
+        <button type="submit">Filter</button>
+    </form>
+</div>
 
 <!-- Appointments Table -->
 <table>
     <thead>
     <tr>
         <th>Appointment ID</th>
-        <th>Appointment Date & Time</th>
-        <th>Patient Name</th>
-        <th>Patient Contact</th>
+        <th>Appointment Date</th>
+        <th>Appointment Time</th>
+        <th>Reason</th>
     </tr>
     </thead>
     <tbody>
@@ -126,5 +166,6 @@
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

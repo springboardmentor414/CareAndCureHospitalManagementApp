@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bill Management</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: "Roboto", Arial, sans-serif;
+            background: linear-gradient(to right, #2c3e50, #4ca1af);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0px 10px 25px rgba(0, 0, 0, 0.2);
+            width: 700px;
+            box-sizing: border-box;
+            animation: fadeIn 0.8s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            color: #2c3e50;
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        h3 {
+            text-align: center;
+            color: #4ca1af;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .form-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        input, select {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.3s ease-in-out;
+        }
+
+        input:focus, select:focus {
+            border-color: #4ca1af;
+            box-shadow: 0 0 5px rgba(76, 161, 175, 0.5);
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            grid-column: span 2;
+        }
+
+        button {
+            padding: 12px 18px;
+            font-size: 16px;
+            color: #fff;
+            background-color: #4ca1af;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.3s ease-in-out;
+        }
+
+        button:hover {
+            background-color: #357f8e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bill Management</h1>
+        <h3>Add Bill Details</h3>
+        
+        <form th:action="@{/bills}" id="dynamicForm" th:object="${bill}" method="post">
+            <div class="form-container">
+                <div class="form-group">
+                    <label for="appointmentId">Appointment ID:</label>
+                    <input type="number" id="appId" name="appointment.appointmentId" placeholder="Enter Appointment ID" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="billDate">Bill Date:</label>
+                    <input type="date" name="billDate" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="consultationFees">Consultation Fees:</label>
+                    <input type="number" name="consultationFees" placeholder="Enter Consultation Fees" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="medicineFees">Medicine Fees:</label>
+                    <input type="number" name="medicineFees" placeholder="Enter Medicine Fees" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="testCharges">Test Charges:</label>
+                    <input type="number" name="testCharges" placeholder="Enter Test Charges" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="miscCharges">Miscellaneous Charges:</label>
+                    <input type="number" name="miscellaneousCharge" placeholder="Enter Miscellaneous Charges" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="isInsuranceApplicable">Is Insurance Applicable:</label>
+                    <select name="isInsuranceApplicable" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+				<!--
+                <div class="form-group">
+                    <label for="discountPercentage">Discount Percentage:</label>
+                    <input type="number" name="discountPercentage" placeholder="Enter Discount %" step="0.01" required>
+                </div>
+                
+				
+                <div class="form-group">
+                    <label for="tax">Tax:</label>
+                    <select name="tax" required>
+                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+                -->
+                <div class="form-group">
+                    <label for="description">Description:</label>
+                    <input type="text" name="description" placeholder="Enter Description" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="paymentStatus">Payment Status:</label>
+                    <select name="paymentstatus" required>
+						<option value="unpaid">Unpaid</option>
+                        <option value="paid">Paid</option>
+
+                        <option value="partially_paid">Partially Paid</option>
+                    </select>
+                </div>
+				
+				<!--
+                
+                <div class="form-group">
+                    <label for="totalAmount">Total Amount:</label>
+                    <input type="number" name="totalamount" placeholder="Enter Total Amount" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="finalAmount">Final Amount:</label>
+                    <input type="number" name="finalamount" placeholder="Enter Final Amount" required>
+                </div>
+				-->
+            </div>
+            
+            <div class="button-row">
+                <button type="button" onclick="submitForm()">Add Bill</button>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function submitForm() {
+            const appointmentId = document.getElementsByName('appointment.appointmentId')[0].value;
+            const form = document.getElementById('dynamicForm');
+            form.action = `/bills/${appointmentId}`;
+            form.submit();
+        }
+    </script>
+</body>
+</html>

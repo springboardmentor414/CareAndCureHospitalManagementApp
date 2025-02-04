@@ -231,6 +231,9 @@ h1 {
 			<button id="scheduleButton" class="sidebar-button"
 				th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">Schedule
 				Appointment</button>
+
+                <button th:if="${userRole=='patient'}" onclick="window.location.href='/patientPage'">Back</button>
+                <button th:if="${userRole=='admin'}" onclick="window.location.href='/adminPatientPage'">Back to Home</button>
 		</div>
 
 		<div class="content">
