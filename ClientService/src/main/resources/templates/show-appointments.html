@@ -95,16 +95,32 @@
     </style>
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            // Get the base URL up to "/appointments/1"
-            const baseUrl = window.location.origin + window.location.pathname.split("/").slice(0, 3).join("/");
-
-            // Update the form action dynamically with the base URL
+            const fromDateInput = document.getElementById("fromDate");
+            const toDateInput = document.getElementById("toDate");
             const form = document.querySelector(".filter-form form");
-            form.action = `${baseUrl}/filtered`;
 
-            // Debugging
-            console.log("Base URL for form action:", baseUrl);
-            console.log("Form action updated to:", form.action);
+            // Disable "To Date" initially
+            toDateInput.disabled = true;
+
+            fromDateInput.addEventListener("change", function () {
+                if (fromDateInput.value) {
+                    toDateInput.disabled = false;
+                    toDateInput.min = fromDateInput.value; // Set "To Date" min to "From Date"
+                } else {
+                    toDateInput.disabled = true;
+                    toDateInput.value = ""; // Reset "To Date" if "From Date" is cleared
+                }
+            });
+
+            form.addEventListener("submit", function (event) {
+                const fromDate = new Date(fromDateInput.value);
+                const toDate = new Date(toDateInput.value);
+
+                if (toDate < fromDate) {
+                    alert("Error: 'To Date' must be greater than or equal to 'From Date'.");
+                    event.preventDefault();
+                }
+            });
         });
     </script>
 </head>
@@ -147,7 +163,6 @@
         <td th:text="${appointment.appointmentDate}"></td>
         <td th:text="${appointment.appointmentTime}"></td>
         <td th:text="${appointment.reason}"></td>
-     
     </tr>
     </tbody>
 </table>

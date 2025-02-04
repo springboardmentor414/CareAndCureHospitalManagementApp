@@ -195,6 +195,12 @@
             document.getElementById("editDoctorForm").addEventListener("submit", updateDoctorDetails);
         });
     </script>
+	<script>
+	    function goBack() {
+	        const doctorId = document.getElementById("doctorIdHidden").value;
+	        window.location.href = `http://localhost:9093/doctorHomePage/${doctorId}`;
+	    }
+	</script>
 </head>
 <body>
 <div class="container">
@@ -283,6 +289,10 @@
                 <option value="Other">Other</option>
             </select><br>
         </div>
+		<div style="text-align: left; margin-bottom: 10px;">
+		    <button type="button" onclick="goBack()" class="btn btn-secondary">Back</button>
+		</div>
+
 
         <button type="submit">Save</button>
     </form>

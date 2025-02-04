@@ -34,10 +34,35 @@
         .disable-button:hover {
             background-color: #e7e7e7;
         }
+        
+        /* Back Button Styling */
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+        }
+        .back-button a {
+            padding: 10px 20px;
+            font-size: 16px;
+            color: white;
+            background-color: #007bff;
+            border-radius: 5px;
+            text-decoration: none;
+        }
+        .back-button a:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
+
+<!-- Back Button -->
+<div class="back-button">
+    <a href="/adminDoctorPage">Back</a>
+</div>
+
 <h1>List of Active Doctors</h1>
+
 <table>
     <thead>
     <tr>
@@ -79,11 +104,10 @@
             <a th:href="@{/edit/{doctorId}(doctorId=${doctor.doctorId})}">
                 <button class="edit-button">Edit</button>
             </a>
-           
-         
         </td>
     </tr>
     </tbody>
 </table>
+
 </body>
 </html>

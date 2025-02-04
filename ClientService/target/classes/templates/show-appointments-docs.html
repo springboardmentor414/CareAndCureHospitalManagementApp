@@ -107,6 +107,28 @@
                 const backButton = document.querySelector(".back-button a");
                 backButton.href = `http://localhost:9093/doctorHomePage/${doctorId}`;
             }
+
+            // Frontend Validation for the filter form
+            const fromDateInput = document.getElementById("fromDate");
+            const toDateInput = document.getElementById("toDate");
+
+            // Set an event listener for the "From Date" to enable the "To Date"
+            fromDateInput.addEventListener("change", function () {
+                toDateInput.disabled = false;
+                toDateInput.min = fromDateInput.value; // To Date should not be before From Date
+            });
+
+            // Set an event listener for the form submission to validate dates
+            document.querySelector(".filter-form form").addEventListener("submit", function (event) {
+                const fromDate = new Date(fromDateInput.value);
+                const toDate = new Date(toDateInput.value);
+                
+                // Check if "To Date" is greater than or equal to "From Date"
+                if (toDate < fromDate) {
+                    event.preventDefault();  // Prevent form submission
+                    alert("The 'To Date' must be greater than or equal to the 'From Date'. Please correct the dates.");
+                }
+            });
         });
     </script>
 </head>
@@ -126,7 +148,7 @@
         <input type="date" id="fromDate" name="fromDate" required />
         
         <label for="toDate">To: </label>
-        <input type="date" id="toDate" name="toDate" required />
+        <input type="date" id="toDate" name="toDate" required disabled />
         
         <button type="submit">Filter</button>
     </form>

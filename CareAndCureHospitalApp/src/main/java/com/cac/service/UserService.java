@@ -1,5 +1,7 @@
 package com.cac.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -71,6 +73,19 @@ public class UserService {
     public UserInfo addDoctor(String username, String password) {
         UserInfo user = new UserInfo(username, password, "DOCTOR");
         return userRepository.save(user);
+    }
+    
+    public boolean updatePasswordByUsername(String username, String newPassword) {
+        Optional<UserInfo> userOptional = userRepository.findByUsername(username);
+        
+        if (userOptional.isPresent()) {
+            UserInfo user = userOptional.get();
+            user.setPassword(newPassword);
+            userRepository.save(user);
+            return true; // Password updated successfully
+        }
+        
+        return false; // User not found
     }
 
 }
