@@ -78,6 +78,7 @@
             display: flex;
             justify-content: center;
             grid-column: span 2;
+			margin-top:15px;
         }
 
         button {
@@ -94,6 +95,12 @@
         button:hover {
             background-color: #357f8e;
         }
+		.error-message {
+		    color: red;
+		    font-size: 11px;
+			margin-top:3px;
+			margin-left:15px;
+		}
     </style>
 </head>
 <body>
@@ -101,102 +108,190 @@
         <h1>Bill Management</h1>
         <h3>Add Bill Details</h3>
         
-        <form th:action="@{/bills}" id="dynamicForm" th:object="${bill}" method="post">
-            <div class="form-container">
-                <div class="form-group">
-                    <label for="appointmentId">Appointment ID:</label>
-                    <input type="number" id="appId" name="appointment.appointmentId" placeholder="Enter Appointment ID" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="billDate">Bill Date:</label>
-                    <input type="date" name="billDate" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="consultationFees">Consultation Fees:</label>
-                    <input type="number" name="consultationFees" placeholder="Enter Consultation Fees" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="medicineFees">Medicine Fees:</label>
-                    <input type="number" name="medicineFees" placeholder="Enter Medicine Fees" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="testCharges">Test Charges:</label>
-                    <input type="number" name="testCharges" placeholder="Enter Test Charges" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="miscCharges">Miscellaneous Charges:</label>
-                    <input type="number" name="miscellaneousCharge" placeholder="Enter Miscellaneous Charges" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="isInsuranceApplicable">Is Insurance Applicable:</label>
-                    <select name="isInsuranceApplicable" required>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-				<!--
-                <div class="form-group">
-                    <label for="discountPercentage">Discount Percentage:</label>
-                    <input type="number" name="discountPercentage" placeholder="Enter Discount %" step="0.01" required>
-                </div>
-                
-				
-                <div class="form-group">
-                    <label for="tax">Tax:</label>
-                    <select name="tax" required>
-                        <option value="true">Yes</option>
-                        <option value="false">No</option>
-                    </select>
-                </div>
-                -->
-                <div class="form-group">
-                    <label for="description">Description:</label>
-                    <input type="text" name="description" placeholder="Enter Description" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="paymentStatus">Payment Status:</label>
-                    <select name="paymentstatus" required>
-						<option value="unpaid">Unpaid</option>
-                        <option value="paid">Paid</option>
+		<form th:action="@{/bills}" id="dynamicForm" th:object="${bill}" method="post">
+		        <div class="form-container">
+		            <div class="form-group">
+		                <label for="appId">Appointment ID:</label>
+		                <input type="number" id="appId" name="appointment.appointmentId" placeholder="Enter Appointment ID">
+		                <div class="error-message" id="appIdError"></div>
+		            </div>
 
-                        <option value="partially_paid">Partially Paid</option>
-                    </select>
-                </div>
-				
-				<!--
-                
-                <div class="form-group">
-                    <label for="totalAmount">Total Amount:</label>
-                    <input type="number" name="totalamount" placeholder="Enter Total Amount" required>
-                </div>
-                
-                <div class="form-group">
-                    <label for="finalAmount">Final Amount:</label>
-                    <input type="number" name="finalamount" placeholder="Enter Final Amount" required>
-                </div>
-				-->
-            </div>
-            
-            <div class="button-row">
-                <button type="button" onclick="submitForm()">Add Bill</button>
-            </div>
-        </form>
+		            <div class="form-group">
+		                <label for="billDate">Bill Date:</label>
+		                <input type="date" id="billDate" name="billDate">
+		                <div class="error-message" id="billDateError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="consultationFees">Consultation Fees:</label>
+		                <input type="number" id="consultationFees" name="consultationFees" placeholder="Enter Consultation Fees">
+		                <div class="error-message" id="consultationFeesError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="medicineFees">Medicine Fees:</label>
+		                <input type="number" id="medicineFees" name="medicineFees" placeholder="Enter Medicine Fees">
+		                <div class="error-message" id="medicineFeesError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="testCharges">Test Charges:</label>
+		                <input type="number" id="testCharges" name="testCharges" placeholder="Enter Test Charges">
+		                <div class="error-message" id="testChargesError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="miscellaneousCharge">Miscellaneous Charges:</label>
+		                <input type="number" id="miscellaneousCharge" name="miscellaneousCharge" placeholder="Enter Miscellaneous Charges">
+		                <div class="error-message" id="miscellaneousChargeError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="isInsuranceApplicable">Is Insurance Applicable:</label>
+		                <select name="isInsuranceApplicable" required>
+		                    <option value="false">No</option>
+		                    <option value="true">Yes</option>
+		                </select>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="description">Description:</label>
+		                <input type="text" id="description" name="description" placeholder="Enter Description">
+		                <div class="error-message" id="descriptionError"></div>
+		            </div>
+
+		            <div class="form-group">
+		                <label for="paymentStatus">Payment Status:</label>
+		                <select name="paymentstatus" required>
+		                    <option value="unpaid">Unpaid</option>
+		                    <option value="paid">Paid</option>
+		                    <option value="partially_paid">Partially Paid</option>
+		                </select>
+		            </div>
+		        </div>
+
+		        <div class="button-row">
+		            <button type="submit">Add Bill</button>
+		        </div>
+		    </form>
+
     </div>
 
+	<script>
+		document.addEventListener("DOMContentLoaded", function () {
+		    const billDate = document.getElementById("billDate");
+
+		    // Allow today and future dates only
+		    const today = new Date();
+		    today.setDate(today.getDate() - 1); // Yesterday is the minimum selectable date
+		    billDate.setAttribute("min", today.toISOString().split("T")[0]);
+
+		    // Form validation on submit
+		    document.getElementById("dynamicForm").addEventListener("submit", function (event) {
+		        if (!validateForm()) {
+		            event.preventDefault(); // Prevent submission if validation fails
+		        } else {
+		            submitForm(); // Proceed with form submission if valid
+		        }
+		    });
+		});
+
+		function validateForm() {
+		    let isValid = true;
+
+		    // Get all form fields
+		    const appId = document.getElementById("appId");
+		    const billDate = document.getElementById("billDate");
+		    const consultationFees = document.getElementById("consultationFees");
+		    const medicineFees = document.getElementById("medicineFees");
+		    const testCharges = document.getElementById("testCharges");
+		    const miscellaneousCharge = document.getElementById("miscellaneousCharge");
+		    const description = document.getElementById("description");
+
+		    // Clear previous error messages
+		    document.querySelectorAll(".error-message").forEach(el => el.textContent = "");
+
+		    // Required fields validation
+		    if (!appId.value.trim()) {
+		        document.getElementById("appIdError").textContent = "Appointment ID is required.";
+		        isValid = false;
+		    }
+		    if (!billDate.value.trim()) {
+		        document.getElementById("billDateError").textContent = "Bill Date is required.";
+		        isValid = false;
+		    }
+		    if (!consultationFees.value.trim()) {
+		        document.getElementById("consultationFeesError").textContent = "Consultation Fee is required.";
+		        isValid = false;
+		    }
+		    if (!medicineFees.value.trim()) {
+		        document.getElementById("medicineFeesError").textContent = "Medicine Fee is required.";
+		        isValid = false;
+		    }
+		    if (!testCharges.value.trim()) {
+		        document.getElementById("testChargesError").textContent = "Test Charges are required.";
+		        isValid = false;
+		    }
+		    if (!miscellaneousCharge.value.trim()) {
+		        document.getElementById("miscellaneousChargeError").textContent = "Miscellaneous Charges are required.";
+		        isValid = false;
+		    }
+		    if (!description.value.trim()) {
+		        document.getElementById("descriptionError").textContent = "Description is required.";
+		        isValid = false;
+		    } else if (description.value.length < 5 || description.value.length > 255) {
+		        document.getElementById("descriptionError").textContent = "Description must be between 5 and 255 characters.";
+		        isValid = false;
+		    }
+
+		    // Non-negative value validation
+		    if (appId.value < 0) {
+		        document.getElementById("appIdError").textContent = "Appointment ID cannot be negative.";
+		        isValid = false;
+		    }
+		    if (consultationFees.value < 0) {
+		        document.getElementById("consultationFeesError").textContent = "Consultation Fees cannot be negative.";
+		        isValid = false;
+		    }
+		    if (medicineFees.value < 0) {
+		        document.getElementById("medicineFeesError").textContent = "Medicine Fees cannot be negative.";
+		        isValid = false;
+		    }
+		    if (miscellaneousCharge.value < 0) {
+		        document.getElementById("miscellaneousChargeError").textContent = "Miscellaneous Charges cannot be negative.";
+		        isValid = false;
+		    }
+
+		    // Date validation
+		    const selectedDate = new Date(billDate.value);
+		    const minAllowedDate = new Date();
+		    minAllowedDate.setDate(minAllowedDate.getDate()); // Yesterday is the minimum selectable date
+
+		    if (selectedDate < minAllowedDate) {
+		        document.getElementById("billDateError").textContent = "Bill Date cannot be before yesterday.";
+		        isValid = false;
+		    }
+
+		    return isValid;
+		}
+
+		function submitForm() {
+		    const appointmentId = document.getElementsByName('appointment.appointmentId')[0].value;
+		    const form = document.getElementById('dynamicForm');
+		    form.action = /bills/${appointmentId};
+		    form.submit();
+		}
+
+	    </script>
+	<!--
     <script>
         function submitForm() {
             const appointmentId = document.getElementsByName('appointment.appointmentId')[0].value;
             const form = document.getElementById('dynamicForm');
-            form.action = `/bills/${appointmentId}`;
+            form.action = /bills/${appointmentId};
             form.submit();
         }
     </script>
+	-->
 </body>
 </html>
