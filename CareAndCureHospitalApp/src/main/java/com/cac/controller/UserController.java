@@ -25,11 +25,6 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @PostMapping("/userRegister")
-    public ResponseEntity<UserInfo> userLogin(@RequestBody UserInfo user) throws UserNotFoundException {
-        return ResponseEntity.status(HttpStatus.CREATED).body(userService.createUser(user));
-    }
-
     @PostMapping("/login")
     public ResponseEntity<UserInfo> login(
             @RequestBody LoginDetails loginDetails) throws UserNotFoundException {

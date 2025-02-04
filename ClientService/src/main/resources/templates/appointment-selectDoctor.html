@@ -259,7 +259,7 @@ body {
 
 <body>
 	<div class="container">
-		<button class="btn btn-primary"
+		<button th:if="${userRole!=null}" class="btn btn-primary"
 			th:onclick="|window.location.href='/patient/${patientId}/appointments'|">Back</button>
 		<div class="header">
 			<h1>Find Your Doctor</h1>
@@ -325,10 +325,19 @@ body {
 						<p><i class="fas fa-phone"></i> <span th:text="${doctor.contactNumber}">Contact</span></p>
 					</div>
 					<div class="doctor-actions">
-						<button class="btn btn-primary"
+						<button th:if="${userRole!=null}" class="btn btn-primary"
 							th:onclick="|window.location.href='/patient/${patientId}/appointments/${doctor.doctorId}/schedule'|">
 							<i class="fas fa-calendar-alt"></i> Book Appointment
 						</button>
+						<!-- <button th:if="${userRole==null}" class="btn btn-primary"
+							th:onclick="|window.location.href='/patientLoginForm'|">
+							<i class="fas fa-calendar-alt"></i> Book Appointment
+						</button>
+						 -->
+						 <button th:if="${userRole==null}" class="btn btn-primary"
+        th:onclick="|window.location.href='/patientLoginForm?redirectUrl=' + encodeURIComponent(window.location.href)|">
+    <i class="fas fa-calendar-alt"></i> Book Appointment
+</button>
 					</div>
 				</div>
 			</div>

@@ -86,14 +86,6 @@ public class DoctorClientController {
         return "index"; // This maps to index.html
     }
 
-    // comment by nomit for patient and doctor integration don't uncomment until you
-    // need
-
-    // @GetMapping("/adminPage")
-    // public String showAdminPage() {
-    // return "adminPage"; // This maps to index.html
-    // }
-
     @GetMapping("/appointment")
     public String showDoctorsss(Model model) {
         try {
@@ -120,47 +112,6 @@ public class DoctorClientController {
     public String showAdmin() {
         return "admin"; // This maps to index.html
     }
-
-    // comment for patient and doctor integration don't uncomment doctor page can accessible from main page
-
-    // @GetMapping("/adminPage")
-    // public String showAdminPage(HttpSession session) {
-    // // Check if the session contains an 'admin' attribute
-    // Object admin = session.getAttribute("admin");
-
-    // if (admin == null) {
-    // // If admin is not in session, redirect to login page
-    // return "redirect:/admin";
-    // }
-
-    // // Log session attributes for debugging (optional)
-    // System.out.println("Admin session attribute: " + admin);
-
-    // return "adminPage"; // Render adminPage.html if session is valid
-    // }
-
-    // @PostMapping("/login")
-    // public String login(@RequestParam String username, @RequestParam String
-    // password, HttpSession session, Model model) {
-    // // Create a request payload for Admin login
-    // UserInfo admin = new UserInfo(username, password, "admin");
-
-    // // Send POST request to backend /api/admin/login endpoint
-    // ResponseEntity<UserInfo> response =
-    // restTemplate.postForEntity("http://localhost:8082/api/admin/login", admin,
-    // UserInfo.class);
-
-    // if (response.getStatusCode().is2xxSuccessful()) {
-    // // Successfully authenticated
-    // session.setAttribute("admin", response.getBody()); // Set admin in session
-    // with the name "admin"
-    // return "redirect:/adminPage"; // Redirect to admin page
-    // } else {
-    // // Failed authentication
-    // model.addAttribute("errorMessage", "Invalid username or password");
-    // return "admin"; // Return to login page with error message
-    // }
-    // }
 
     @GetMapping("/appointment-schedule")
     public String show() {

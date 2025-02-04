@@ -54,34 +54,27 @@ public class PatientClientController {
 	String role = null;
 
 	@ModelAttribute
-	public void getDoc(@SessionAttribute(name = "doctorObj", required = false)
-	Doctor docObj) {
-	if (docObj != null) {
-	doctorSession = docObj;
-	}
+	public void getDoc(@SessionAttribute(name = "doctorObj", required = false) Doctor docObj) {
+		doctorSession = docObj;
+
 	}
 
 	@ModelAttribute
 	public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj) {
-			patientSession = patObj;		
+		patientSession = patObj;
 	}
 
 	@ModelAttribute
 	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
-			this.role = userRole;
-			model.addAttribute("userRole", userRole);
-	}
-
-	public boolean isAuthorized() {
-		if (role == null || role.equalsIgnoreCase("patient")) {
-			return false;
-		}
-		return true;
+		this.role = userRole;
+		model.addAttribute("userRole", userRole);
 	}
 
 	@GetMapping("/searchPatient")
 	public String searchPatient() {
-		if (!isAuthorized())
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
 			return "unauthorized";
 		return "patient/patientSearch";
 	}
@@ -102,7 +95,10 @@ public class PatientClientController {
 	@GetMapping("/patientPage")
 	public String patientPage(HttpSession session, Model model) {
 		cleanUpSessionAttributes(session, model);
-		if (role == null || !role.equalsIgnoreCase("patient"))
+		if (role == null) {
+			return "redirect:/patientLoginForm";
+		}
+		if (!role.equalsIgnoreCase("patient"))
 			return "unauthorized";
 		model.addAttribute("patientId", patientSession.getPatientId());
 		return "patient/patientPage";
@@ -110,7 +106,9 @@ public class PatientClientController {
 
 	@RequestMapping(value = "/findPatientByName", method = RequestMethod.GET)
 	public String findPatientByName(@RequestParam("name") String name, Model model) {
-		if (!isAuthorized())
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
 			return "unauthorized";
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewPatientByName/" + name;
@@ -149,7 +147,9 @@ public class PatientClientController {
 	@RequestMapping(value = "/findPatientById", method = RequestMethod.GET)
 	public String findPatientById(@RequestParam("patientId") int patientId, Model model) {
 
-		if (!isAuthorized())
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
 			return "unauthorized";
 
 		Patient patient = null;
@@ -191,12 +191,12 @@ public class PatientClientController {
 
 	@GetMapping("/patient/viewPatientProfile")
 	public String viewProfileByPatient(Model model) {
-		if(role==null) {
-			model.addAttribute("errorMessage", "Some error occur or Login required.");
-			return "unauthorized";
+		if (role == null) {
+			return "redirect:/patientLoginForm";
 		}
 		if (!role.equalsIgnoreCase("patient") || patientSession == null)
 			return "unauthorized";
+
 		int patientId = patientSession.getPatientId();
 		Patient patient = null;
 		String url = baseUrl + "/api/patient/viewPatient/" + patientId;
@@ -219,7 +219,11 @@ public class PatientClientController {
 	@GetMapping("/admin/viewPatientProfile")
 	public String viewPatientProfileByAdmin(@RequestParam int patientId, Model model) {
 
-		if (!isAuthorized())
+		if (role == null) {
+			model.addAttribute("errorMessage", "Need to Login first!.");
+			return "unauthorized";
+		}
+		if (!role.equalsIgnoreCase("admin"))
 			return "unauthorized";
 
 		Patient patient = null;
@@ -233,35 +237,35 @@ public class PatientClientController {
 			return "patient/viewPatientProfilePage";
 		} catch (HttpClientErrorException | HttpServerErrorException e) {
 			model.addAttribute("errorMessage",
-					e.getResponseBodyAs(new ParameterizedTypeReference<Map<String, String>>() {}).get("error"));
+					e.getResponseBodyAs(new ParameterizedTypeReference<Map<String, String>>() {
+					}).get("error"));
 			return "statusPage";
 		}
 	}
 
 	@GetMapping("/updatePatient")
 	public String updatePatient(@RequestParam(value = "patientId", required = false) Integer patientId, Model model) {
-		
+
 		if (role == null) {
 			model.addAttribute("errorMessage", "Need to Login first!.");
 			return "unauthorized";
 		}
-		if (role.equals("patient")) {
-			if(patientId!=null && patientSession!=null && patientSession.getPatientId()!=patientId) return "unauthorized"; 
+		if (role.equalsIgnoreCase("patient")) {
+			if (patientId != null && patientSession != null && patientSession.getPatientId() != patientId)
+				return "unauthorized";
 			if (patientSession != null)
 				patientId = patientSession.getPatientId();
 			else {
 				model.addAttribute("errorMessage", "No patient ID found in session for patient role.");
 				return "unauthorized";
 			}
-		} else if (role.equals("admin")) {
+		}
+		if (role.equalsIgnoreCase("admin")) {
 			if (patientId == null) {
 				return "redirect:/adminLoginForm";
 				// Replace with your error view
 			}
-		} else {
-			return "redirect:/"; // Replace with your error view
 		}
-
 		Patient patient = null;
 		String url = baseUrl + "/api/patient/viewPatient/" + patientId;
 		try {
@@ -325,7 +329,10 @@ public class PatientClientController {
 			Model model) {
 		Patient patient = null;
 
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
 		String url = baseUrl + "/api/patient/deactivatePatient/" + patientId;
 		HttpHeaders headers = new HttpHeaders();
@@ -363,7 +370,10 @@ public class PatientClientController {
 	@RequestMapping(value = "/viewAllPatient", method = RequestMethod.GET)
 	public String getAllPatient(Model model) {
 
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllPatient";
@@ -395,7 +405,10 @@ public class PatientClientController {
 	@GetMapping("/viewAllActivePatient")
 	public String getAllPatientByStatus(@RequestParam boolean active, Model model) {
 
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllPatientByStatus?active=" + active;
@@ -424,11 +437,14 @@ public class PatientClientController {
 		}
 	}
 
-	//view insurance details of patient
+	// view insurance details of patient
 	@GetMapping("/viewPatientInsuranceDetails")
 	public String ViewPatientInsurance(@RequestParam("patientId") int patientId, Model model) {
 
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized"; 
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
 		Patient patient = null;
 		String url = baseUrl + "/api/patient/viewPatient/" + patientId;
@@ -447,7 +463,9 @@ public class PatientClientController {
 		} catch (HttpStatusCodeException e) {
 			try {
 				ObjectMapper objectMapper = new ObjectMapper();
-				Map<String, String> errorMessage = objectMapper.readValue(e.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {});
+				Map<String, String> errorMessage = objectMapper.readValue(e.getResponseBodyAsString(),
+						new TypeReference<Map<String, String>>() {
+						});
 				model.addAttribute("errorMessage", errorMessage.get("error"));
 			} catch (Exception parseException) {
 				model.addAttribute("errorMessage", "Some error occur.");
@@ -458,11 +476,14 @@ public class PatientClientController {
 		return "statusPage";
 	}
 
-	//Get PatientList by InsuranceProvider
+	// Get PatientList by InsuranceProvider
 	@GetMapping("/viewAllPatientByInsuranceProvider")
 	public String viewAllPatientByInsuranceProvider(@RequestParam String insuranceProvider, Model model) {
 
-		if(role==null || !role.equalsIgnoreCase("admin")) return "unauthorized";
+		if (role == null)
+			return "redirect:/adminLoginForm";
+		if (!role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
 		List<Patient> patientList = new ArrayList<>();
 		String url = baseUrl + "/api/patient/viewAllByInsuranceProvider?insuranceProvider=" + insuranceProvider;
@@ -486,9 +507,9 @@ public class PatientClientController {
 			model.addAttribute("patientList", patientList);
 			return "patient/patientListByInsuranceProvider";
 		} else {
-			model.addAttribute("errorMessage", "No Patient Record Found with Insurance Provider "+insuranceProvider);
+			model.addAttribute("errorMessage", "No Patient Record Found with Insurance Provider " + insuranceProvider);
 			return "patient/patientListByInsuranceProvider";
 		}
 	}
-	
+
 }

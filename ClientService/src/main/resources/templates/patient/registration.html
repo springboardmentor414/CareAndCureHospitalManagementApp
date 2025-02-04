@@ -453,7 +453,7 @@
           >
             Go to Patient Page
           </button> -->
-      <button type="button" class="next-button" onclick="history.back()">Back</button>
+      <button type="button" class="next-button" onclick="goBack()">Back</button>
 
     </div>
 
@@ -508,18 +508,18 @@
     };
 
   </script>
-  <!-- <script>
-     function toggleInsuranceFields() {
-      var insuranceFields = document.getElementsByClassName("insuranceFields")
-      var hasInsuranceCheckbox = document.getElementById("hasInsurance");
-
-      if (hasInsuranceCheckbox.checked) {
-        insuranceFields.style.display = "block";  // Show insurance fields
-      } else {
-        insuranceFields.style.display = "none";  // Hide insurance fields
-      }
+  
+  <script>
+    function goBack() {
+        var previousPage = document.referrer;  // Get the previous page URL
+        
+        if (previousPage) {
+            window.location.href = previousPage;  // Navigate to the previous page
+        } else {
+            window.history.back();  // If no referrer (maybe directly accessed), use history.back
+        }
     }
-  </script> -->
+</script>
 
 </body>
 

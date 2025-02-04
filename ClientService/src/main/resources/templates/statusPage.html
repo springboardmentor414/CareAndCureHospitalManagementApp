@@ -179,9 +179,21 @@
 			<button th:if="${userRole == 'patient'}" type="button" class="next-button" onclick="window.location.href='/patientPage'">
 				Home Page
 			</button>
-			<button class="next-button" onclick="history.back()">Back</button>
+			<button class="next-button" onclick="goBack()">Back</button>
 		</div>
 	</div>
+
+	<script>
+		function goBack() {
+			var previousPage = document.referrer;  // Get the previous page URL
+			
+			if (previousPage) {
+				window.location.href = previousPage;  // Navigate to the previous page
+			} else {
+				window.history.back();  // If no referrer (maybe directly accessed), use history.back
+			}
+		}
+	</script>
 </body>
 
 </html>

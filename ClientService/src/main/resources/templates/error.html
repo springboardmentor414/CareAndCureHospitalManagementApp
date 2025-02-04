@@ -13,7 +13,7 @@
 
         body {
             font-family: Arial, sans-serif;
-            background-color: #69a5e1;
+            background-color: #bcd8f4c5;
             color: #333;
             display: flex;
             flex-direction: column;
@@ -35,10 +35,11 @@
             background-color: rgba(0, 0, 0, 0.4); /* Black with opacity */
             overflow: auto;
             padding-top: 60px;
+            
         }
 
         .modal-content {
-            background-color: #fff;
+            background-color: #c6e4f9;
             margin: 5% auto;
             padding: 20px;
             border: 1px solid #888;
@@ -82,7 +83,10 @@
     <div id="errorModal" class="modal">
         <div class="modal-content">
             <!-- <span class="close" id="closeModal">&times;</span> -->
-            <h1>An Error Occurred</h1>
+            <h1>An Error Occurred <br>
+                OR<br>
+            No Resource Found.
+            </h1>
             <p th:text="${errorMessage}">Something went wrong!</p>
             <div>
                 <button id="okButton" class="ok-button">OK</button>
@@ -97,9 +101,9 @@
         
 
         // Display the modal when the page loads
-        // window.onload = function() {
-        //     modal.style.display = "block"; // Show the modal
-        // }
+        window.onload = function() {
+            modal.style.display = "block"; // Show the modal
+        }
 
         
         // When the user clicks on the OK button, close the modal and prevent page reload

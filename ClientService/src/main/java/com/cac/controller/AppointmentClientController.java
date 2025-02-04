@@ -122,7 +122,13 @@ public class AppointmentClientController {
 	@GetMapping("/{patientId}/appointments/selectDoctor")
 	public String showScheduleAppointment(@PathVariable Long patientId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) String specialty, @RequestParam(required = false) String experience,
-			@RequestParam(required = false) String gender, Model model) {
+			@RequestParam(required = false) String gender, Model model, HttpSession session) {
+
+				if(role==null && patientId!=0) {
+			model.addAttribute("errorMessage", "Please login to continue.");
+			session.setAttribute("redirectUrl", "/patient/"+0+"/appointments/selectDoctor");
+			return "redirect:/patientLoginForm";
+				}
 
 		String url = baseUrl + "/api/doctors";
 		try {
@@ -789,7 +795,7 @@ public class AppointmentClientController {
             return "unauthorized";
 
 			if(searchDate.getStartDate()==null && searchDate.getEndDate()==null) {
-				model.addAttribute("errorMessage", "Select Date.");
+				// model.addAttribute("errorMessage", "Select Date.");
 				return "patientNoShowReport";
 			}
 

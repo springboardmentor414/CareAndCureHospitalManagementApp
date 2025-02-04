@@ -13,6 +13,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
@@ -57,8 +58,16 @@ public class UserClientController {
 	}
 
 	@GetMapping("/patientLoginForm")
-	public String patientLoginForm(HttpSession session, Model model) {
+	public String patientLoginForm(@RequestParam(value = "redirectUrl", required = false) String redirectUrl,
+			HttpSession session, Model model) {
+		// Clean up session attributes if needed
 		cleanUpSessionAttributes(session, model);
+
+		// Store the redirectUrl in the session so it can be used after login
+		if (redirectUrl != null) {
+			session.setAttribute("redirectUrl", redirectUrl);
+		}
+
 		model.addAttribute("userInfo", new UserInfo());
 		return "patient/patientLoginForm";
 	}
@@ -85,13 +94,18 @@ public class UserClientController {
 
 	@GetMapping("/logout")
 	public String logout(HttpSession session, Model model) {
+		String role = (String)session.getAttribute("userRole");
 		session.invalidate();
 
 		// Now send a request to the backend to invalidate the backend session
 		restTemplate.postForEntity(baseUrl + "/api/admin/logout", null, String.class);
 
 		model.asMap().clear();
-		return "redirect:/";
+		String redirectUrl = "/";
+		if(role.equalsIgnoreCase("admin")) redirectUrl = "/adminLoginForm";
+		if(role.equalsIgnoreCase("doctor")) redirectUrl = "/doctorLoginForm";
+		if(role.equalsIgnoreCase("patient")) redirectUrl = "/patientLoginForm";
+		return "redirect:"+redirectUrl;
 	}
 
 	@PostMapping("/login")
@@ -128,6 +142,14 @@ public class UserClientController {
 				session.setAttribute("message", "Welcome " + user.getPassword());
 				session.setAttribute("patientObj", patientObj.getBody());
 				session.setAttribute("userRole", "patient");
+				if(session.getAttribute("redirectUrl")!=null){
+					String redirectUrl = (String) session.getAttribute("redirectUrl");
+					session.removeAttribute("redirectUrl");
+					int patientId = patientObj.getBody().getPatientId();
+					redirectUrl = redirectUrl.replace("/0/", "/"+patientId+"/");
+					System.out.println(redirectUrl);
+					return "redirect:"+redirectUrl;
+				}
 				return "redirect:/patientPage";
 
 			} else if (user.getRole().equalsIgnoreCase("admin")) {
