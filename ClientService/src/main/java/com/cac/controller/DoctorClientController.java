@@ -60,24 +60,24 @@ public class DoctorClientController {
 
     @ModelAttribute
     public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
-        if (userRole != null) {
+        
             role = userRole;
             model.addAttribute("userRole", userRole);
-        }
+        
     }
 
     @ModelAttribute
     public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj) {
-        if (adminObj != null) {
+      
             this.adminSession = adminObj;
-        }
+        
     }
 
     @ModelAttribute
     public void checkDoctorObject(@SessionAttribute(name = "doctorObj", required = false) Doctor doctor) {
-        if (doctor != null) {
+      
             this.doctorSession = doctor;
-        }
+       
     }
 
     // home for doctor management
@@ -123,7 +123,13 @@ public class DoctorClientController {
             @PathVariable int doctorId,
             @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
             @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-            Model model) {
+            Model model,HttpSession session) {
+    	
+    	 if (role == null || !role.equalsIgnoreCase("admin")) {
+             // If admin is not in session, redirect to the login page
+             return "redirect:/adminLoginForm";
+         }
+
 
         // Construct the backend API URL
         String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
@@ -301,7 +307,12 @@ public class DoctorClientController {
     }
 
     @GetMapping("/show-doctors-for-editing")
-    public String showAllDoctors(Model model) {
+    public String showAllDoctors(Model model, HttpSession session) {
+    	
+    	if (role == null || !role.equalsIgnoreCase("admin")) {
+            // If admin is not in session, redirect to the login page
+            return "redirect:/adminLoginForm";
+        }
         String backendUrll = "http://localhost:8082/api/doctors/all"; // Backend service URL
         ResponseEntity<Doctor[]> response = restTemplate.getForEntity(backendUrll, Doctor[].class);
 
@@ -316,8 +327,15 @@ public class DoctorClientController {
     }
 
     @GetMapping("/disableDoctor/{doctorId}")
-    public String disableDoctor(@PathVariable int doctorId, RedirectAttributes redirectAttributes) {
+    public String disableDoctor(@PathVariable int doctorId, RedirectAttributes redirectAttributes, HttpSession session) {
+    	
+    	if (role == null || !role.equalsIgnoreCase("admin")) {
+            // If admin is not in session, redirect to the login page
+            return "redirect:/adminLoginForm";
+        }
         try {
+        	
+        	
             // Send POST request to backend to disable the doctor
             String url = backendUrl + "/disable/" + doctorId;
             ResponseEntity<String> response = restTemplate.postForEntity(url, null, String.class);
@@ -436,7 +454,13 @@ public class DoctorClientController {
     }
 
     @GetMapping("/edit/{doctorId}")
-    public String editDoctor(@PathVariable int doctorId, Model model) {
+    public String editDoctor(@PathVariable int doctorId, Model model,HttpSession session) {
+    	
+    	 if (role == null || !role.equalsIgnoreCase("admin")) {
+             // If admin is not in session, redirect to the login page
+             return "redirect:/adminLoginForm";
+         }
+
         // Pass the doctor ID to the edit page; details will be fetched via JavaScript
         model.addAttribute("doctorId", doctorId);
         return "edit-doctor"; // Corresponds to the edit-doctor.html template
@@ -475,5 +499,71 @@ public class DoctorClientController {
             session.removeAttribute("message");
         }
     }
+    
+    @GetMapping("doctorHomePage/{doctorId}")
+    public String doctorPortal(@PathVariable int doctorId, Model model, HttpSession session) {
+        
+        // Retrieve role from session
+        String role = (String) session.getAttribute("userRole");
+
+        if (role == null || !role.equalsIgnoreCase("doctor")) {
+            // If user is not a doctor, redirect to the admin login page
+            return "redirect:/adminLoginForm";
+        }
+
+        // Pass the doctor ID to the model; details will be fetched via JavaScript
+        model.addAttribute("doctorId", doctorId);
+        
+        return "doctor/doctorHomePage"; // Returns the Thymeleaf template
+    }
+    
+    @GetMapping("/doctor/details/{doctorId}")
+    public String showDoctorDetails(@PathVariable int doctorId, Model model) {
+        // Fetch doctor details from backend
+        Doctor doctor = restTemplate.getForObject(backendUrl + "/details/" + doctorId, Doctor.class);
+        model.addAttribute("doctor", doctor);
+        return "doctor-details"; // Returns the Thymeleaf template
+    }
+    
+    @GetMapping("/appointments-doctors/{doctorId}")
+    public String showAppointmentssByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
+        // Check if the session contains an 'admin' attribute
+
+        if (role == null || !role.equalsIgnoreCase("doctor")) {
+            // If admin is not in session, redirect to the login page
+            return "redirect:/doctorLoginForm";
+        }
+
+        // Construct the backend API URL
+        String backendApiUrl = backendUrl + "/appointments/" + doctorId;
+
+        // Fetch appointments from the backend API
+        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Appointment>>() {
+                });
+
+        // Add the appointments to the model
+        model.addAttribute("appointments", appointmentsArray.getBody());
+
+        // Return the view name to render
+        return "show-appointments-docs";
+    }
+    
+    @GetMapping("/editing/{doctorId}")
+    public String edittDoctor(@PathVariable int doctorId, Model model,HttpSession session) {
+    	
+    	 if (role == null || !role.equalsIgnoreCase("doctor")) {
+             // If admin is not in session, redirect to the login page
+             return "redirect:/doctorLoginForm";
+         }
+
+        // Pass the doctor ID to the edit page; details will be fetched via JavaScript
+        model.addAttribute("doctorId", doctorId);
+        return "editing-doctor"; // Corresponds to the edit-doctor.html template
+    }
+    
+    
+    
+
 
 }

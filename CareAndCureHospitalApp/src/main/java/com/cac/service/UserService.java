@@ -5,9 +5,11 @@ import org.springframework.stereotype.Service;
 
 import com.cac.exception.UserNotFoundException;
 import com.cac.dto.LoginDetails;
+import com.cac.model.ContactForm;
 import com.cac.model.Doctor;
 import com.cac.model.Patient;
 import com.cac.model.UserInfo;
+import com.cac.repository.ContactFormRepository;
 import com.cac.repository.DoctorRepository;
 import com.cac.repository.PatientRepository;
 import com.cac.repository.UserRepository;
@@ -23,6 +25,9 @@ public class UserService {
 
     @Autowired
     private DoctorRepository doctorRepository;
+
+    @Autowired
+    private ContactFormRepository contactFormRepository;
 
     public UserInfo createUser(UserInfo userInfo) throws UserNotFoundException {
         userInfo.setRole(userInfo.getRole().toUpperCase());
@@ -71,6 +76,10 @@ public class UserService {
     public UserInfo addDoctor(String username, String password) {
         UserInfo user = new UserInfo(username, password, "DOCTOR");
         return userRepository.save(user);
+    }
+
+    public ContactForm addContactForm(ContactForm contactForm) {
+        return contactFormRepository.save(contactForm);
     }
 
 }

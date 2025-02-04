@@ -44,4 +44,44 @@ public class Availability {
         FRIDAY,
         SATURDAY
     }
+
+
+	public Long getId() {
+		return id;
+	}
+
+
+	public void setId(Long id) {
+		this.id = id;
+	}
+
+
+	public DayOfWeek getDayOfWeek() {
+		return dayOfWeek;
+	}
+
+
+	public void setDayOfWeek(DayOfWeek dayOfWeek) {
+		this.dayOfWeek = dayOfWeek;
+	}
+
+
+	public Doctor getDoctor() {
+		return doctor;
+	}
+
+
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+
+
+	public Map<String, Boolean> getTimeSlots() {
+		return timeSlots;
+	}
+
+
+	public void setTimeSlots(Map<String, Boolean> timeSlots) {
+		this.timeSlots = timeSlots;
+	}
 }

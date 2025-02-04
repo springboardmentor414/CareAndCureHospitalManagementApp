@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.cac.exception.UserNotFoundException;
 import com.cac.dto.LoginDetails;
+import com.cac.model.ContactForm;
 import com.cac.model.UserInfo;
 import com.cac.service.UserService;
 
@@ -37,6 +38,12 @@ public class UserController {
     public ResponseEntity<UserInfo> getMethodName(@PathVariable String username) throws UserNotFoundException {
         UserInfo userInfo = userService.getUserByUsername(username);
         return new ResponseEntity<>(userInfo, HttpStatus.OK);
+    }
+
+    @PostMapping("/addContactFormDetails")
+    public ResponseEntity<String> addContactFormDetails(@Valid @RequestBody ContactForm contactForm) {
+        userService.addContactForm(contactForm);
+        return new ResponseEntity<>("Contact Form Details Added Successfully", HttpStatus.OK);
     }
 
 }

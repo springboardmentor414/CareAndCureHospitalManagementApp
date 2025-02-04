@@ -10,6 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import org.springframework.web.client.HttpStatusCodeException;
 import org.springframework.web.client.RestTemplate;
 
 import com.cac.model.AdminDto;
+import com.cac.model.ContactForm;
 import com.cac.model.Doctor;
 import com.cac.model.Patient;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -26,6 +28,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
 
 import com.cac.model.UserInfo;
 
@@ -50,6 +53,13 @@ public class UserClientController {
 			model.addAttribute("message", message);
 			session.removeAttribute(message);
 		}
+
+		String contactMessage = (String) session.getAttribute("contactFormMessage");
+		if (contactMessage != null) {
+			model.addAttribute("contactFormMessage", contactMessage);
+			session.removeAttribute("contactFormMessage");
+		}
+		model.addAttribute("contactForm", new ContactForm());
 		return "MainPage";
 	}
 
@@ -102,9 +112,9 @@ public class UserClientController {
 
 		model.asMap().clear();
 		String redirectUrl = "/";
-		if(role.equalsIgnoreCase("admin")) redirectUrl = "/adminLoginForm";
-		if(role.equalsIgnoreCase("doctor")) redirectUrl = "/doctorLoginForm";
-		if(role.equalsIgnoreCase("patient")) redirectUrl = "/patientLoginForm";
+		if(role!=null && role.equalsIgnoreCase("admin")) redirectUrl = "/adminLoginForm";
+		if(role!=null && role.equalsIgnoreCase("doctor")) redirectUrl = "/doctorLoginForm";
+		if(role!=null && role.equalsIgnoreCase("patient")) redirectUrl = "/patientLoginForm";
 		return "redirect:"+redirectUrl;
 	}
 
@@ -132,7 +142,9 @@ public class UserClientController {
 				session.setAttribute("message", "Welcome " + doctorObj.getBody().getDoctorName());
 				session.setAttribute("userRole", "doctor");
 				session.setAttribute("doctorObj", doctorObj.getBody());
-				return "redirect:/doctorHomePage";
+				
+				return "redirect:/doctorHomePage/" + user.getUsername();
+
 
 			} else if (user.getRole().equalsIgnoreCase("patient")) {
 
@@ -241,5 +253,39 @@ public class UserClientController {
 		}
 
 	}
+
+	@PostMapping("/contactForm/submit")
+	public String addContactForm(@ModelAttribute("contactForm") ContactForm contactForm,  
+        HttpSession session, 
+        Model model) {
+
+		String requestUrl = baseUrl + "/addContactFormDetails";
+		HttpHeaders headers = new HttpHeaders();
+		headers.set("Content-Type", "application/json");
+		HttpEntity<ContactForm> requestEntity = new HttpEntity<>(contactForm, headers);
+
+		try {
+			ResponseEntity<String> response = restTemplate.postForEntity(requestUrl, requestEntity, String.class);
+			session.setAttribute("contactFormMessage", response.getBody());
+			return "redirect:/";
+		} catch (HttpStatusCodeException e) {
+			Map<String, String> errors = null;
+            try {
+                errors = new ObjectMapper().readValue(
+                        e.getResponseBodyAsString(), new TypeReference<Map<String, String>>() {
+                        });
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+
+            model.addAttribute("validationError", errors);
+			System.out.println(errors);
+
+            model.addAttribute("errorMessage", "Please correct the highlighted fields.");
+			
+		}
+		return "MainPage";
+	}
+
 
 }
