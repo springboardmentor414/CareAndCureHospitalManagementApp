@@ -140,12 +140,40 @@
 </head>
 
 <body>
-    <!-- Page Title -->
-    <h1>Doctor Page</h1>
 
-    <!-- Display Error Message -->
-    <div th:if="${errorMessage}" class="container">
-        <p class="error-message" th:text="${errorMessage}"></p>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="#">Doctor's Portal</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                <li class="nav-item">
+                    <a class="btn btn-outline-light me-2" th:href="@{/doctor/details/{doctorId}(doctorId=${doctorId})}">View Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light me-2" th:href="@{/appointments-doctors/{doctorId}(doctorId=${doctorId})}">View Appointments</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-outline-light" th:href="@{/editing/{doctorId}(doctorId=${doctorId})}">Edit Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="btn btn-danger ms-2" th:href="@{/logout}">Logout</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container mt-4">
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <h1>Welcome to the Doctor's Portal</h1>
+            <p class="lead">Manage your details and appointments with ease.</p>
+        </div>
     </div>
 
     <div class="form-container">

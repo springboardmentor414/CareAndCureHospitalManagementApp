@@ -282,7 +282,6 @@ public class AdminDoctorController {
             BindingResult result) {
         // Validate input
         if (result.hasErrors()) {
-            // Collect field-specific validation errors into a map
             Map<String, String> errors = result.getFieldErrors().stream()
                     .collect(Collectors.toMap(
                             FieldError::getField,
@@ -355,10 +354,16 @@ public class AdminDoctorController {
             existingDoctor.setUsername(updatedDoctor.getUsername());
             updatedFields.append("Username updated to: ").append(updatedDoctor.getUsername()).append("\n");
         }
+        
+        // **Check if password is updated and call UserInfoService**
         if (updatedDoctor.getPassword() != null && !updatedDoctor.getPassword().equals(existingDoctor.getPassword())) {
             existingDoctor.setPassword(updatedDoctor.getPassword());
-            updatedFields.append("Password updated to: ").append(updatedDoctor.getPassword()).append("\n");
+            updatedFields.append("Password updated.\n");
+
+            // **Call the password update service**
+            userService.updatePasswordByUsername(existingDoctor.getUsername(), updatedDoctor.getPassword());
         }
+
         if (updatedDoctor.getStatus() != existingDoctor.getStatus()) {
             existingDoctor.setStatus(updatedDoctor.getStatus());
             updatedFields.append("Status updated to: ").append(updatedDoctor.getStatus() ? "Active" : "Inactive")

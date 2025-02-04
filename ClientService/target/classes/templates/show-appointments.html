@@ -66,6 +66,36 @@
             background-color: #f1f1f1;
         }
     </style>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const fromDateInput = document.getElementById("fromDate");
+            const toDateInput = document.getElementById("toDate");
+            const form = document.querySelector(".filter-form form");
+
+            // Disable "To Date" initially
+            toDateInput.disabled = true;
+
+            fromDateInput.addEventListener("change", function () {
+                if (fromDateInput.value) {
+                    toDateInput.disabled = false;
+                    toDateInput.min = fromDateInput.value; // Set "To Date" min to "From Date"
+                } else {
+                    toDateInput.disabled = true;
+                    toDateInput.value = ""; // Reset "To Date" if "From Date" is cleared
+                }
+            });
+
+            form.addEventListener("submit", function (event) {
+                const fromDate = new Date(fromDateInput.value);
+                const toDate = new Date(toDateInput.value);
+
+                if (toDate < fromDate) {
+                    alert("Error: 'To Date' must be greater than or equal to 'From Date'.");
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
 </head>
 <body>
 
@@ -90,9 +120,9 @@
     <!-- Loop through the appointments list -->
     <tr th:each="appointment : ${appointments}">
         <td th:text="${appointment.appointmentId}"></td>
-        <td th:text="${appointment.appointmentDateTime}"></td>
-        <td th:text="${appointment.patientName}"></td>
-        <td th:text="${appointment.patientContactNumber}"></td>
+        <td th:text="${appointment.appointmentDate}"></td>
+        <td th:text="${appointment.appointmentTime}"></td>
+        <td th:text="${appointment.reason}"></td>
     </tr>
     </tbody>
 </table>
