@@ -118,12 +118,10 @@
                     <strong>Bill Date</strong>
                     <p th:text="${bill.billDate}"></p>
                 </div>
-                <div>
-                    <strong>Payment Status</strong>
-                    <p th:text="${bill.paymentstatus}"></p>
-                </div>
+               
+
 				
-				
+
             </div>
         </div>
 
@@ -167,9 +165,30 @@
                 <div>
                     <strong>Final Amount</strong>
                     <p th:text="${bill.finalamount}"></p>
-                </div>
+                
+				
             </div>
         </div>
+		
+		
+		<div class="section">
+		            <h3>Paid and Unpaid Amount details</h3>
+		            <div class="details-grid">
+						<div>
+										
+										    <strong>Unpaid Amount: </strong>
+										    <p th:text="${balanceAmount}"></p>
+										</div>
+										<div>
+														    <strong>Paid Amount: </strong>
+														    <p th:text="${bill.amountPaid}"></p>
+										</div>
+										<div>
+										                   <strong>Payment Status</strong>
+										                   <p th:text="${bill.paymentstatus}"></p>
+										               </div>
+						</div>
+						</div>				
 
         <!-- Appointment Details -->
         <div class="section">
@@ -239,7 +258,7 @@
             </ul>
         </div>
 
-        <form th:action="@{/create}" method="GET">
+        <form th:if="${balanceAmount > 0}" th:action="@{/create}" method="GET">
             <input type="hidden" name="billId" th:value="${bill.billId}" />
             <input type="hidden" name="finalamount" th:value="${bill.finalamount}" />
             <button type="submit" class="btn">Make Payment</button>
@@ -248,156 +267,3 @@
 </body>
 </html>
 
-<!--<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bill Details</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f9;
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-        }
-        .container {
-            max-width: 100%;
-            width: 90%;
-            background: #fff;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-            overflow-x: auto; /* Allow horizontal scrolling for wide tables */
-        }
-        h2 {
-            text-align: center;
-            color: #333;
-            margin-bottom: 20px;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            min-width: 1000px; /* Ensures the table is scrollable if content exceeds container width */
-        }
-        th, td {
-            text-align: center;
-            padding: 10px;
-            border: 1px solid #ccc;
-            word-wrap: break-word; /* Prevents content overflow */
-        }
-        th {
-            background: #007bff;
-            color: #fff;
-        }
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-        @media (max-width: 768px) {
-            th, td {
-                padding: 8px; /* Reduce padding on smaller screens */
-                font-size: 14px;
-            }
-            h2 {
-                font-size: 18px; /* Adjust heading size for smaller screens */
-            }
-        }
-        @media (max-width: 480px) {
-            th, td {
-                padding: 5px;
-                font-size: 12px; /* Further reduce font size for very small screens */
-            }
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <h2>Bill Details</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Bill ID</th>
-                    <th>Bill Date</th>
-                    <th>Consultation Fees</th>
-                    <th>Medicine Fees</th>
-                    <th>Test Charges</th>
-                    <th>Miscellaneous Charge</th>
-                    <th>Description</th>
-                    <th>Insurance Applicable</th>
-                    <th>Discount (%)</th>
-                    <th>Tax</th>
-                    <th>Total Amount</th>
-                    <th>Final Amount</th>
-                    <th>Payment Status</th>
-                    <th>Appointment ID</th>
-                    <th>Reason</th>
-                    <th>Patient ID</th>
-                    <th>Doctor ID</th>
-                    <th>Appointment Date</th>
-                    <th>Appointment Time</th>
-                    <th>Status</th>
-					
-				 </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td th:text="${bill.billId}"></td>
-                    <td th:text="${bill.billDate}"></td>
-                    <td th:text="${bill.consultationFees}"></td>
-                    <td th:text="${bill.medicineFees}"></td>
-                    <td th:text="${bill.testCharges}"></td>
-                    <td th:text="${bill.miscellaneousCharge}"></td>
-                    <td th:text="${bill.description}"></td>
-                    <td th:text="${bill.isInsuranceApplicable} ? 'Yes' : 'No'"></td>
-                    <td th:text="${bill.discountPercentage}"></td>
-                    <td th:text="${bill.tax} ? 'Yes' : 'No'"></td>
-                    <td th:text="${bill.totalamount}"></td>
-                    <td th:text="${bill.finalamount}"></td>
-                    <td th:text="${bill.paymentstatus}"></td>
-                    <td th:text="${bill.appointment.appointmentId}"></td>
-                    <td th:text="${bill.appointment.reason}"></td>
-                    <td th:text="${bill.appointment.patientId}"></td>
-                    <td th:text="${bill.appointment.doctorId}"></td>
-                    <td th:text="${bill.appointment.appointmentDate}"></td>
-                    <td th:text="${bill.appointment.appointmentTime}"></td>
-                    <td th:text="${bill.appointment.status}"></td>
-                </tr>
-
-
-				<div th:if="${not #lists.isEmpty(bill.payList)}">
-				        <ul>
-				            <li th:each="payment : ${bill.payList}">
-				                <p><strong>paymentMethod</strong> <span th:text="${payment.paymentMethod}"></span></p>
-								<p><strong>amount</strong> <span th:text="${payment.amount}"></span></p>
-								<p><strong>paymentStatus</strong> <span th:text="${payment.paymentStatus}"></span></p>
-								<p><strong>paymentDate</strong> <span th:text="${payment.paymentDate}"></span></p>
-								<p><strong>razorpayOrderId</strong> <span th:text="${payment.razorpayOrderId}"></span></p>
-								<p><strong>currency</strong> <span th:text="${payment.currency}"></span></p>
-				            </li>
-				        </ul>
-				    </div>
-
-
-            </tbody>
-        </table>
-		<a href="/create" class="btn">Make Payment</a>
-		<a href="/create?billId=${bill.billId}&finalAmount=${bill.finalamount}" class="btn">Make Payment</a>
-		<a href="@{/create(billId=${bill.billId}, finalAmount=${bill.finalamount})}" class="btn">Make Payment</a>
-		<a href="@{/create(billId=${bill.billId}, finalAmount=${bill.finalamount})}" class="btn">Make Payment</a>
-
-			
-<form th:action="@{/create}" method="GET">
-    <input type="hidden" name="billId" th:value="${bill.billId}" />
-    <input type="hidden" name="finalamount" th:value="${bill.finalamount}" />
-    <button type="submit" class="btn">Make Payment</button>
-</form>
-
-
-    </div>
-</body>
-</html>
--->

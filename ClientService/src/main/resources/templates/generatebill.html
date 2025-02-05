@@ -115,6 +115,7 @@
 		                <input type="number" id="appId" th:field="*{appointment.appointmentId}" placeholder="Enter Appointment ID">
 		                <div class="error-message" id="appIdError"></div>
 		            </div>
+					
 
 		            <div class="form-group">
 		                <label for="billDate">Bill Date:</label>
@@ -275,6 +276,7 @@
 		    return isValid;
 		}
 
+		
 		function submitForm() {
 		    const appointmentId = document.getElementsByName('appointment.appointmentId')[0].value;
 		    const form = document.getElementById('dynamicForm');
@@ -283,15 +285,7 @@
 		}
 
 	    </script>
-	<!--
-    <script>
-        function submitForm() {
-            const appointmentId = document.getElementsByName('appointment.appointmentId')[0].value;
-            const form = document.getElementById('dynamicForm');
-            form.action = /bills/${appointmentId};
-            form.submit();
-        }
-    </script>
-	-->
+	
+	
 </body>
 </html>
