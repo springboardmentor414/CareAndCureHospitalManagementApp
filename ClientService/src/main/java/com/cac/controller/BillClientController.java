@@ -125,7 +125,6 @@ public class BillClientController {
          // Send the POST request
          try {
              ResponseEntity<Bill> response = restTemplate.exchange(
-             ResponseEntity<Bill> response = restTemplate.exchange(
                  url,
                  HttpMethod.POST,
                  request,
@@ -183,7 +182,6 @@ public class BillClientController {
 
  	    try {
  	        ResponseEntity<Bill> response = restTemplate.exchange(
- 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.GET,
  	            null,
@@ -236,7 +234,6 @@ public class BillClientController {
  	   
  	    try {
  	        ResponseEntity<Bill> response = restTemplate.exchange(
- 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.PUT,
  	            request,
@@ -284,7 +281,6 @@ public class BillClientController {
 	    try {
 	        // Send the GET request to fetch the list of bills
 	        ResponseEntity<List<Bill>> response = restTemplate.exchange(
-	        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
 	            null,
@@ -328,7 +324,6 @@ public class BillClientController {
 
 		    try {
 		        // Send the GET request to fetch the list of bills
-		        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 		        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 		            url,
 		            HttpMethod.GET,
@@ -376,7 +371,6 @@ public class BillClientController {
 	    headers.set("Content-Type", "application/json");
 
 	    try {
-	        ResponseEntity<Bill> response = restTemplate.exchange(
 	        ResponseEntity<Bill> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
