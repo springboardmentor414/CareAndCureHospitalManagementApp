@@ -497,8 +497,7 @@ public class AdminDoctorController {
     //
     @GetMapping("/details/{doctorId}")
     public ResponseEntity<Doctor> getDoctorrById(@PathVariable int doctorId) {
-    Doctor doctor = doctorService.getDoctorById(doctorId); // Assume this always
-    exists
+    Doctor doctor = doctorService.getDoctorById(doctorId); // Assume this always exists
     return ResponseEntity.ok(doctor); // Return HTTP 200 with doctor details
     }
 

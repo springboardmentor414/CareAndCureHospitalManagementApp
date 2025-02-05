@@ -85,7 +85,7 @@ public class BillService {
 	}
    
 	public List<Bill> getBillsByPatientId(int patientId) {
-	    return billingRepository.findByAppointment_PatientId(patientId);
+	    return billingRepository.findByAppointment_Patient_PatientId(patientId);
 	}
 
 	

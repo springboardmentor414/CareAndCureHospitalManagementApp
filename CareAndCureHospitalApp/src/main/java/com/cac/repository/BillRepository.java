@@ -13,7 +13,7 @@ public interface BillRepository extends JpaRepository<Bill, Integer> {
 	 Bill findByAppointment_AppointmentId(int appointmentId);
 
 	
-	 List<Bill> findByAppointment_PatientId(int patientId);
+	 List<Bill> findByAppointment_Patient_PatientId(int patientId);
 
 	 List<Bill> findByBillDate(LocalDate billDate);
 }
