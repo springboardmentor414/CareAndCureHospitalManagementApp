@@ -3,6 +3,7 @@ package com.cac.controller;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
@@ -35,10 +36,12 @@ public class BillClientController {
     public void initBinder(WebDataBinder binder) {
        
     }
-	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
+	/*
+	 * @Bean public RestTemplate restTemplate() { return new RestTemplate(); }
+	 */
+    
+	@Autowired
+    private RestTemplate restTemplate;
 
 	@RequestMapping(value="/index")
 	public String regindex() {
@@ -105,7 +108,7 @@ public class BillClientController {
 
          // Send the POST request
          try {
-             ResponseEntity<Bill> response = restTemplate().exchange(
+             ResponseEntity<Bill> response = restTemplate.exchange(
                  url,
                  HttpMethod.POST,
                  request,
@@ -140,6 +143,9 @@ public class BillClientController {
          if (billobj != null) {
         	 
              model.addAttribute("bill", billobj); // Optionally add the newly created bill to the model
+             double balanceAmount = billobj.getFinalamount() - billobj.getAmountPaid();
+        	 model.addAttribute("balanceAmount", balanceAmount);
+             System.out.println(balanceAmount);
              return "bill_list"; // A confirmation page to show the bill details
          } else {
              // If the bill wasn't created, show an error message
@@ -159,7 +165,7 @@ public class BillClientController {
  	    headers.set("Content-Type", "application/json");
 
  	    try {
- 	        ResponseEntity<Bill> response = restTemplate().exchange(
+ 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.GET,
  	            null,
@@ -211,7 +217,7 @@ public class BillClientController {
 
  	   
  	    try {
- 	        ResponseEntity<Bill> response = restTemplate().exchange(
+ 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.PUT,
  	            request,
@@ -258,7 +264,7 @@ public class BillClientController {
 
 	    try {
 	        // Send the GET request to fetch the list of bills
-	        ResponseEntity<List<Bill>> response = restTemplate().exchange(
+	        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
 	            null,
@@ -302,7 +308,7 @@ public class BillClientController {
 
 		    try {
 		        // Send the GET request to fetch the list of bills
-		        ResponseEntity<List<Bill>> response = restTemplate().exchange(
+		        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 		            url,
 		            HttpMethod.GET,
 		            null,
@@ -349,7 +355,7 @@ public class BillClientController {
 	    headers.set("Content-Type", "application/json");
 
 	    try {
-	        ResponseEntity<Bill> response = restTemplate().exchange(
+	        ResponseEntity<Bill> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
 	            null,
@@ -371,6 +377,9 @@ public class BillClientController {
 
 	    if (bill != null) {
 	        model.addAttribute("bill", bill);
+	        double balanceAmount = bill.getFinalamount() - bill.getAmountPaid();
+	       	 model.addAttribute("balanceAmount", balanceAmount);
+	            System.out.println(balanceAmount);
 	        return "bill_list";
 	    } else {
 	        model.addAttribute("errorMessage", "No bill details found with the given ID.");

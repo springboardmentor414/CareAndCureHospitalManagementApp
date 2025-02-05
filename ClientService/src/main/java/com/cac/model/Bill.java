@@ -2,11 +2,11 @@ package com.cac.model;
 
 
 import java.time.LocalDate;
+
 import java.util.Set;
 
 import com.cac.model.Payment;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 
 
@@ -40,6 +40,17 @@ public class Bill {
 	
     private float taxPercentage;
     private double taxableamount;
+    
+    private double amountPaid;   
+    
+    
+	
+	public double getAmountPaid() {
+		return amountPaid;
+	}
+	public void setAmountPaid(double amountPaid) {
+		this.amountPaid = amountPaid;
+	}
 	
 	
 	public Set<Payment> getPayList() {
