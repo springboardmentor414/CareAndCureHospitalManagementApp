@@ -35,8 +35,8 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         
       //email address
-        //helper.setTo(bill.getAppointment().getPatientEmail());
-        helper.setTo("anshitagupta2277@gmail.com");
+        helper.setTo(bill.getAppointment().getPatient().getEmailId());
+        //helper.setTo("anshitagupta2277@gmail.com");
         helper.setSubject("Your Bill Details");
         helper.setText(emailBody, true);
 

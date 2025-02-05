@@ -4,6 +4,7 @@ import com.cac.exception.UserNotFoundException;
 import com.cac.model.Bill;
 import com.cac.model.Payment;
 import com.cac.repository.BillRepository;
+import com.cac.service.BillService;
 import com.cac.service.EmailService;
 import com.cac.service.PaymentService;
 import com.cac.service.RazorpayService;
@@ -54,7 +55,7 @@ public class PaymentController {
     @Autowired
     private RazorpayService razorpayService;
     
-        
+    
    
     
     @CrossOrigin(origins = "http://localhost:9093") // Allow CORS for this controller method
@@ -125,7 +126,8 @@ public class PaymentController {
                      Bill bill = payment.getBill();
                      paymentService.updatePaymentStatus(bill.getBillId());
                      double balanceAmount = bill.getFinalamount() - bill.getAmountPaid();
-                     String userEmail = "aathi22004@gmail.com"; 
+                     String userEmail=payment.getBill().getAppointment().getPatient().getEmailId();
+                   //  String userEmail = "aathi22004@gmail.com"; 
                      emailNotificationService.sendPaymentSuccessEmail(
                              userEmail, razorpayPaymentId, razorpayOrderId, payment.getAmount(), bill.getBillId(), balanceAmount
                      );
@@ -141,8 +143,8 @@ public class PaymentController {
                  if (payment != null) {
                      payment.setPaymentStatus("UnSuccess");
                      paymentService.savePayment(payment);
-
-                     String userEmail = "aathi22004@gmail.com"; 
+                     String userEmail=payment.getBill().getAppointment().getPatient().getEmailId();
+                     //String userEmail = "aathi22004@gmail.com"; 
                      emailNotificationService.sendPaymentFailureEmail(
                              userEmail, razorpayOrderId, "Invalid payment signature.", payment.getBill().getBillId()
                      );
@@ -156,8 +158,8 @@ public class PaymentController {
              if (payment != null) {
                  payment.setPaymentStatus("Failed");
                  paymentService.savePayment(payment);
-
-                 String userEmail = "aathi22004@gmail.com"; 
+                 String userEmail=payment.getBill().getAppointment().getPatient().getEmailId();
+                 //String userEmail = "aathi22004@gmail.com"; 
                  emailNotificationService.sendPaymentFailureEmail(
                          userEmail, razorpayOrderId, e.getMessage(), payment.getBill().getBillId()
                  );
@@ -179,7 +181,11 @@ public class PaymentController {
         	int billId = Integer.parseInt(payload.get("billId").toString());
             String orderId = (String) payload.get("orderId");
             String failureReason = (String) payload.get("message");
-            String userEmail = "aathi22004@gmail.com"; 
+            Bill bill = billingRepository.findByBillId(billId);
+            String userEmail = bill.getAppointment().getPatient().getEmailId();
+
+
+            //String userEmail = "aathi22004@gmail.com"; 
             emailNotificationService.sendPaymentFailureEmail(userEmail, orderId, failureReason, billId);
 
             response.put("message", "Failure notification sent successfully!");
