@@ -95,7 +95,7 @@ public class AppointmentClientController {
 			model.addAttribute("errorMessage", "Login Required!.");
 			return "unauthorized";
 		}
-		if((role.equalsIgnoreCase("patient") && patientSession!=null && patientSession.getPatientId()!=patientId) || !role.equalsIgnoreCase("admin")){
+		if((role.equalsIgnoreCase("patient") && patientSession!=null && patientSession.getPatientId()!=patientId)){
 			model.addAttribute("errorMessage", "Unauthorized Access!.");
 			return "unauthorized";
 		}
