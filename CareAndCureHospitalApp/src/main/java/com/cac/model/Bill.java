@@ -1,7 +1,13 @@
 package com.cac.model;
 
+import jakarta.persistence.*;
+
+import com.cac.model.Appointment;
+import com.cac.model.Payment;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Set;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -25,8 +31,6 @@ import lombok.Setter;
 
 @Entity
 public class Bill {
-
-	
 	@Id
 	@GeneratedValue(strategy=GenerationType.IDENTITY)
 	private  int billId;
@@ -182,13 +186,4 @@ public class Bill {
 	
 	
 	
-
 }
-
-
-
-
-
-
-
-

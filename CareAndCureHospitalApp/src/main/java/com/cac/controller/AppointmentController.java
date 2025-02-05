@@ -213,6 +213,3 @@ public ResponseEntity<?> updateAppointment(@PathVariable int patientId, @PathVar
     }
     
 }
-
-
-

@@ -7,6 +7,11 @@ import com.cac.repository.BillRepository;
 import com.cac.service.EmailService;
 import com.cac.service.PaymentService;
 import com.cac.service.RazorpayService;
+import com.cac.controller.PaymentController;
+import com.cac.exception.UserNotFoundException;
+import com.cac.model.Bill;
+import com.cac.repository.BillRepository;
+import com.cac.service.EmailService;
 import com.razorpay.Order;
 import com.razorpay.Utils;
 
@@ -17,6 +22,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import jakarta.validation.Valid;
 
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
@@ -32,6 +39,7 @@ import java.util.logging.Logger;
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
+
 
     private static final Logger logger = Logger.getLogger(PaymentController.class.getName());
 
@@ -197,51 +205,42 @@ public class PaymentController {
             if (paymentStatus != null) {
                 paymentStatus = URLDecoder.decode(paymentStatus, StandardCharsets.UTF_8);
             }
-
-            List<Payment> payments = new ArrayList<>();
-            String message = "No payments found for the provided criteria: ";
-
-            if (billId != null && paymentMethod != null && paymentStatus != null) {
-                payments = paymentService.getPaymentsByBillIdAndMethodAndStatus(billId, paymentMethod, paymentStatus);
-                message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod + ", Payment Status = " + paymentStatus;
-            } else if (billId != null && paymentMethod != null) {
-                payments = paymentService.getPaymentsByBillIdAndMethod(billId, paymentMethod);
-                message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod;
-            } else if (billId != null && paymentStatus != null) {
-                payments = paymentService.getPaymentsByBillIdAndStatus(billId, paymentStatus);
-                message += "Bill ID = " + billId + ", Payment Status = " + paymentStatus;
-            } else if (paymentMethod != null && paymentStatus != null) {
-                payments = paymentService.getPaymentsByMethodAndStatus(paymentMethod, paymentStatus);
-                message += "Payment Method = " + paymentMethod + ", Payment Status = " + paymentStatus;
-            } else if (billId != null) {
-                payments = paymentService.getPaymentsByBillId(billId);
-                message += "Bill ID = " + billId;
-            } else if (paymentMethod != null) {
-                payments = paymentService.getPaymentsByPaymentMethod(paymentMethod);
-                message += "Payment Method = " + paymentMethod;
-            } else if (paymentStatus != null) {
-                payments = paymentService.getPaymentsByPaymentStatus(paymentStatus);
-                message += "Payment Status = " + paymentStatus;
+            if (billId != null) {
+                List<Payment> payments = paymentService.getPaymentsByBillId(billId);
+                if (payments.isEmpty()) {
+                    throw new UserNotFoundException("No payments found for the provided Bill ID: " + billId);
+                }
+                return ResponseEntity.ok(payments);
+            } else if (paymentMethod != null && !paymentMethod.isEmpty()) {                
+                List<Payment> payments = paymentService.getPaymentsByPaymentMethod(paymentMethod);
+                if (payments.isEmpty()) {
+                    throw new UserNotFoundException("No payments found for the payment method: " + paymentMethod);
+                }
+                return ResponseEntity.ok(payments);
+            } else if (paymentStatus != null && !paymentStatus.isEmpty()) {
+                List<Payment> payments = paymentService.getPaymentsByPaymentStatus(paymentStatus);
+                if (payments.isEmpty()) {
+                    throw new UserNotFoundException("No payments found for the payment status: " + paymentStatus);
+                }
+                return ResponseEntity.ok(payments);
+            } else if (billId == null && (paymentMethod == null || paymentMethod.isEmpty()) && (paymentStatus == null || paymentStatus.isEmpty())) {
+                List<Payment> allPayments = paymentService.getAllPayments();
+                if (allPayments.isEmpty()) {
+                    throw new UserNotFoundException("No payments found in the system.");
+                }
+                return ResponseEntity.ok(allPayments);
             } else {
-                payments = paymentService.getAllPayments();
-                message = "No payments found in the system.";
+                return ResponseEntity.badRequest()
+                        .body("Error! Please provide valid search criteria (Bill ID, Payment Method, or Payment Status). ");
             }
-
-            if (payments.isEmpty()) {
-                throw new UserNotFoundException(message);
-            }
-
-            return ResponseEntity.ok(payments);
         } catch (UserNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ex.getMessage());
-        } catch (Exception e) {
+        } catch (Exception e) {            
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while processing your request.");
         }
     }
-
-
 
 
     @CrossOrigin(origins = "http://localhost:9093")
@@ -278,6 +277,7 @@ public class PaymentController {
                     .body("Error searching payments: " + e.getMessage());
         }
     }
+
 
 
 

@@ -89,7 +89,17 @@ public class AppointmentClientController {
     }
 
 	@GetMapping("/{patientId}/appointments")
-	public String showAppointmentsForPatient(@PathVariable Long patientId, Model model) {
+	public String showAppointmentsForPatient(@PathVariable int patientId, Model model) {
+
+		if(role==null) {
+			model.addAttribute("errorMessage", "Login Required!.");
+			return "unauthorized";
+		}
+		if((role.equalsIgnoreCase("patient") && patientSession!=null && patientSession.getPatientId()!=patientId) || !role.equalsIgnoreCase("admin")){
+			model.addAttribute("errorMessage", "Unauthorized Access!.");
+			return "unauthorized";
+		}
+		
 		String url = baseUrl + "/patient/" + patientId + "/appointments";
 		try {
 			ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null,

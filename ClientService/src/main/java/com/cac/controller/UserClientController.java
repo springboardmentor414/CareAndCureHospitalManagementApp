@@ -229,7 +229,7 @@ public class UserClientController {
 			patientObj = response.getBody();
 			model.addAttribute("patientId", patientObj.getPatientId());
 			model.addAttribute("patientName", patientObj.getPatientName());
-			model.addAttribute("message", "Registration Successfully.");
+			model.addAttribute("patientMessage", "Registration Successfully.");
 			return "statuspage";
 		} catch (HttpStatusCodeException e) {
 			ObjectMapper objectMapper = new ObjectMapper();

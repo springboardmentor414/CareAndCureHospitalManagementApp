@@ -1,8 +1,9 @@
 package com.cac.service;
 
 import com.cac.model.Bill;
+
 import com.cac.repository.BillRepository;
-import com.cac.exception.UserNotFoundException;
+import com.cac.exception.BillNotFoundException;
 import com.cac.model.Appointment;
 import com.cac.repository.AppointmentRepository;
 import com.cac.repository.BillRepository;
@@ -16,12 +17,19 @@ import org.springframework.stereotype.Service;
 @Service
 public class BillService {
 
-	@Autowired
-	private BillRepository billingRepository;
-	
+    @Autowired
+    private BillRepository billRepository;
+
 	@Autowired
 	private AppointmentRepository appointmentRepository;
+
+    public Bill findByBillId(int billId) {
+        return billRepository.findByBillId(billId);
+    }
+   
+   
 	
+		
 	public String displayWelcomeMessage() {
 		return "welcome to billingSystem";
 	}
@@ -35,11 +43,11 @@ public class BillService {
 		}
        
 	    Appointment appointment = appointmentRepository.findById(appointmentId)
-	            .orElseThrow(() -> new UserNotFoundException("Appointment not found with ID: " + appointmentId));
+	            .orElseThrow(() -> new BillNotFoundException("Appointment not found with ID: " + appointmentId));
 
 	    
 	    // Check if a bill is already associated with this appointment
-	    Bill b=billingRepository.findByAppointment_AppointmentId(appointmentId);
+	    Bill b=billRepository.findByAppointment_AppointmentId(appointmentId);
         if (b!=null) {
             throw new IllegalArgumentException("A bill already exists for this appointment.");
         }   
@@ -64,7 +72,7 @@ public class BillService {
 	    bill.setAppointment(appointment);
 
 	    
-	    return billingRepository.save(bill);
+	    return billRepository.save(bill);
 	}
 	
 	public Bill updatePaymentStatus(int billId, String paymentStatus) {
@@ -72,31 +80,29 @@ public class BillService {
 		    throw new IllegalArgumentException("Invalid Bill or Appointment ID.");
 		}
        
-        Bill bill = billingRepository.findById(billId)
-                .orElseThrow(() -> new UserNotFoundException("Bill not found with ID: " + billId));
+        Bill bill = billRepository.findById(billId)
+                .orElseThrow(() -> new BillNotFoundException("Bill not found with ID: " + billId));
         bill.setPaymentstatus(paymentStatus);
-        return billingRepository.save(bill);
+        return billRepository.save(bill);
     }
 
 	
 	public Bill getBillById(int billId) {
-	    return billingRepository.findById(billId)
-	            .orElseThrow(() -> new UserNotFoundException("Bill not found with ID: " + billId));
+	    return billRepository.findById(billId)
+	            .orElseThrow(() -> new BillNotFoundException("Bill not found with ID: " + billId));
 	}
    
 	public List<Bill> getBillsByPatientId(int patientId) {
-	    return billingRepository.findByAppointment_Patient_PatientId(patientId);
+	    return billRepository.findByAppointment_Patient_PatientId(patientId);
 	}
 
 	
 	public List<Bill> getBillsByDate(LocalDate billDate) {
-	    return billingRepository.findByBillDate(billDate);
+	    return billRepository.findByBillDate(billDate);
 	}
 
 	public Bill saveBill(Bill bill) {
-	    return billingRepository.save(bill);
+	    return billRepository.save(bill);
 	}
-	public Bill findByBillId(int billId) {
-        return billingRepository.findByBillId(billId);
-    }
+	
 }

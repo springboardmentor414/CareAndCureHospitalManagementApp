@@ -1,6 +1,5 @@
 package com.cac.model;
 
-
 import java.time.LocalDate;
 import java.util.Set;
 

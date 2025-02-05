@@ -1,5 +1,7 @@
 package com.cac.model;
 
+import com.cac.model.Bill;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import jakarta.validation.constraints.Size;
@@ -32,6 +34,11 @@ public class Appointment {
   @ManyToOne(fetch = FetchType.EAGER) 
   @JoinColumn(name = "patient_id", nullable = false)
   private Patient patient;
+  
+//added by team 4
+  @OneToOne(mappedBy = "appointment")
+	@JsonBackReference
+	private Bill bill;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "doctor_id", nullable = false)
@@ -47,6 +54,8 @@ public class Appointment {
   private String doctorPhoneNumber;
   @Transient
   private String specialty;
+  
+  
 
   @PostLoad
   public void setDoctorNameAndId() {

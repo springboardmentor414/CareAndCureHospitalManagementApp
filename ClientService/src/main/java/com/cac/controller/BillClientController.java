@@ -1,17 +1,24 @@
 package com.cac.controller;
 
-import java.time.LocalDate;
-import java.util.List;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.springframework.context.annotation.Bean;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cac.model.Appointment;
+import com.cac.model.Bill;
+import com.cac.model.Doctor;
+
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.WebDataBinder;
 import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -22,23 +29,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
+import org.springframework.ui.Model;
+import org.springframework.http.HttpHeaders;
+import java.util.*;
+import java.time.LocalDate;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.cac.model.Bill;
 
 @Controller
 public class BillClientController {
-	@InitBinder
-    public void initBinder(WebDataBinder binder) {
-       
-    }
-	@Bean
-	public RestTemplate restTemplate() {
-	    return new RestTemplate();
-	}
+	
+	@Autowired
+	public RestTemplate restTemplate;
+
+	@Value("${base.url}")
+	private String backendUrl;
 
 	@RequestMapping(value="/index")
 	public String regindex() {
@@ -46,13 +50,28 @@ public class BillClientController {
 		
 	}
 	
-	@RequestMapping(value="/")
+	@RequestMapping(value="/billHomePage")
 	public String registrationPage() {
 	    return "frontpage";
 		
 	}
 	
+	@RequestMapping(value="/generateBillByAdmin/{appointmentId}")
+	public String generateBillPageByAdmin(@PathVariable int appointmentId, Model m) {
+
+		Appointment appointment= restTemplate.getForEntity(backendUrl + "/api/admin/getAppointmentById/"+ appointmentId,Appointment.class).getBody();
+		Bill bill = new Bill();
+		if(appointment!=null){
+		bill.setAppointment(appointment);
+		Doctor doctor = restTemplate.getForEntity(backendUrl + "/api/doctors/"+ appointment.getDoctorId(),Doctor.class).getBody();
+			if(doctor!=null)
+		bill.setConsultationFees(doctor.getConsultationFees());
+		bill.setInsuranceApplicable(appointment.getPatient().getHasInsurance());
+		}
+		m.addAttribute("bill", bill);
+	    return "generatebill";
 	
+	}
 	
 	
 	
@@ -105,7 +124,7 @@ public class BillClientController {
 
          // Send the POST request
          try {
-             ResponseEntity<Bill> response = restTemplate().exchange(
+             ResponseEntity<Bill> response = restTemplate.exchange(
                  url,
                  HttpMethod.POST,
                  request,
@@ -159,7 +178,7 @@ public class BillClientController {
  	    headers.set("Content-Type", "application/json");
 
  	    try {
- 	        ResponseEntity<Bill> response = restTemplate().exchange(
+ 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.GET,
  	            null,
@@ -175,10 +194,10 @@ public class BillClientController {
                  return "statuspage_bill"; 
              }
  	        model.addAttribute("errorMessage", "Client error: " + e.getMessage());
- 	        return "statuspage_bill";
+ 	        return "statuspage";
  	    } catch (HttpServerErrorException e) {
  	        model.addAttribute("errorMessage", "Server error: " + e.getMessage());
- 	        return "statuspage_bill";
+ 	        return "statuspage";
  	    } catch (Exception e) {
  	        model.addAttribute("errorMessage", "Unexpected error: " + e.getMessage());
  	        return "statuspage_bill";
@@ -211,7 +230,7 @@ public class BillClientController {
 
  	   
  	    try {
- 	        ResponseEntity<Bill> response = restTemplate().exchange(
+ 	        ResponseEntity<Bill> response = restTemplate.exchange(
  	            url,
  	            HttpMethod.PUT,
  	            request,
@@ -251,14 +270,14 @@ public class BillClientController {
 	    List<Bill> bills = null;
 
 	   
-	    String url = "http://localhost:8080/bills/patient/" + patientId;
+	    String url = "http://localhost:8082/bills/patient/" + patientId;
 	    
 	    HttpHeaders headers = new HttpHeaders();
 	    headers.set("Content-Type", "application/json");
 
 	    try {
 	        // Send the GET request to fetch the list of bills
-	        ResponseEntity<List<Bill>> response = restTemplate().exchange(
+	        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
 	            null,
@@ -302,7 +321,7 @@ public class BillClientController {
 
 		    try {
 		        // Send the GET request to fetch the list of bills
-		        ResponseEntity<List<Bill>> response = restTemplate().exchange(
+		        ResponseEntity<List<Bill>> response = restTemplate.exchange(
 		            url,
 		            HttpMethod.GET,
 		            null,
@@ -349,7 +368,7 @@ public class BillClientController {
 	    headers.set("Content-Type", "application/json");
 
 	    try {
-	        ResponseEntity<Bill> response = restTemplate().exchange(
+	        ResponseEntity<Bill> response = restTemplate.exchange(
 	            url,
 	            HttpMethod.GET,
 	            null,

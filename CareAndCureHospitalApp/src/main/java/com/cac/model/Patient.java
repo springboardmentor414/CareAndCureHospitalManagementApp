@@ -46,7 +46,7 @@ public class Patient {
     private String address;
 
     @Email(message = "Enter valid email", regexp = "^[a-zA-Z0-9._-]+@[a-zA-Z0-9]+\\.[a-zA-Z]{2,}$")
-    @Column(unique = true, length=100)
+    @Column(unique = true, nullable = false)
     private String emailId;
 
     @Lob
@@ -71,7 +71,7 @@ public class Patient {
     @Column(length = 50)
     private String insuranceProvider;
 
-    @Column(length = 20, unique = true)
+    @Column(length = 20)
     private String insurancePolicyNumber;
 
     private LocalDate insuranceExpiryDate;

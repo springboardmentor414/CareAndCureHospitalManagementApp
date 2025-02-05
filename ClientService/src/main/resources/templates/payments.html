@@ -210,27 +210,24 @@
 
         <div id="dateError" class="error-message mt-2"></div>
 
-		<table class="table table-striped" th:if="${payments != null and !payments.isEmpty()}">
-		    <thead>
-		        <tr>
-		            
-		            <th><i class="fas fa-credit-card"></i> Payment Method</th>
-		            <th><i class="fas fa-wallet"></i> Amount</th>
-		            <th><i class="fas fa-calendar-alt"></i> Payment Date</th>
-		            <th><i class="fas fa-check-circle"></i> Payment Status</th>
-		        </tr>
-		    </thead>
-		    <tbody>
-		        <tr th:each="payment : ${payments}">
-		            
-		            <td th:text="${payment.paymentMethod}"></td>
-		            <td th:text="${payment.amount}"></td>
-		            <td th:text="${payment.paymentDate}"></td>
-		            <td th:class="${payment.paymentStatus == 'Success' ? 'status-success' : 'status-failed'}" th:text="${payment.paymentStatus}"></td>
-		        </tr>
-		    </tbody>
-		</table>
-
+        <table class="table table-striped" th:if="${payments != null and !payments.isEmpty()}">
+            <thead>
+                <tr>
+                    <th><i class="fas fa-credit-card"></i> Payment Method</th>
+                    <th><i class="fas fa-wallet"></i> Amount</th>
+                    <th><i class="fas fa-calendar-alt"></i> Payment Date</th>
+                    <th><i class="fas fa-check-circle"></i> Payment Status</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="payment : ${payments}">
+                    <td th:text="${payment.paymentMethod}"></td>
+                    <td th:text="${payment.amount}"></td>
+                    <td th:text="${payment.paymentDate}"></td>
+                    <td th:class="${payment.paymentStatus == 'Success' ? 'status-success' : 'status-failed'}" th:text="${payment.paymentStatus}"></td>
+                </tr>
+            </tbody>
+        </table>
 
         <div class="alert alert-warning" th:if="${payments == null or payments.isEmpty()}">
             No payments found for the given search criteria.

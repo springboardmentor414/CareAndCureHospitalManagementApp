@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -70,12 +71,35 @@ public class PaymentClientController {
     public String viewpayments() {
         return "payments";
     }
-    
-   
 
-   
-   
-    @GetMapping("/searchbypayment")
+    @PostMapping("/create")
+    public String createPayment(
+        @RequestParam int billId,
+        @RequestParam String paymentMethod,
+        @RequestParam Double amount
+    ) {
+        RestTemplate restTemplate = new RestTemplate();
+        try {
+        	Payment payment = new Payment();
+            Bill bill = new Bill();
+            bill.setBillId(billId);  
+            payment.setBill(bill);
+            payment.setPaymentMethod(paymentMethod);
+            payment.setAmount(amount);
+
+            restTemplate.postForObject(
+                backendUrl + "/create",
+                payment,
+                String.class
+            );
+        } catch (Exception e) {
+            logger.severe("Error creating payment: " + e.getMessage());
+            return "redirect:/create?error=true";
+        }
+        return "redirect:/payments";
+    }
+
+    @GetMapping("/search")
     public String searchPayments(
             @RequestParam(required = false) Integer billId,
             @RequestParam(required = false) String paymentMethod,

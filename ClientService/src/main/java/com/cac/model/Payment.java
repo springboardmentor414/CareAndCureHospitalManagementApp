@@ -1,6 +1,5 @@
 package com.cac.model;
 
-
 import com.cac.model.Bill;
 
 public class Payment {

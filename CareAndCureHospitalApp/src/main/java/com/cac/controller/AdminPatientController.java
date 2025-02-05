@@ -16,6 +16,9 @@ import com.cac.service.AdminService;
 import com.cac.service.AppointmentService;
 
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
 @RequestMapping("/api/admin")
@@ -58,6 +61,12 @@ public class AdminPatientController {
 
         return new ResponseEntity<>(noShows, HttpStatus.OK);
     }
+
+    @GetMapping("/getAppointmentById/{id}")
+    public ResponseEntity<Appointment> getAppointmentById(@PathVariable int id) {
+        return ResponseEntity.ok(appointmentService.getAppointmentById(id).orElse(null));
+    }
+    
 
     
 }
