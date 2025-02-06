@@ -191,6 +191,14 @@ public class DoctorService {
         
       return doctorRepository.findByUsername(username).orElseThrow(()->new UserNotFoundException("Doctor not found with username : "+username));
     }
+    
+    public boolean emailExists(String emailId) {
+        return doctorRepository.existsByEmailId(emailId);
+    }
+
+    public boolean contactNumberExists(String contactNumber) {
+        return doctorRepository.existsByContactNumber(contactNumber);
+    }
 
     
 }
