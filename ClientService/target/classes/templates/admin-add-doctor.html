@@ -128,6 +128,13 @@
             alert('Error submitting form. Please correct the highlighted fields.');
         }
     </script>
+	<script>
+	    function fillUsername() {
+	        var doctorId = document.getElementById("doctorId").value;
+	        document.getElementById("username").value = doctorId;
+	    }
+	</script>
+
 </head>
 <body>
     <div class="container">
@@ -148,7 +155,8 @@
             <!-- Doctor ID Field -->
             <div class="form-group">
                 <label for="doctorId">Doctor ID:</label>
-                <input type="number" id="doctorId" name="doctorId" th:field="*{doctorId}" />
+				<input type="number" id="doctorId" name="doctorId" th:field="*{doctorId}" oninput="fillUsername()" />
+
                 <div th:if="${#fields.hasErrors('doctorId')}" class="error-text" th:errors="*{doctorId}"></div>
             </div>
 

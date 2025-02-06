@@ -433,27 +433,27 @@
           </td>
         </tr>
       </table>
+
     </form>
+    <span>Already Registered ? <a th:href="@{/patientLoginForm}">Login</a></span>
 
     <!-- Additional Buttons -->
     <div class="button-container">
-      <!-- <div class="button-group">
-          <button
-            class="next-button"
-            th:if="${userRole == 'admin'}"
-            th:onclick="|window.location.href='/adminPage'|"
-          >
+
+    
+        <!-- <div th:if="${userRole=='admin'}">
+          <button class="next-button" onclick="window.location.href='/adminPatientPage'">
             Go to Admin Page
           </button>
-
-          <button
-            class="next-button"
-            th:if="${userRole == 'patient'}"
-            th:onclick="|window.location.href='/patientHomePage'|"
-          >
-            Go to Patient Page
-          </button> -->
-      <button type="button" class="next-button" onclick="goBack()">Back</button>
+        </div>
+        <div th:if="${userRole!='admin'}">
+          <button class="next-button" th:if="${userRole!='admin'}"
+            onclick="window.location.href='/patientHomePage'">
+            Go to Home
+          </button>
+        </div> -->
+    
+      <button type="button" class="next-button" onclick="history.back()">Back</button>
 
     </div>
 
@@ -508,18 +508,7 @@
     };
 
   </script>
-  
-  <script>
-    function goBack() {
-        var previousPage = document.referrer;  // Get the previous page URL
-        
-        if (previousPage) {
-            window.location.href = previousPage;  // Navigate to the previous page
-        } else {
-            window.history.back();  // If no referrer (maybe directly accessed), use history.back
-        }
-    }
-</script>
+
 
 </body>
 

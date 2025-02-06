@@ -161,6 +161,16 @@ h1 {
     transform: scale(1.05);
 }
 
+/*bill button*/
+.bill-button {
+    background-color: #28a745;
+}
+
+.bill-button:hover {
+    background-color: #218838;
+    transform: scale(1.05);
+}
+
 /* Cancel Button */
 .cancel-button {
     background-color: #dc3545;
@@ -170,6 +180,18 @@ h1 {
     background-color: #c82333;
     transform: scale(1.05);
 }
+
+/* Cancel Button */
+.back-button {
+    background-color: #353bdc;
+}
+
+.back-button:hover {
+    background-color: #1e95c7;
+    transform: scale(1.05);
+}
+
+
 
 /* Reschedule Button */
 .reschedule-button {
@@ -232,8 +254,8 @@ h1 {
 				th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">Schedule
 				Appointment</button>
 
-                <button th:if="${userRole=='patient'}" onclick="window.location.href='/patientPage'">Back</button>
-                <button th:if="${userRole=='admin'}" onclick="window.location.href='/adminPatientPage'">Back to Home</button>
+                <button th:if="${userRole=='patient'}" class="sidebar-button back-button" onclick="window.location.href='/patientPage'">Back</button>
+                <button th:if="${userRole=='admin'}" class="sidebar-button back-button" onclick="window.location.href='/adminPatientPage'">Back to Home</button>
 		</div>
 
 		<div class="content">
@@ -296,6 +318,12 @@ h1 {
 						<button class="sidebar-button cancel-button"
 							th:onclick="|window.location.href='/patient/${patientId}/appointments/cancel/${appointment.appointmentId}'|">Cancel
 							Appointment</button>
+					</div>
+
+                    <div th:if="${userRole=='admin'}">
+						<button class="sidebar-button bill-button"
+							th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate
+							Bill</button>
 					</div>
 				</div>
 			</div>

@@ -213,7 +213,7 @@
 		<table class="table table-striped" th:if="${payments != null and !payments.isEmpty()}">
 		    <thead>
 		        <tr>
-		            
+		            <th><i class="fas fa-file-invoice"></i> Bill ID</th>
 		            <th><i class="fas fa-credit-card"></i> Payment Method</th>
 		            <th><i class="fas fa-wallet"></i> Amount</th>
 		            <th><i class="fas fa-calendar-alt"></i> Payment Date</th>
@@ -222,7 +222,8 @@
 		    </thead>
 		    <tbody>
 		        <tr th:each="payment : ${payments}">
-		            
+		           <!-- <td th:text="${payment.bill.billId}"></td>-->
+				   <td th:text="${billid}"></td>
 		            <td th:text="${payment.paymentMethod}"></td>
 		            <td th:text="${payment.amount}"></td>
 		            <td th:text="${payment.paymentDate}"></td>
