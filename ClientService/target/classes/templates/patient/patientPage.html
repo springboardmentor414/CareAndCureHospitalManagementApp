@@ -240,6 +240,9 @@
           <a th:href="@{'/patient/'+${patientId}+'/appointments'}" class="next-button">Schedule Appointment</a>
         </li>
         <li>
+          <a th:href="@{'/findBillByPatientId?patientId='+${patientId}}" class="next-button">View Bills</a>
+        </li>
+        <li>
           <button
             class="logout-button"
             onclick="window.location.href='/logout'"

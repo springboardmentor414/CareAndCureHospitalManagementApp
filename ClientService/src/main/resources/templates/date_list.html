@@ -129,7 +129,7 @@
                 </thead>
                 <tbody>
                     <tr th:each="bill : ${bills}">
-						<td th:text="${bill.appointment.patientId}"></td>
+						<td th:text="${bill.appointment.patient.patientId}"></td>
                         <td th:text="${bill.billId}"></td>
                         <td th:text="${bill.billDate}"></td>
                         <td th:text="${bill.consultationFees}"></td>

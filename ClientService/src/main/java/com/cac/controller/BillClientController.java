@@ -397,9 +397,12 @@ public class BillClientController {
 	       	 model.addAttribute("balanceAmount", balanceAmount);
 	            System.out.println(balanceAmount);
 	        return "bill_list";
-	    } else {
+	          // return "viewByBillId";
+	    } 
+	    else {
 	        model.addAttribute("errorMessage", "No bill details found with the given ID.");
 	        return "statuspage_bill";
 	    }
+	  
 	}
 }
