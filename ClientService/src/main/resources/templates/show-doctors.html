@@ -127,11 +127,13 @@
             <td th:text="${doctor.qualification}"></td>
             <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
             <td th:text="${doctor.status != null ? (doctor.status ? 'Active' : 'Inactive') : 'Inactive'}"></td>
-            <td>
-                <a th:href="@{/disableDoctor/{doctorId}(doctorId=${doctor.doctorId})}">
-                    <button class="disable-button">Disable</button>
-                </a>
-            </td>
+			<td>
+			    <a th:href="@{/disableDoctor/{doctorId}(doctorId=${doctor.doctorId})}" 
+			       onclick="alert('Doctor has been successfully disabled!')">
+			        <button class="disable-button">Disable</button>
+			    </a>
+			</td>
+
         </tr>
         </tbody>
     </table>
