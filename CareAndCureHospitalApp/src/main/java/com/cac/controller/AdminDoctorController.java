@@ -70,6 +70,16 @@ public class AdminDoctorController {
                     .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
             return new ResponseEntity<>(errors, HttpStatus.BAD_REQUEST);
         }
+        
+        // Check if email already exists
+        if (doctorService.emailExists(doctor.getEmailId())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Email ID already in use.");
+        }
+
+        // Check if contact number already exists
+        if (doctorService.contactNumberExists(doctor.getContactNumber())) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("Error: Contact number already in use.");
+        }
 
         // Save doctor details
         Doctor savedDoctor = doctorService.addDoctor(doctor);
