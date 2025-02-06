@@ -195,6 +195,7 @@ public class PaymentController {
             @RequestParam(required = false) Integer billId,
             @RequestParam(required = false) String paymentMethod,
             @RequestParam(required = false) String paymentStatus) {
+    	System.out.println("inside searchbypayment");
         try {
             if (paymentMethod != null) {
                 paymentMethod = URLDecoder.decode(paymentMethod, StandardCharsets.UTF_8);
@@ -202,35 +203,67 @@ public class PaymentController {
             if (paymentStatus != null) {
                 paymentStatus = URLDecoder.decode(paymentStatus, StandardCharsets.UTF_8);
             }
-
+            System.out.println("hello sss");
+            System.out.println(billId+" "+paymentMethod+" "+paymentStatus);
             List<Payment> payments = new ArrayList<>();
             String message = "No payments found for the provided criteria: ";
 
             if (billId != null && paymentMethod != null && paymentStatus != null) {
                 payments = paymentService.getPaymentsByBillIdAndMethodAndStatus(billId, paymentMethod, paymentStatus);
+                System.out.println("All list1");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                    System.out.println(p.getBill().getBillId());
+                }
                 message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod + ", Payment Status = " + paymentStatus;
             } else if (billId != null && paymentMethod != null) {
                 payments = paymentService.getPaymentsByBillIdAndMethod(billId, paymentMethod);
+                System.out.println("All list2");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod;
             } else if (billId != null && paymentStatus != null) {
                 payments = paymentService.getPaymentsByBillIdAndStatus(billId, paymentStatus);
+                System.out.println("All list3");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message += "Bill ID = " + billId + ", Payment Status = " + paymentStatus;
             } else if (paymentMethod != null && paymentStatus != null) {
                 payments = paymentService.getPaymentsByMethodAndStatus(paymentMethod, paymentStatus);
+                System.out.println("All list4");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message += "Payment Method = " + paymentMethod + ", Payment Status = " + paymentStatus;
             } else if (billId != null) {
                 payments = paymentService.getPaymentsByBillId(billId);
+                System.out.println("All list5");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message += "Bill ID = " + billId;
             } else if (paymentMethod != null) {
                 payments = paymentService.getPaymentsByPaymentMethod(paymentMethod);
+                System.out.println("All list6");
                 message += "Payment Method = " + paymentMethod;
             } else if (paymentStatus != null) {
                 payments = paymentService.getPaymentsByPaymentStatus(paymentStatus);
+                System.out.println("All list7");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message += "Payment Status = " + paymentStatus;
             } else {
                 payments = paymentService.getAllPayments();
+                System.out.println("All list8");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
                 message = "No payments found in the system.";
             }
+            
 
             if (payments.isEmpty()) {
                 throw new UserNotFoundException(message);

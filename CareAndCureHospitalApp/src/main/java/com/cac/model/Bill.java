@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import com.cac.model.Appointment;
 import com.cac.model.Payment;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.time.LocalDate;
@@ -50,10 +51,15 @@ public class Bill {
 	private  float discountPercentage;
 	private double amountPaid;   
 	
-	@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
+	/*@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
 	//@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	@JsonManagedReference
-	private  Set<Payment> payList;
+	private  Set<Payment> payList;*/
+	
+	@OneToMany(mappedBy = "bill", cascade = CascadeType.ALL, orphanRemoval = true)
+	@JsonIgnoreProperties("bill") // Prevents recursion but allows payments in Bill response
+	private Set<Payment> payList;
+
 	
 //	private boolean tax;
     private float taxPercentage;
@@ -168,22 +174,24 @@ public class Bill {
 	public void setTaxableamount(double taxableamount) {
 		this.taxableamount = taxableamount;
 	}
-	@Override
-	public String toString() {
-		return "Bill [billId=" + billId + ", billDate=" + billDate + ", appointment=" + appointment
-				+ ", consultationFees=" + consultationFees + ", medicineFees=" + medicineFees + ", testCharges="
-				+ testCharges + ", miscellaneousCharge=" + miscellaneousCharge + ", description=" + description
-				+ ", isInsuranceApplicable=" + isInsuranceApplicable + ", discountPercentage=" + discountPercentage
-				+ ", payList=" + payList + ", taxPercentage=" + taxPercentage + ", taxableamount=" + taxableamount + ", totalamount=" + totalamount + ", finalamount="
-				+ finalamount + ", paymentstatus=" + paymentstatus + "]";
-	}
+	
 	public double getAmountPaid() {
 		return amountPaid;
 	}
 	public void setAmountPaid(double amountPaid) {
 		this.amountPaid = amountPaid;
 	}
-	
+	/*@Override
+	public String toString() {
+		return "Bill [billId=" + billId + ", billDate=" + billDate + ", appointment=" + appointment
+				+ ", consultationFees=" + consultationFees + ", medicineFees=" + medicineFees + ", testCharges="
+				+ testCharges + ", miscellaneousCharge=" + miscellaneousCharge + ", description=" + description
+				+ ", isInsuranceApplicable=" + isInsuranceApplicable + ", discountPercentage=" + discountPercentage
+				+ ", amountPaid=" + amountPaid + ", payList=" + payList + ", taxPercentage=" + taxPercentage
+				+ ", taxableamount=" + taxableamount + ", totalamount=" + totalamount + ", finalamount=" + finalamount
+				+ ", paymentstatus=" + paymentstatus + "]";
+	}
+	*/
 	
 	
 }
