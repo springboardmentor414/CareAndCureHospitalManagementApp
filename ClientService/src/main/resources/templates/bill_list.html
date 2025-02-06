@@ -9,6 +9,8 @@
         body {
             font-family: 'Poppins', sans-serif;
             background: #eef2f7;
+            font-family: 'Poppins', sans-serif;
+            background: #eef2f7;
             margin: 0;
             padding: 0;
             display: flex;
@@ -19,7 +21,11 @@
         .container {
             width: 90%;
             max-width: 1100px;
+            max-width: 1100px;
             background: #fff;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
@@ -29,6 +35,8 @@
             color: #333;
             margin-bottom: 25px;
             font-size: 26px;
+            margin-bottom: 25px;
+            font-size: 26px;
         }
         .section {
             margin-top: 20px;
@@ -36,19 +44,30 @@
             border-radius: 10px;
             background: #f9f9fb;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            border-radius: 10px;
+            background: #f9f9fb;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
         }
         .section h3 {
             color: #0056b3;
+            color: #0056b3;
             margin-bottom: 15px;
             font-size: 20px;
+            font-size: 20px;
         }
+        .details-grid {
         .details-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
             gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 20px;
         }
         .details-grid div {
+        .details-grid div {
             background: #fff;
+            padding: 12px;
             padding: 12px;
             border-radius: 8px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
@@ -56,7 +75,13 @@
         }
         .details-grid div:hover {
             transform: translateY(-3px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.2s ease-in-out;
         }
+        .details-grid div:hover {
+            transform: translateY(-3px);
+        }
+        .details-grid div strong {
         .details-grid div strong {
             display: block;
             color: #007bff;
@@ -64,12 +89,16 @@
             font-size: 14px;
         }
         .details-grid div p {
+        .details-grid div p {
             margin: 0;
+            font-size: 15px;
+            color: #333;
             font-size: 15px;
             color: #333;
         }
         button {
             width: 100%;
+            padding: 12px;
             padding: 12px;
             background: #007bff;
             color: #fff;
@@ -79,9 +108,16 @@
             cursor: pointer;
             margin-top: 20px;
             transition: background 0.3s ease-in-out;
+            transition: background 0.3s ease-in-out;
         }
         button:hover {
             background: #0056b3;
+        }
+        .back-btn {
+            background: #6c757d;
+        }
+        .back-btn:hover {
+            background: #5a6268;
         }
         .back-btn {
             background: #6c757d;
@@ -94,19 +130,33 @@
 
 <body>
     <div class="container" th:if="${bill != null}">
+    <div class="container" th:if="${bill != null}">
         <h2>Bill Details</h2>
+        
         
         <div class="section">
             <h3>Bill Information</h3>
             <div class="details-grid">
                 <div><strong>Bill ID</strong><p th:text="${bill.billId}"></p></div>
                 <div><strong>Bill Date</strong><p th:text="${bill.billDate}"></p></div>
+                <div><strong>Bill ID</strong><p th:text="${bill.billId}"></p></div>
+                <div><strong>Bill Date</strong><p th:text="${bill.billDate}"></p></div>
             </div>
         </div>
+        
         
         <div class="section">
             <h3>Fees and Charges</h3>
             <div class="details-grid">
+                <div><strong>Consultation Fees</strong><p th:text="${bill.consultationFees}"></p></div>
+                <div><strong>Medicine Fees</strong><p th:text="${bill.medicineFees}"></p></div>
+                <div><strong>Test Charges</strong><p th:text="${bill.testCharges}"></p></div>
+                <div><strong>Miscellaneous Charge</strong><p th:text="${bill.miscellaneousCharge}"></p></div>
+                <div><strong>Total Amount</strong><p th:text="${bill.totalamount}"></p></div>
+                <div><strong>Discount (%)</strong><p th:text="${bill.discountPercentage}"></p></div>
+                <div><strong>Taxable Amount</strong><p th:text="${bill.taxableamount}"></p></div>
+                <div><strong>Tax (%)</strong><p th:text="${bill.taxPercentage}"></p></div>
+                <div><strong>Final Amount</strong><p th:text="${bill.finalamount}"></p></div>
                 <div><strong>Consultation Fees</strong><p th:text="${bill.consultationFees}"></p></div>
                 <div><strong>Medicine Fees</strong><p th:text="${bill.medicineFees}"></p></div>
                 <div><strong>Test Charges</strong><p th:text="${bill.testCharges}"></p></div>
@@ -128,6 +178,16 @@
             </div>
         </div>
         
+        
+        <div class="section">
+            <h3>Paid and Unpaid Amount</h3>
+            <div class="details-grid">
+                <div><strong>Unpaid Amount</strong><p th:text="${balanceAmount}"></p></div>
+                <div><strong>Paid Amount</strong><p th:text="${bill.amountPaid}"></p></div>
+                <div><strong>Payment Status</strong><p th:text="${bill.paymentstatus}"></p></div>
+            </div>
+        </div>
+        
         <div class="section">
             <h3>Appointment Details</h3>
             <div class="details-grid">
@@ -138,14 +198,27 @@
                 <div><strong>Appointment Date</strong><p th:text="${bill.appointment.appointmentDate}"></p></div>
                 <div><strong>Appointment Time</strong><p th:text="${bill.appointment.appointmentTime}"></p></div>
                 <div><strong>Status</strong><p th:text="${bill.appointment.status}"></p></div>
+                <div><strong>Appointment ID</strong><p th:text="${bill.appointment.appointmentId}"></p></div>
+                <div><strong>Reason</strong><p th:text="${bill.appointment.reason}"></p></div>
+                <div><strong>Patient ID</strong><p th:text="${bill.appointment.patient.patientId}"></p></div>
+                <div><strong>Doctor ID</strong><p th:text="${bill.appointment.doctorId}"></p></div>
+                <div><strong>Appointment Date</strong><p th:text="${bill.appointment.appointmentDate}"></p></div>
+                <div><strong>Appointment Time</strong><p th:text="${bill.appointment.appointmentTime}"></p></div>
+                <div><strong>Status</strong><p th:text="${bill.appointment.status}"></p></div>
             </div>
         </div>
+        
         
         <form th:if="${balanceAmount > 0}" th:action="@{/create}" method="GET">
             <input type="hidden" name="billId" th:value="${bill.billId}" />
             <input type="hidden" name="finalamount" th:value="${bill.finalamount}" />
             <button type="submit">Make Payment</button>
+            <button type="submit">Make Payment</button>
         </form>
+        
+        <a th:href="@{/billHomePage}">
+            <button type="button" class="back-btn">Back</button>
+        </a>
         
         <a th:href="@{/billHomePage}">
             <button type="button" class="back-btn">Back</button>
