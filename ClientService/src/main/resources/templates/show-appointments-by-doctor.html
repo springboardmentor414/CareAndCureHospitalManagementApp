@@ -112,61 +112,62 @@
         }
     </style>
 
-    <script>
-        function validateDates() {
-            let fromDate = document.getElementById("fromDate").value;
-            let toDate = document.getElementById("toDate").value;
-            let errorMessage = document.getElementById("dateError");
+	<script>
+	    function validateDates() {
+	        let fromDate = document.getElementById("fromDate").value;
+	        let toDate = document.getElementById("toDate").value;
+	        let errorMessage = document.getElementById("dateError");
 
-            if (fromDate && toDate) {
-                if (toDate < fromDate) {
-                    errorMessage.style.display = "block";
-                    errorMessage.innerText = "Error: To Date cannot be earlier than From Date.";
-                    return false;
-                } else {
-                    errorMessage.style.display = "none";
-                }
-            }
+	        if (fromDate && toDate) {
+	            if (toDate < fromDate) {
+	                errorMessage.style.display = "block";
+	                errorMessage.innerText = "Error: To Date cannot be earlier than From Date.";
+	                return false;
+	            } else {
+	                errorMessage.style.display = "none";
+	            }
+	        }
+	        return true;
+	    }
 
-            return true;
-        }
+	    function enableToDate() {
+	        let fromDate = document.getElementById("fromDate").value;
+	        let toDateInput = document.getElementById("toDate");
 
-        function disableToDate() {
-            let fromDate = document.getElementById("fromDate").value;
-            let toDateInput = document.getElementById("toDate");
+	        if (fromDate) {
+	            toDateInput.removeAttribute("disabled");
+	            toDateInput.setAttribute("min", fromDate); // Ensures "To Date" cannot be before "From Date"
+	        } else {
+	            toDateInput.value = "";
+	            toDateInput.setAttribute("disabled", "true");
+	        }
+	    }
 
-            if (fromDate) {
-                toDateInput.removeAttribute("disabled");
-                toDateInput.setAttribute("min", fromDate);
-            } else {
-                toDateInput.value = "";
-                toDateInput.setAttribute("disabled", "true");
-            }
-        }
+	    function validateForm(event) {
+	        if (!validateDates()) {
+	            event.preventDefault(); // Prevent form submission if validation fails
+	        }
+	    }
 
-        function validateForm(event) {
-            if (!validateDates()) {
-                event.preventDefault(); // Prevent form submission if validation fails
-            }
-        }
+	    document.addEventListener("DOMContentLoaded", function () {
+	        let fromDate = document.getElementById("fromDate");
+	        let toDateInput = document.getElementById("toDate");
 
-        document.addEventListener("DOMContentLoaded", function() {
-            let fromDate = document.getElementById("fromDate").value;
-            let toDateInput = document.getElementById("toDate");
+	        if (!fromDate.value) {
+	            toDateInput.setAttribute("disabled", "true");
+	        }
+	    });
+	</script>
 
-            if (fromDate) {
-                toDateInput.removeAttribute("disabled");
-                toDateInput.setAttribute("min", fromDate);
-            }
-        });
-    </script>
+
 </head>
 <body>
     <h1>Appointments by Doctor</h1>
 
     <form action="/appointments/filteredByDoctor" method="get" onsubmit="validateForm(event)">
         <label for="fromDate">From Date:</label>
-        <input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" oninput="disableToDate()" required />
+		<input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" oninput="enableToDate()" required />
+
 
         <label for="toDate">To Date:</label>
         <input type="date" id="toDate" name="toDate" th:value="${param.toDate}" oninput="validateDates()" required />
