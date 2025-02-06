@@ -74,8 +74,9 @@ public class Doctor {
     @Column(unique = true)
     private String username;
 
-    @NotBlank(message = "Password cannot be blank")
-    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
+   // @NotNull(message = "password is required")
+   // @NotBlank(message = "Password cannot be blank")
+    @Size(min = 4, max = 20, message = "Password must be between 4 and 20 characters")
     private String password;
 
     // One-to-many relationship with Appointment using doctorId
