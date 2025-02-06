@@ -99,7 +99,7 @@ public class PaymentClientController {
         return "redirect:/payments";
     }
 
-    @GetMapping("/search")
+    @GetMapping("/searchPaymentByBillId")
     public String searchPayments(
             @RequestParam(required = false) Integer billId,
             @RequestParam(required = false) String paymentMethod,

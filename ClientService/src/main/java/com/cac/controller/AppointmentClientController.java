@@ -47,59 +47,61 @@ public class AppointmentClientController {
 	private RestTemplate restTemplate;
 
 	@Value("${base.url}")
-    private String baseUrl;
+	private String baseUrl;
 
-    Doctor doctorSession = null;
+	Doctor doctorSession = null;
 
-    Patient patientSession = null;
+	Patient patientSession = null;
 
-    String role = null;
-
-    @ModelAttribute
-    public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj) {
-        patientSession = patObj;
-
-    }
+	String role = null;
 
 	@ModelAttribute
-    public void getPatient(@SessionAttribute(name = "docObj", required = false) Doctor docObj) {
-        doctorSession = docObj;
+	public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj, Model model) {
+		patientSession = patObj;
+		if(patientSession!=null) model.addAttribute("patientId", patientSession.getPatientId());
 
-    }
+	}
 
-    @ModelAttribute
-    public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
-        role = userRole;
-        model.addAttribute("userRole", userRole);
-    }
+	@ModelAttribute
+	public void getPatient(@SessionAttribute(name = "docObj", required = false) Doctor docObj) {
+		doctorSession = docObj;
 
-    @ModelAttribute
-    public String checkLogin() {
-        if (role == null)
-            return "redirect:/";
-        return null;
-    }
+	}
 
-    private boolean isAuthPatient(int patientId) {
-        if (role == null)
-            return false;
-        if (role.equalsIgnoreCase("patient") && patientSession != null && patientId != patientSession.getPatientId())
-            return false;
-        return true;
-    }
+	@ModelAttribute
+	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
+		role = userRole;
+		model.addAttribute("userRole", userRole);
+	}
+
+	@ModelAttribute
+	public String checkLogin() {
+		if (role == null)
+			return "redirect:/";
+		return null;
+	}
+
+	private boolean isAuthPatient(int patientId) {
+		if (role == null)
+			return false;
+		if (role.equalsIgnoreCase("patient") && patientSession != null && patientId != patientSession.getPatientId())
+			return false;
+		return true;
+	}
 
 	@GetMapping("/{patientId}/appointments")
 	public String showAppointmentsForPatient(@PathVariable int patientId, Model model) {
 
-		if(role==null) {
+		if (role == null) {
 			model.addAttribute("errorMessage", "Login Required!.");
 			return "unauthorized";
 		}
-		if((role.equalsIgnoreCase("patient") && patientSession!=null && patientSession.getPatientId()!=patientId) || !role.equalsIgnoreCase("admin")){
+		if ((role.equalsIgnoreCase("patient") && patientSession != null
+				&& patientSession.getPatientId() != patientId)) {
 			model.addAttribute("errorMessage", "Unauthorized Access!.");
 			return "unauthorized";
 		}
-		
+
 		String url = baseUrl + "/patient/" + patientId + "/appointments";
 		try {
 			ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null,
@@ -134,11 +136,16 @@ public class AppointmentClientController {
 			@RequestParam(required = false) String specialty, @RequestParam(required = false) String experience,
 			@RequestParam(required = false) String gender, Model model, HttpSession session) {
 
-				if(role==null && patientId!=0) {
+		if (role == null && patientId != 0) {
 			model.addAttribute("errorMessage", "Please login to continue.");
-			session.setAttribute("redirectUrl", "/patient/"+0+"/appointments/selectDoctor");
+			session.setAttribute("redirectUrl", "/patient/" + 0 + "/appointments/selectDoctor");
 			return "redirect:/patientLoginForm";
-				}
+		}
+		if (role!=null && (role.equalsIgnoreCase("patient") && patientSession != null
+				&& patientSession.getPatientId() != patientId)) {
+			model.addAttribute("errorMessage", "Unauthorized Access!.");
+			return "unauthorized";
+		}
 
 		String url = baseUrl + "/api/doctors";
 		try {
@@ -222,8 +229,6 @@ public class AppointmentClientController {
 	private boolean filterByGender(DoctorDTO doctor, String gender) {
 		return gender == null || gender.isEmpty() || doctor.getGender().equalsIgnoreCase(gender);
 	}
-
-	
 
 	@GetMapping("/{patientId}/appointments/{doctorId}/schedule")
 	public String scheduleAppointment(@PathVariable Long patientId, @PathVariable Long doctorId, Model model) {
@@ -379,13 +384,14 @@ public class AppointmentClientController {
 			System.out.println("Converted appointmentTime: " + appointmentTime);
 		} catch (DateTimeParseException e) {
 
-			try{
+			try {
 				DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("h:mma", Locale.ENGLISH);
-			appointmentTime = LocalTime.parse(scheduleAppointmentDTO.getAppointmentTime().toUpperCase(), timeFormatter);
-			} catch(DateTimeParseException e1){
+				appointmentTime = LocalTime.parse(scheduleAppointmentDTO.getAppointmentTime().toUpperCase(),
+						timeFormatter);
+			} catch (DateTimeParseException e1) {
 				model.addAttribute("errorMessage",
-					"Invalid date or time format. Please use MMM dd, yyyy for the date and hh:mma for the time.");
-			return "error";
+						"Invalid date or time format. Please use MMM dd, yyyy for the date and hh:mma for the time.");
+				return "error";
 			}
 		}
 
@@ -504,7 +510,6 @@ public class AppointmentClientController {
 						new ParameterizedTypeReference<Appointment>() {
 						});
 				Appointment appointments = responseAppointment.getBody();
-
 
 				LocalDate appointmentDate = appointments.getAppointmentDate();
 				System.out.println(appointmentDate);
@@ -673,47 +678,47 @@ public class AppointmentClientController {
 			System.out.println("Appointment new time: " + rescheduleAppointmentDTO.getNewTime());
 			String firstDate = rescheduleAppointmentDTO.getNewDate();
 			// Define formatter for input format
-	        DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
+			DateTimeFormatter inputFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy");
 
-	        // Define formatter for output format
-	        DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+			// Define formatter for output format
+			DateTimeFormatter outputFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
-	        // Convert string to LocalDate
-	        LocalDate date = LocalDate.parse(firstDate, inputFormatter);
+			// Convert string to LocalDate
+			LocalDate date = LocalDate.parse(firstDate, inputFormatter);
 
-	        // Convert LocalDate to required string format
-	        String formattedDate = date.format(outputFormatter);
-	        rescheduleAppointmentDTO.setNewDate(formattedDate);
-	        System.out.println("Appointment new date: " + rescheduleAppointmentDTO.getNewDate());
-	        String time12Hour = rescheduleAppointmentDTO.getNewTime(); // Example: "06:00pm"
+			// Convert LocalDate to required string format
+			String formattedDate = date.format(outputFormatter);
+			rescheduleAppointmentDTO.setNewDate(formattedDate);
+			System.out.println("Appointment new date: " + rescheduleAppointmentDTO.getNewDate());
+			String time12Hour = rescheduleAppointmentDTO.getNewTime(); // Example: "06:00pm"
 
-	        DateTimeFormatter inputFormatterTime = DateTimeFormatter.ofPattern("hh:mma");
-			
-	        DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
-			
-	        LocalTime parsedTime = null;
-			try{
-				parsedTime= LocalTime.parse(time12Hour, inputFormatterTime);
-			}catch(DateTimeParseException e){
-				try{
+			DateTimeFormatter inputFormatterTime = DateTimeFormatter.ofPattern("hh:mma");
+
+			DateTimeFormatter outputFormatterTime = DateTimeFormatter.ofPattern("HH:mm:ss.SSSSSS");
+
+			LocalTime parsedTime = null;
+			try {
+				parsedTime = LocalTime.parse(time12Hour, inputFormatterTime);
+			} catch (DateTimeParseException e) {
+				try {
 					DateTimeFormatter inputFormatterTime2 = DateTimeFormatter.ofPattern("h:mma");
-				parsedTime = LocalTime.parse(time12Hour, inputFormatterTime2);
-				} catch (DateTimeParseException e1){
+					parsedTime = LocalTime.parse(time12Hour, inputFormatterTime2);
+				} catch (DateTimeParseException e1) {
 					model.addAttribute("errorMessage", "Invalid time format. Please use hh:mma for the time.");
 					return "error";
 				}
 
 			}
-	        String formattedTime = parsedTime.format(outputFormatterTime);
+			String formattedTime = parsedTime.format(outputFormatterTime);
 
-	        // Set the formatted time back into the DTO
-	        rescheduleAppointmentDTO.setNewTime(formattedTime);
-	        System.out.println("Appointment new time: " + rescheduleAppointmentDTO.getNewTime());
-	        
+			// Set the formatted time back into the DTO
+			rescheduleAppointmentDTO.setNewTime(formattedTime);
+			System.out.println("Appointment new time: " + rescheduleAppointmentDTO.getNewTime());
+
 			HttpEntity<RescheduleAppointmentDTO> request = new HttpEntity<>(rescheduleAppointmentDTO, headers);
 
 			ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, request, String.class);
-			
+
 			if (response.getStatusCode().is2xxSuccessful()) {
 				ResponseEntity<Appointment> responseAppointment = restTemplate.exchange(url1, HttpMethod.GET, null,
 						new ParameterizedTypeReference<Appointment>() {
@@ -721,7 +726,7 @@ public class AppointmentClientController {
 				Appointment appointments = responseAppointment.getBody();
 
 				Long doctorId = appointments.getDoctorId().longValue();
-				System.out.println("doctorid: " + doctorId); 
+				System.out.println("doctorid: " + doctorId);
 				// Convert the appointmentDate from "MMM dd, yyyy" format to LocalDate
 				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);
 				LocalDate appointmentDate = LocalDate.parse(firstDate, dateFormatter);
@@ -750,12 +755,13 @@ public class AppointmentClientController {
 				// Step 3: Check the result of the secondary request
 				if (secondaryResponse.getStatusCode().is2xxSuccessful()) {
 					model.addAttribute("successMessage", "Appointment rescheduled successfully!");
-					return "redirect:/patient/" + patientId + "/appointments"; // Redirect to appointment management page
+					return "redirect:/patient/" + patientId + "/appointments"; // Redirect to appointment management
+																				// page
 				} else {
 					model.addAttribute("errorMessage", "Failed to update availability. Please try again.");
 					return "error";
 				}
-				
+
 			} else {
 				model.addAttribute("errorMessage", "Failed to reschedule the appointment. Please try again.");
 				return "error";
@@ -771,74 +777,74 @@ public class AppointmentClientController {
 			return "error";
 		}
 
-		
 	}
 
 	@GetMapping("/dailyAppointments")
-    public String viewAppointmentsByDate(@RequestParam(value = "date", required = false) String date,
-            HttpSession session, Model model) {
-        if (role == null || !role.equalsIgnoreCase("ADMIN"))
-            return "unauthorized";
-        LocalDate selectedDate = date != null ? LocalDate.parse(date) : LocalDate.now();
-        String url = baseUrl+"/api/admin/date/" + selectedDate;
-        try {
-            ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-                    null,
-                    new ParameterizedTypeReference<List<AppointmentDTO>>() {
-                    });
-            List<AppointmentDTO> appointments = response.getBody();
-            model.addAttribute("appointments", appointments);
-            model.addAttribute("selectedDate", selectedDate);
-        } catch (HttpStatusCodeException e) {
-            model.addAttribute("errorMessage", "Unable to fetch daily appointments: " + e.getResponseBodyAsString());
-            return "statusPage";
-        }
+	public String viewAppointmentsByDate(@RequestParam(value = "date", required = false) String date,
+			HttpSession session, Model model) {
+		if (role == null || !role.equalsIgnoreCase("ADMIN"))
+			return "unauthorized";
+		LocalDate selectedDate = date != null ? LocalDate.parse(date) : LocalDate.now();
+		String url = baseUrl + "/api/admin/date/" + selectedDate;
+		try {
+			ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(
+					url,
+					HttpMethod.GET,
+					null,
+					new ParameterizedTypeReference<List<AppointmentDTO>>() {
+					});
+			List<AppointmentDTO> appointments = response.getBody();
+			model.addAttribute("appointments", appointments);
+			model.addAttribute("selectedDate", selectedDate);
+		} catch (HttpStatusCodeException e) {
+			model.addAttribute("errorMessage", "Unable to fetch daily appointments: " + e.getResponseBodyAsString());
+			return "statusPage";
+		}
 
-        return "dailyAppointments";
-    }
+		return "dailyAppointments";
+	}
 
 	@GetMapping("/no-show-patients")
-    public String viewNoShowAppointments(@ModelAttribute("selectSearchDate") SelectSearchDate searchDate, HttpSession session, Model model) {
-        if (role == null || !role.equalsIgnoreCase("admin"))
-            return "unauthorized";
+	public String viewNoShowAppointments(@ModelAttribute("selectSearchDate") SelectSearchDate searchDate,
+			HttpSession session, Model model) {
+		if (role == null || !role.equalsIgnoreCase("admin"))
+			return "unauthorized";
 
-			if(searchDate.getStartDate()==null && searchDate.getEndDate()==null) {
-				// model.addAttribute("errorMessage", "Select Date.");
-				return "patientNoShowReport";
-			}
+		if (searchDate.getStartDate() == null && searchDate.getEndDate() == null) {
+			// model.addAttribute("errorMessage", "Select Date.");
+			return "patientNoShowReport";
+		}
 
-			if(searchDate.getStartDate()==null){
-				model.addAttribute("errorMessage", "Select Start Date.");
-				model.addAttribute("selectSearchDate", searchDate);
-				return "patientNoShowReport";
-			} 
-			if(searchDate.getEndDate()==null){
-				model.addAttribute("errorMessage", "Select end Date.");
-				model.addAttribute("selectSearchDate", searchDate);
-				return "patientNoShowReport";
-			}
-
-        String url = baseUrl+ "/api/admin/no-show/"+searchDate.getStartDate()+"/"+searchDate.getEndDate();
-
-        try {
-            ResponseEntity<List<Patient>> response = restTemplate.exchange(
-                    url,
-                    HttpMethod.GET,
-              null,
-                    new ParameterizedTypeReference<List<Patient>>() {
-                    });
-                    System.out.println("hello");
-            List<Patient> noShowAppointments = response.getBody();
-			System.out.println(noShowAppointments);
-            model.addAttribute("noShowAppointments", noShowAppointments);
+		if (searchDate.getStartDate() == null) {
+			model.addAttribute("errorMessage", "Select Start Date.");
 			model.addAttribute("selectSearchDate", searchDate);
 			return "patientNoShowReport";
-        } catch (HttpStatusCodeException e) {
-            model.addAttribute("errorMessage", "Unable to fetch no-show appointments: " + e.getResponseBodyAsString());
-        }
+		}
+		if (searchDate.getEndDate() == null) {
+			model.addAttribute("errorMessage", "Select end Date.");
+			model.addAttribute("selectSearchDate", searchDate);
+			return "patientNoShowReport";
+		}
+
+		String url = baseUrl + "/api/admin/no-show/" + searchDate.getStartDate() + "/" + searchDate.getEndDate();
+
+		try {
+			ResponseEntity<List<Patient>> response = restTemplate.exchange(
+					url,
+					HttpMethod.GET,
+					null,
+					new ParameterizedTypeReference<List<Patient>>() {
+					});
+			System.out.println("hello");
+			List<Patient> noShowAppointments = response.getBody();
+			System.out.println(noShowAppointments);
+			model.addAttribute("noShowAppointments", noShowAppointments);
+			model.addAttribute("selectSearchDate", searchDate);
+			return "patientNoShowReport";
+		} catch (HttpStatusCodeException e) {
+			model.addAttribute("errorMessage", "Unable to fetch no-show appointments: " + e.getResponseBodyAsString());
+		}
 		return "statusPage";
-    }
+	}
 
 }

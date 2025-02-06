@@ -90,12 +90,12 @@ public class PatientService {
 
 		if (!oldDetail.getPatientName().equals(patient.getPatientName())) {
 			oldDetail.setPatientName(patient.getPatientName());
-			updateDetails.append("- Name updated to: ").append(patient.getPatientName()).append("\n");
+			updateDetails.append("- Name updated to: ").append(patient.getPatientName()).append("<br>");
 			isUpdated = true;
 		}
 		if (!oldDetail.getEmailId().equals(patient.getEmailId())) {
 			oldDetail.setEmailId(patient.getEmailId());
-			updateDetails.append("- Email updated to: ").append(patient.getEmailId()).append("\n");
+			updateDetails.append("- Email updated to: ").append(patient.getEmailId()).append("<br>");
 			isUpdated = true;
 		}
 		if (!oldDetail.getAllergies().equals(patient.getAllergies())) {
@@ -105,7 +105,7 @@ public class PatientService {
 		}
 		if (!oldDetail.getContactNumber().equals(patient.getContactNumber())) {
 			oldDetail.setContactNumber(patient.getContactNumber());
-			updateDetails.append("- Contact number updated to: ").append(patient.getContactNumber()).append("\n");
+			updateDetails.append("- Contact number updated to: ").append(patient.getContactNumber()).append("<br>");
 			isUpdated = true;
 		}
 		if (!oldDetail.getMedicalHistory().equals(patient.getMedicalHistory())) {
@@ -130,7 +130,7 @@ public class PatientService {
 		}
 		if (oldDetail.getAge() != patient.getAge()) {
 			oldDetail.setAge(patient.getAge());
-			updateDetails.append("- Age updated to: ").append(patient.getAge()).append("\n");
+			updateDetails.append("- Age updated to: ").append(patient.getAge()).append("<br>");
 			isUpdated = true;
 		}
 		if (oldDetail.getHasInsurance() || patient.getHasInsurance()!=oldDetail.getHasInsurance()) {
@@ -139,14 +139,14 @@ public class PatientService {
 						|| !oldDetail.getInsurancePolicyNumber().equals(patient.getInsurancePolicyNumber())) {
 					oldDetail.setInsurancePolicyNumber(patient.getInsurancePolicyNumber());
 					updateDetails.append("- Insurance policy number updated to: ")
-							.append(patient.getInsurancePolicyNumber()).append("\n");
+							.append(patient.getInsurancePolicyNumber()).append("<br>");
 					isUpdated = true;
 				}
 				if (oldDetail.getInsuranceProvider() == null
 						|| !oldDetail.getInsuranceProvider().equals(patient.getInsuranceProvider())) {
 					oldDetail.setInsuranceProvider(patient.getInsuranceProvider());
 					updateDetails.append("- Insurance provider updated to: ").append(patient.getInsuranceProvider())
-							.append("\n");
+							.append("<br>");
 					isUpdated = true;
 				}
 				if (oldDetail.getInsuranceCoverageDetails() == null
@@ -159,14 +159,14 @@ public class PatientService {
 						|| !oldDetail.getInsuranceExpiryDate().equals(patient.getInsuranceExpiryDate())) {
 					oldDetail.setInsuranceExpiryDate(patient.getInsuranceExpiryDate());
 					updateDetails.append("- Insurance expiry date updated to: ")
-							.append(patient.getInsuranceExpiryDate()).append("\n");
+							.append(patient.getInsuranceExpiryDate()).append("<br>");
 					isUpdated = true;
 				}
 				if (oldDetail.getInsuranceAmountLimit() == null
 						|| !oldDetail.getInsuranceAmountLimit().equals(patient.getInsuranceAmountLimit())) {
 					oldDetail.setInsuranceAmountLimit(patient.getInsuranceAmountLimit());
 					updateDetails.append("- Insurance amount limit updated to: ")
-							.append(patient.getInsuranceAmountLimit()).append("\n");
+							.append(patient.getInsuranceAmountLimit()).append("<br>");
 					isUpdated = true;
 				}
 			}
@@ -188,7 +188,7 @@ public class PatientService {
 			String message = "<html><body>" +
 					"<p>Dear <strong>" + updatedPatient.getPatientName() + "</strong>,</p>" +
 					"<p>We hope this message finds you well.</p>" +
-					"<p>This is to inform you that the following details in your Care & Cure profile have been successfully updated:</p>"
+					"<p>This is to inform you that the following details in your Care & Cure profile have been successfully updated:</p><br>"
 					+
 					"<p><strong>" + updateDetails + "</strong></p><br>" +
 					"<p>If you did not make these changes, please contact our support team immediately at <a href='mailto:support@careandcure.com'>support@careandcure.com</a> to secure your account.</p><br>"

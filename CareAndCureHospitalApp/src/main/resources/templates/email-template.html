@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <style>
         body {
             font-family: Arial, sans-serif;
             color: #333;
         }
+
         .container {
             width: 100%;
             max-width: 600px;
@@ -14,19 +16,23 @@
             background-color: #f9f9f9;
             border-radius: 8px;
         }
+
         h1 {
             color: #27ae60;
             font-size: 24px;
             text-align: center;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
         }
+
         td {
             padding: 8px;
             border-bottom: 1px solid #ddd;
         }
+
         .footer {
             text-align: center;
             font-size: 14px;
@@ -35,31 +41,32 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <!-- Updated heading -->
         <h1>Care and Cure Hospital</h1>
         <p style="text-align: center; color: #555; font-size: 16px;">Your Bill Details</p>
         <table>
-		
+
             <tr>
                 <td>Bill ID:</td>
                 <td th:text="${bill.billId}"></td>
             </tr>
-			<tr>
-			               <td>Appointment ID</td>
-			               <td th:text="${bill.appointment.appointmentId}"></td>
-			 </tr>
-			 <tr>
-			                <td>Patient ID</td>
-			                <td th:text="${bill.appointment.patientId}"></td>
-			  </tr>
-			  <tr>
-			  		                <td>Doctor ID</td>
-			  		                <td th:text="${bill.appointment.doctorId}"></td>
-			  		  </tr>
             <tr>
-				
+                <td>Appointment ID</td>
+                <td th:text="${bill.appointment.appointmentId}"></td>
+            </tr>
+            <tr>
+                <td>Patient ID</td>
+                <td th:text="${bill.appointment.patient.patientId}"></td>
+            </tr>
+            <tr>
+                <td>Doctor ID</td>
+                <td th:text="${bill.appointment.doctorId}"></td>
+            </tr>
+            <tr>
+
                 <td>Bill Date:</td>
                 <td th:text="${bill.billDate}"></td>
             </tr>
@@ -67,15 +74,15 @@
                 <td>Consultation Fees:</td>
                 <td th:text="${bill.consultationFees}"></td>
             </tr>
-			<tr>
-			                <td>Test Charges</td>
-			                <td th:text="${bill.testCharges}"></td>
-			 </tr>
-			 <tr>
-			                 <td>Miscellaneous Charge</td>
-			                 <td th:text="${bill.miscellaneousCharge}"></td>
-			  </tr>
-			  
+            <tr>
+                <td>Test Charges</td>
+                <td th:text="${bill.testCharges}"></td>
+            </tr>
+            <tr>
+                <td>Miscellaneous Charge</td>
+                <td th:text="${bill.miscellaneousCharge}"></td>
+            </tr>
+
             <tr>
                 <td>Medicine Fees:</td>
                 <td th:text="${bill.medicineFees}"></td>
@@ -84,10 +91,10 @@
                 <td>Total Amount:</td>
                 <td th:text="${bill.totalamount}"></td>
             </tr>
-			<tr>
-			                <td>Discount (%)</td>
-			                <td th:text="${bill.discountPercentage}"></td>
-			            </tr>
+            <tr>
+                <td>Discount (%)</td>
+                <td th:text="${bill.discountPercentage}"></td>
+            </tr>
             <tr>
                 <td>Final Amount:</td>
                 <td th:text="${bill.finalamount}"></td>
@@ -98,4 +105,5 @@
         </div>
     </div>
 </body>
+
 </html>

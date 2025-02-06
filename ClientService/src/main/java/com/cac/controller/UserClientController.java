@@ -43,15 +43,11 @@ public class UserClientController {
 
 	@GetMapping("/")
 	public String homePage(HttpSession session, Model model) {
-		String errorMessage = (String) session.getAttribute("errorMessage");
-		if (errorMessage != null) {
-			model.addAttribute("errorMessage", errorMessage);
-			session.removeAttribute(errorMessage);
-		}
-		String message = (String) session.getAttribute("message");
-		if (message != null) {
-			model.addAttribute("message", message);
-			session.removeAttribute(message);
+		cleanUpSessionAttributes(session, model);
+
+		String redirectUrl = (String) session.getAttribute("redirectUrl");
+		if (redirectUrl != null) {
+			session.removeAttribute("redirectUrl");
 		}
 
 		String contactMessage = (String) session.getAttribute("contactFormMessage");

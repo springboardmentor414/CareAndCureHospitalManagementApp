@@ -4,7 +4,6 @@ import jakarta.mail.MessagingException;
 
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.stereotype.Service;
@@ -36,7 +35,7 @@ public class EmailService {
         
       //email address
         //helper.setTo(bill.getAppointment().getPatientEmail());
-        helper.setTo("anshitagupta2277@gmail.com");
+        helper.setTo(bill.getAppointment().getPatient().getEmailId());
         helper.setSubject("Your Bill Details");
         helper.setText(emailBody, true);
 
@@ -104,35 +103,35 @@ public class EmailService {
     public void sendPatientWelcomeEmail(Patient savedPatient) throws MessagingException {
         String subject = "Welcome to Care & Cure";
         String message = String.format(
-                "<html>" +
-                        "<body>" +
-                        "<h1>Welcome to Care & Cure</h1>" +
-                        "<p>Dear <b>%s</b>,</p>" +
-                        "<p>Thank you for registering with Care & Cure. Your patient ID is: <b>%d</b>.</p>" +
-                        "<h3>ABOUT CARE & CURE HOSPITAL</h3>" +
+                "<div style='font-family: Arial, sans-serif; color: #444; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 8px; padding: 20px;'>"
+                    + "<div style='text-align: center; border-bottom: 1px solid #ddd; padding-bottom: 10px;'>"
+                    + "<h1 style='color:rgb(25, 44, 219);'>Welcome to Care & Cure</h1>"
+                    + "</div>"+
+                        "<p style='margin-top: 20px;'>Dear <b>%s</b>,</p>" +
+                        "<p style='margin-top: 5px;'>Thank you for registering with Care & Cure. Your patient ID is: <b>%d</b>.</p>" +
+                        "<h3 style='margin-top: 10px;'>ABOUT CARE & CURE HOSPITAL</h3>" +
                         "<p>Care & Cure is dedicated to improving health and well-being with compassionate, personalized healthcare services.</p>"
                         +
-                        "<h3>OUR MISSION</h3>" +
+                        "<h3 style='margin-top: 10px;'>OUR MISSION</h3>" +
                         "<p>To provide accessible, high-quality medical care with a focus on excellence, patient-centered treatment, and innovation.</p>"
                         +
-                        "<h3>OUR VISION</h3>" +
+                        "<h3 style='margin-top: 10px;'>OUR VISION</h3>" +
                         "<p>To become a global leader in healthcare, known for trust, quality, and advancing medical research and education.</p>"
                         +
-                        "<h3>OUR FACILITIES</h3>" +
-                        "<ul>" +
+                        "<h3 style='margin-top: 10px;'>OUR FACILITIES</h3>" +
+                        "<ul style='margin-top: 10px;'>" +
                         "  <li>24/7 Emergency and Trauma Care</li>" +
                         "  <li>State-of-the-art Diagnostic and Laboratory Services</li>" +
                         "  <li>Advanced Surgical and Inpatient Facilities</li>" +
                         "  <li>Specialized Clinics for Cardiology, Orthopedics, and more</li>" +
                         "  <li>Preventive Health Programs and Wellness Services</li>" +
                         "</ul>" +
-                        "<p>For any assistance or inquiries, feel free to reach out to us at: <a href='mailto:support@careandcure.com'>support@careandcure.com</a></p>"
+                        "<p style='margin-top: 20px;'>For any assistance or inquiries, feel free to reach out to us at: <a href='mailto:support@careandcure.com'>support@careandcure.com</a></p>"
                         +
                         "<p>Our team of highly skilled professionals is dedicated to providing you with world-class healthcare. We are honored to be part of your health journey.</p>"
                         +
                         "<p>Best regards,<br>Care & Cure Team</p>" +
-                        "</body>" +
-                        "</html>",
+                        "</div>",
                 savedPatient.getPatientName(), savedPatient.getPatientId());
 
         sendEmail(savedPatient.getEmailId(), subject, message);

@@ -321,10 +321,10 @@ h1 {
 					</div>
 
                     <div th:if="${userRole=='admin'}">
-						<button class="sidebar-button bill-button"
-							th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate
-							Bill</button>
-					</div>
+                        <button class="sidebar-button bill-button"
+                            th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate
+                            Bill</button>
+                    </div>
 				</div>
 			</div>
 		</div>
