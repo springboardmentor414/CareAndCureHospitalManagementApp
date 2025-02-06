@@ -118,61 +118,40 @@ public class DoctorClientController {
         return "redirect:https://calendar.google.com/calendar/u/0/r/week/2025/1/6?pli=1";
     }
 
-    @GetMapping("/appointments/{doctorId}/filtered")
-    public String showFilteredAppointments(
-            @PathVariable int doctorId,
-            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
-            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
-            Model model,HttpSession session) {
-    	
-    	 if (role == null || !role.equalsIgnoreCase("admin")) {
-             // If admin is not in session, redirect to the login page
-             return "redirect:/adminLoginForm";
-         }
+   
+//    @GetMapping("/appointments-doctors/{doctorId}")
+//    public String showFiltereddAppointments(
+//            @PathVariable int doctorId,
+//            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+//            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+//            Model model,HttpSession session) {
+//    	
+//    	 if (role == null || !role.equalsIgnoreCase("admin")) {
+//             // If admin is not in session, redirect to the login page
+//             return "redirect:/adminLoginForm";
+//         }
+//
+//
+//        // Construct the backend API URL
+//        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
+//                + fromDate + "&toDate=" + toDate;
+//
+//        // Fetch filtered appointments from the backend API
+//        Appointment[] filteredAppointmentsArray = restTemplate.getForObject(backendApiUrl, Appointment[].class);
+//
+//        // Convert to a List
+//        List<Appointment> filteredAppointments = filteredAppointmentsArray != null
+//                ? Arrays.asList(filteredAppointmentsArray)
+//                : List.of();
+//
+//        // Add filtered appointments to the model
+//        model.addAttribute("appointments", filteredAppointments);
+//
+//        // Return the view name to render
+//        return "show-appointments-docs";
+//    }
 
-
-        // Construct the backend API URL
-        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
-                + fromDate + "&toDate=" + toDate;
-
-        // Fetch filtered appointments from the backend API
-        Appointment[] filteredAppointmentsArray = restTemplate.getForObject(backendApiUrl, Appointment[].class);
-
-        // Convert to a List
-        List<Appointment> filteredAppointments = filteredAppointmentsArray != null
-                ? Arrays.asList(filteredAppointmentsArray)
-                : List.of();
-
-        // Add filtered appointments to the model
-        model.addAttribute("appointments", filteredAppointments);
-
-        // Return the view name to render
-        return "show-appointments";
-    }
-
-    @GetMapping("/appointments/{doctorId}")
-    public String showAppointmentsByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
-        // Check if the session contains an 'admin' attribute
-
-        if (role == null || !role.equalsIgnoreCase("admin")) {
-            // If admin is not in session, redirect to the login page
-            return "redirect:/adminLoginForm";
-        }
-
-        // Construct the backend API URL
-        String backendApiUrl = backendUrl + "/appointments/" + doctorId;
-
-        // Fetch appointments from the backend API
-        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl, HttpMethod.GET, null,
-                new ParameterizedTypeReference<List<Appointment>>() {
-                });
-
-        // Add the appointments to the model
-        model.addAttribute("appointments", appointmentsArray.getBody());
-
-        // Return the view name to render
-        return "show-appointments";
-    }
+  
 
     @GetMapping("/admin-add-doctor")
     public String showAddDoctorPage(Model model, HttpSession session) {
@@ -226,6 +205,7 @@ public class DoctorClientController {
                 for (Map.Entry<String, String> entry : errors.entrySet()) {
                     result.rejectValue(entry.getKey(), "", entry.getValue());
                 }
+                
             }
 
             model.addAttribute("errorMessage", "Error while adding doctor. Please correct the highlighted fields.");
@@ -524,7 +504,29 @@ public class DoctorClientController {
         model.addAttribute("doctor", doctor);
         return "doctor-details"; // Returns the Thymeleaf template
     }
-    
+    @GetMapping("/appointments/{doctorId}")
+    public String showAppointmentsByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
+        // Check if the session contains an 'admin' attribute
+
+        if (role == null || !role.equalsIgnoreCase("admin")) {
+            // If admin is not in session, redirect to the login page
+            return "redirect:/adminLoginForm";
+        }
+
+        // Construct the backend API URL
+        String backendApiUrl = backendUrl + "/appointments/" + doctorId;
+
+        // Fetch appointments from the backend API
+        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl, HttpMethod.GET, null,
+                new ParameterizedTypeReference<List<Appointment>>() {
+                });
+
+        // Add the appointments to the model
+        model.addAttribute("appointments", appointmentsArray.getBody());
+
+        // Return the view name to render
+        return "show-appointments";
+    }
     @GetMapping("/appointments-doctors/{doctorId}")
     public String showAppointmentssByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
         // Check if the session contains an 'admin' attribute
@@ -548,6 +550,94 @@ public class DoctorClientController {
         // Return the view name to render
         return "show-appointments-docs";
     }
+    
+//    @GetMapping("/appointments-doctors/{doctorId}")
+//    public String showAppointmentssByDoctorId(@PathVariable int doctorId, Model model, HttpSession session) {
+//        // Check if the session contains an 'admin' attribute
+//
+//        if (role == null || !role.equalsIgnoreCase("doctor")) {
+//            // If admin is not in session, redirect to the login page
+//            return "redirect:/doctorLoginForm";
+//        }
+//
+//        // Construct the backend API URL
+//        String backendApiUrl = backendUrl + "/appointments/" + doctorId;
+//
+//        // Fetch appointments from the backend API
+//        ResponseEntity<List<Appointment>> appointmentsArray = restTemplate.exchange(backendApiUrl, HttpMethod.GET, null,
+//                new ParameterizedTypeReference<List<Appointment>>() {
+//                });
+//
+//        // Add the appointments to the model
+//        model.addAttribute("appointments", appointmentsArray.getBody());
+//
+//        // Return the view name to render
+//        return "show-appointments-docs";
+//    }
+    
+    @GetMapping("/appointments-doctors/{doctorId}/filtered")
+    public String showFiltereddAppointments(
+            @PathVariable int doctorId,
+            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            Model model,HttpSession session) {
+    	
+    	 if (role == null || !role.equalsIgnoreCase("doctor")) {
+             // If admin is not in session, redirect to the login page
+             return "redirect:/doctorLoginForm";
+         }
+
+
+        // Construct the backend API URL
+        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
+                + fromDate + "&toDate=" + toDate;
+
+        // Fetch filtered appointments from the backend API
+        Appointment[] filteredAppointmentsArray = restTemplate.getForObject(backendApiUrl, Appointment[].class);
+
+        // Convert to a List
+        List<Appointment> filteredAppointments = filteredAppointmentsArray != null
+                ? Arrays.asList(filteredAppointmentsArray)
+                : List.of();
+
+        // Add filtered appointments to the model
+        model.addAttribute("appointments", filteredAppointments);
+
+        // Return the view name to render
+        return "show-appointments-docs";
+    }
+    @GetMapping("/appointments/{doctorId}/filtered")
+    public String showFilteredAppointments(
+            @PathVariable int doctorId,
+            @RequestParam("fromDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fromDate,
+            @RequestParam("toDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate toDate,
+            Model model,HttpSession session) {
+    	
+    	 if (role == null || !role.equalsIgnoreCase("admin")) {
+             // If admin is not in session, redirect to the login page
+             return "redirect:/adminLoginForm";
+         }
+
+
+        // Construct the backend API URL
+        String backendApiUrl = backendUrl + "/appointments/" + doctorId + "/filtered?fromDate="
+                + fromDate + "&toDate=" + toDate;
+
+        // Fetch filtered appointments from the backend API
+        Appointment[] filteredAppointmentsArray = restTemplate.getForObject(backendApiUrl, Appointment[].class);
+
+        // Convert to a List
+        List<Appointment> filteredAppointments = filteredAppointmentsArray != null
+                ? Arrays.asList(filteredAppointmentsArray)
+                : List.of();
+
+        // Add filtered appointments to the model
+        model.addAttribute("appointments", filteredAppointments);
+
+        // Return the view name to render
+        return "show-appointments";
+    }
+    
     
     @GetMapping("/editing/{doctorId}")
     public String edittDoctor(@PathVariable int doctorId, Model model,HttpSession session) {
