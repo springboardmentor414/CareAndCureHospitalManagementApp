@@ -19,6 +19,7 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 
+import com.cac.validation.NotFutureDate;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 
@@ -55,7 +56,7 @@ public class Doctor {
     private double consultationFees;
 
     @NotNull(message = "Date of joining is required")
-    // @NotFutureDate(message = "Date of joining cannot be a future date")
+     @NotFutureDate(message = "Date of joining cannot be a future date")
     private LocalDate dateOfJoining;
 
     @NotNull(message = "Surgeon status must be specified")

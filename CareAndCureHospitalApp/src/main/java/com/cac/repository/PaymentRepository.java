@@ -7,8 +7,12 @@ import org.springframework.stereotype.Repository;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+
+
+
+
 @Repository
-public interface PaymentRepository extends JpaRepository<Payment, String> {
+public interface PaymentRepository extends JpaRepository<Payment, String> {	
 	 List<Payment> findByBill_BillId(int billId);
 	    List<Payment> findByPaymentMethod(String paymentMethod);
 	    Optional<Payment> findByRazorpayOrderId(String razorpayOrderId);
@@ -18,4 +22,7 @@ public interface PaymentRepository extends JpaRepository<Payment, String> {
 	    List<Payment> findByBill_BillIdAndPaymentMethod(int billId, String paymentMethod);
 	    List<Payment> findByBill_BillIdAndPaymentStatus(Integer billId, String paymentStatus);
 	    List<Payment> findByPaymentMethodAndPaymentStatus(String paymentMethod, String paymentStatus);
+
+
+
 }

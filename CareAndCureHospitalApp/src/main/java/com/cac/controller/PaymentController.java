@@ -7,11 +7,6 @@ import com.cac.repository.BillRepository;
 import com.cac.service.EmailService;
 import com.cac.service.PaymentService;
 import com.cac.service.RazorpayService;
-import com.cac.controller.PaymentController;
-import com.cac.exception.UserNotFoundException;
-import com.cac.model.Bill;
-import com.cac.repository.BillRepository;
-import com.cac.service.EmailService;
 import com.razorpay.Order;
 import com.razorpay.Utils;
 
@@ -23,13 +18,12 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import jakarta.validation.Valid;
-
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,13 +33,12 @@ import java.util.logging.Logger;
 @RequestMapping("/api/payments")
 public class PaymentController {
 
-
     private static final Logger logger = Logger.getLogger(PaymentController.class.getName());
 
     @Autowired
     private PaymentService paymentService;
     @Autowired
-	private BillRepository billingRepository;
+    private BillRepository billingRepository;
 
     @Autowired
     private EmailService emailNotificationService;
@@ -63,20 +56,22 @@ public class PaymentController {
             Bill fetchedBill = billingRepository.findByBillId(billId);
             if (fetchedBill == null) {
                 logger.warning("Bill not found for ID: " + billId);
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of("error", "Bill not found for ID: " + billId));
+                return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                        .body(Map.of("error", "Bill not found for ID: " + billId));
             }
 
             if (fetchedBill.getFinalamount() == 0) {
                 logger.warning("Total amount for Bill ID " + billId + " is null.");
-                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", "Bill total amount cannot be null."));
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                        .body(Map.of("error", "Bill total amount cannot be null."));
             }
 
             double remainingBalance = fetchedBill.getFinalamount() - fetchedBill.getAmountPaid();
             if (payment.getAmount() > remainingBalance) {
                 logger.warning("Payment amount exceeds remaining balance for Bill ID " + billId);
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of(
-                    "error", "Payment amount " + payment.getAmount() + " exceeds remaining balance " + remainingBalance + " for Bill ID " + billId
-                ));
+                        "error", "Payment amount " + payment.getAmount() + " exceeds remaining balance "
+                                + remainingBalance + " for Bill ID " + billId));
             }
 
             // Associate payment with fetched bill
@@ -86,25 +81,26 @@ public class PaymentController {
             payment.setPaymentStatus("UnSuccess");
             paymentService.savePayment(payment);
             logger.info("Payment created successfully with ID: " + payment.getRazorpayOrderId());
-            return ResponseEntity.ok(payment); 
+            return ResponseEntity.ok(payment);
         } catch (IllegalArgumentException e) {
             logger.severe("Invalid payment input: " + e.getMessage());
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(Map.of("error", e.getMessage()));
         } catch (Exception e) {
             logger.severe("Error creating payment: " + e.getMessage());
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(Map.of("error", "Payment creation failed: " + e.getMessage()));
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(Map.of("error", "Payment creation failed: " + e.getMessage()));
         }
     }
- 
+
     @CrossOrigin(origins = "http://localhost:9093") // Allow CORS for this controller method
     @PostMapping("/verify")
     @ResponseBody
     public Map<String, String> verifyPayment(@RequestBody Map<String, Object> payload) {
-    	 String razorpayOrderId = (String) payload.get("razorpay_order_id");
-         String razorpayPaymentId = (String) payload.get("razorpay_payment_id");
-         String razorpaySignature = (String) payload.get("razorpay_signature");
+        String razorpayOrderId = (String) payload.get("razorpay_order_id");
+        String razorpayPaymentId = (String) payload.get("razorpay_payment_id");
+        String razorpaySignature = (String) payload.get("razorpay_signature");
 
-         String secret = "Q4Cj1Fcp8DNd6V7D66GJqyoj";
+        String secret = "Q4Cj1Fcp8DNd6V7D66GJqyoj";
 
          Map<String, String> response = new HashMap<>();
          try {
@@ -159,10 +155,10 @@ public class PaymentController {
                  );
              }
 
-             response.put("message", "Payment verification failed!");
-             response.put("status", "failed");
-         }
-         return response;
+            response.put("message", "Payment verification failed!");
+            response.put("status", "failed");
+        }
+        return response;
     }
 
     @CrossOrigin(origins = "http://localhost:9093") // Allow CORS for this controller method
@@ -171,8 +167,8 @@ public class PaymentController {
     public Map<String, String> notifyFailure(@RequestBody Map<String, Object> payload) {
         Map<String, String> response = new HashMap<>();
         try {
-            
-        	int billId = Integer.parseInt(payload.get("billId").toString());
+
+            int billId = Integer.parseInt(payload.get("billId").toString());
             String orderId = (String) payload.get("orderId");
             String failureReason = (String) payload.get("message");
             Bill bill = billingRepository.findByBillId(billId);
@@ -188,7 +184,7 @@ public class PaymentController {
         }
         return response;
     }
-    
+
     @CrossOrigin(origins = "http://localhost:9093") // Allow CORS for this controller method
     @GetMapping("/searchbypayment")
     public ResponseEntity<?> searchByCriteria(
@@ -202,43 +198,50 @@ public class PaymentController {
             if (paymentStatus != null) {
                 paymentStatus = URLDecoder.decode(paymentStatus, StandardCharsets.UTF_8);
             }
-            if (billId != null) {
-                List<Payment> payments = paymentService.getPaymentsByBillId(billId);
-                if (payments.isEmpty()) {
-                    throw new UserNotFoundException("No payments found for the provided Bill ID: " + billId);
-                }
-                return ResponseEntity.ok(payments);
-            } else if (paymentMethod != null && !paymentMethod.isEmpty()) {                
-                List<Payment> payments = paymentService.getPaymentsByPaymentMethod(paymentMethod);
-                if (payments.isEmpty()) {
-                    throw new UserNotFoundException("No payments found for the payment method: " + paymentMethod);
-                }
-                return ResponseEntity.ok(payments);
-            } else if (paymentStatus != null && !paymentStatus.isEmpty()) {
-                List<Payment> payments = paymentService.getPaymentsByPaymentStatus(paymentStatus);
-                if (payments.isEmpty()) {
-                    throw new UserNotFoundException("No payments found for the payment status: " + paymentStatus);
-                }
-                return ResponseEntity.ok(payments);
-            } else if (billId == null && (paymentMethod == null || paymentMethod.isEmpty()) && (paymentStatus == null || paymentStatus.isEmpty())) {
-                List<Payment> allPayments = paymentService.getAllPayments();
-                if (allPayments.isEmpty()) {
-                    throw new UserNotFoundException("No payments found in the system.");
-                }
-                return ResponseEntity.ok(allPayments);
+
+            List<Payment> payments = new ArrayList<>();
+            String message = "No payments found for the provided criteria: ";
+
+            if (billId != null && paymentMethod != null && paymentStatus != null) {
+                payments = paymentService.getPaymentsByBillIdAndMethodAndStatus(billId, paymentMethod, paymentStatus);
+                message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod + ", Payment Status = "
+                        + paymentStatus;
+            } else if (billId != null && paymentMethod != null) {
+                payments = paymentService.getPaymentsByBillIdAndMethod(billId, paymentMethod);
+                message += "Bill ID = " + billId + ", Payment Method = " + paymentMethod;
+            } else if (billId != null && paymentStatus != null) {
+                payments = paymentService.getPaymentsByBillIdAndStatus(billId, paymentStatus);
+                message += "Bill ID = " + billId + ", Payment Status = " + paymentStatus;
+            } else if (paymentMethod != null && paymentStatus != null) {
+                payments = paymentService.getPaymentsByMethodAndStatus(paymentMethod, paymentStatus);
+                message += "Payment Method = " + paymentMethod + ", Payment Status = " + paymentStatus;
+            } else if (billId != null) {
+                payments = paymentService.getPaymentsByBillId(billId);
+                message += "Bill ID = " + billId;
+            } else if (paymentMethod != null) {
+                payments = paymentService.getPaymentsByPaymentMethod(paymentMethod);
+                message += "Payment Method = " + paymentMethod;
+            } else if (paymentStatus != null) {
+                payments = paymentService.getPaymentsByPaymentStatus(paymentStatus);
+                message += "Payment Status = " + paymentStatus;
             } else {
-                return ResponseEntity.badRequest()
-                        .body("Error! Please provide valid search criteria (Bill ID, Payment Method, or Payment Status). ");
+                payments = paymentService.getAllPayments();
+                message = "No payments found in the system.";
             }
+
+            if (payments.isEmpty()) {
+                throw new UserNotFoundException(message);
+            }
+
+            return ResponseEntity.ok(payments);
         } catch (UserNotFoundException ex) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
                     .body(ex.getMessage());
-        } catch (Exception e) {            
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("An error occurred while processing your request.");
         }
     }
-
 
     @CrossOrigin(origins = "http://localhost:9093")
     @GetMapping("/searchByDate")
@@ -273,6 +276,6 @@ public class PaymentController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Error searching payments: " + e.getMessage());
         }
-    }
+            }
 
 }
