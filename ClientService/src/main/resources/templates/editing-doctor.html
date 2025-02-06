@@ -194,6 +194,17 @@
             // Attach submit handler to the form
             document.getElementById("editDoctorForm").addEventListener("submit", updateDoctorDetails);
         });
+		function togglePasswordVisibility() {
+		           const passwordInput = document.getElementById("password");
+		           const toggleButton = document.getElementById("togglePassword");
+		           if (passwordInput.type === "password") {
+		               passwordInput.type = "text";
+		               toggleButton.textContent = "Hide";
+		           } else {
+		               passwordInput.type = "password";
+		               toggleButton.textContent = "Show";
+		           }
+		       }
     </script>
 	<script>
 	    function goBack() {
@@ -219,10 +230,12 @@
             <input type="text" id="doctorName" placeholder="Enter Doctor Name"><br>
         </div>
 
+		
         <div class="input-group">
             <label for="specialization">Specialization:</label>
             <input type="text" id="specialization" readonly placeholder="Enter Specialization"><br>
         </div>
+		
 
         <div class="input-group">
             <label for="qualification">Qualification:</label>
@@ -233,6 +246,7 @@
             <label for="consultationFees">Consultation Fees:</label>
             <input type="number" id="consultationFees" readonly placeholder="Enter Consultation Fees"><br>
         </div>
+		
 
         <div class="input-group">
             <label for="contactNumber">Contact Number:</label>
@@ -248,7 +262,7 @@
             <label for="location">Location:</label>
             <input type="text" id="location" placeholder="Enter Location"><br>
         </div>
-
+       
         <div class="input-group">
             <label for="dateOfJoining">Date of Joining:</label>
             <input type="date" id="dateOfJoining" readonly><br>
@@ -258,6 +272,7 @@
             <label for="yearsOfExperience">Years of Experience:</label>
             <input type="number" id="yearsOfExperience" readonly placeholder="Enter Years of Experience"><br>
         </div>
+		
 
 
         <div class="input-group">
@@ -265,10 +280,11 @@
             <input type="text" id="username" readonly placeholder="Enter username"><br>
         </div>
 
-        <div class="input-group">
-            <label for="password">password:</label>
-            <input type="text" id="password" placeholder="Enter password"><br>
-        </div>
+		<label for="password">Password:</label>
+		       <div class="password-group">
+		           <input type="password" id="password">
+		           <button type="button" id="togglePassword" class="password-toggle" onclick="togglePasswordVisibility()">Show</button>
+		       </div>
 
 
         <div class="status-checkbox">
@@ -280,6 +296,8 @@
             <label for="surgeon">Surgeon:</label>
             <input type="checkbox" id="surgeon" readonly><br>
         </div>
+		
+		
 
         <div class="input-group">
             <label for="gender">Gender:</label>
