@@ -130,12 +130,12 @@
 
         .logout-button {
         display: inline-block;
-        width: 80%;
+        width: 60%;
         padding: 12px;
         font-size: 16px;
         font-weight: bold;
         background: linear-gradient(135deg, #96050c, #831203);
-        color: rgb(251, 93, 93);
+        color: rgb(237, 226, 226);
         border: none;
         border-radius: 8px;
         cursor: pointer;
@@ -145,6 +145,27 @@
 
       .logout-button:hover {
         background: linear-gradient(135deg, #bc1919, #840f04);
+        transform: translateY(-3px);
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
+      }
+
+      .home-button {
+        display: inline-block;
+        width: 60%;
+        padding: 12px;
+        font-size: 16px;
+        font-weight: bold;
+        background: linear-gradient(135deg, #127a02, #1df105);
+        color: rgb(237, 226, 226);
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        transition: all 0.3s ease;
+      }
+
+      .home-button:hover {
+        background: linear-gradient(135deg, #077830, #05c01b);
         transform: translateY(-3px);
         box-shadow: 0 6px 15px rgba(0, 0, 0, 0.2);
       }
@@ -281,18 +302,18 @@
             Manage Doctors
         </button>
         <button onclick="window.location.href='/billHomePage'">
-            Manage Bills
+            Manage Bills and Payments
         </button>
-        <button onclick="window.location.href='/paymentManagement'">
+        <!-- <button onclick="window.location.href='/paymentManagement'">
             Manage Payments
-        </button> 
+        </button>  -->
         <button
         class="logout-button"
         onclick="window.location.href='/logout'"
       >
         Logout
       </button>      
-        <button onclick="window.location.href='/'">Go To Home Page</button>
+        <button class="home-button" onclick="window.location.href='/'">Go To Home Page</button>
     </div>
 
 </body>

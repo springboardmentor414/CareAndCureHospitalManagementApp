@@ -27,11 +27,11 @@ public class PaymentClientController {
 
    
 
-    //payment home page added in main page as payement portal
-    @GetMapping("/paymentManagement")
-    public String home() {
-        return "indexPayment.html";
-    }
+    // //payment home page added in main page as payement portal
+    // @GetMapping("/paymentManagement")
+    // public String home() {
+    //     return "indexPayment.html";
+    // }
 
     private static final Logger logger = Logger.getLogger(PaymentClientController.class.getName());
 	private final String backendUrl = "http://localhost:8082/api/payments";
