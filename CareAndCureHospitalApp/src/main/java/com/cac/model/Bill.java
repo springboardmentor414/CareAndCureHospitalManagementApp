@@ -39,7 +39,7 @@ public class Bill {
 	
 	@OneToOne
 	@JoinColumn(name = "appointment_id")
-	@JsonManagedReference
+	@JsonIgnoreProperties("bill")
 	private Appointment appointment;
 
 	private  double consultationFees;

@@ -46,9 +46,9 @@ public class AppointmentService {
 
     // Get appointments by patient ID
     public List<Appointment> getAppointmentsByPatientId(int patientId) {
-        Patient patient = patientRepository.findById(patientId)
-                .orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + patientId));
-        return appointmentRepository.findByPatient(patient);
+       // Patient patient = patientRepository.findById(patientId)
+      //          .orElseThrow(() -> new IllegalArgumentException("Patient not found with ID: " + patientId));
+        return appointmentRepository.findByPatient_PatientId( patientId);
     }
 
     // Get appointments by doctor ID

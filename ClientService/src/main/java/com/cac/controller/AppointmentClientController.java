@@ -103,14 +103,22 @@ public class AppointmentClientController {
 
 		String url = baseUrl + "/patient/" + patientId + "/appointments";
 		try {
-			ResponseEntity<List<AppointmentDTO>> response = restTemplate.exchange(url, HttpMethod.GET, null,
-					new ParameterizedTypeReference<List<AppointmentDTO>>() {
+			ResponseEntity<List<Appointment>> response = restTemplate.exchange(url, HttpMethod.GET, null,
+					new ParameterizedTypeReference<List<Appointment>>() {
 					});
-			List<AppointmentDTO> appointments = response.getBody();
+			List<Appointment> appointments = response.getBody();
+			
 
 			if (appointments == null || appointments.isEmpty()) {
 				model.addAttribute("message", "No appointments found.");
 			} else {
+				 System.out.println("hello appointment client"); 
+				  for (Appointment p : appointments) {
+				  System.out.println(p); // Assuming Payment has a proper toString() method
+				  System.out.println("Doctor Name"+p.getDoctorName());
+				  System.out.println("Doctor Name"+p.getDoctorId());
+				  
+				  }
 				model.addAttribute("patientId", patientId);
 				model.addAttribute("appointments", appointments);
 			}

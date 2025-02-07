@@ -6,6 +6,7 @@ import com.cac.dto.RescheduleDTO;
 // import com.careandcure.cac.dto.RescheduleRequest;
 import com.cac.model.Appointment;
 import com.cac.model.Patient;
+import com.cac.model.Payment;
 import com.cac.model.Doctor;
 import com.cac.service.AppointmentService;
 import com.cac.service.PatientService;
@@ -40,7 +41,18 @@ public class AppointmentController {
     // Get all appointments for a specific patient
     @GetMapping
     public ResponseEntity<List<Appointment>> getAppointmentsByPatientId(@PathVariable int patientId) {
+    	System.out.println("hello1"); 
         List<Appointment> appointments = appointmentService.getAppointmentsByPatientId(patientId);
+		
+		  System.out.println("hello"); 
+		  for (Appointment p : appointments) {
+		  System.out.println(p); // Assuming Payment has a proper toString() method
+		  System.out.println("Doctor NAme"+p.getDoctorName());
+		  System.out.println("Doctor Id"+p.getDoctorId());
+		  if(p.getBill()!=null)
+		  System.out.println("Bill id"+p.getBill().getBillId());
+		  }
+		 
         return appointments.isEmpty()
                 ? ResponseEntity.noContent().build()
                 : ResponseEntity.ok(appointments);

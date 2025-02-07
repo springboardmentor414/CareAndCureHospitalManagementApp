@@ -3,6 +3,7 @@ package com.cac.model;
 import com.cac.model.Bill;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import jakarta.validation.constraints.Size;
 import jakarta.persistence.*;
@@ -37,12 +38,11 @@ public class Appointment {
   
 //added by team 4
   @OneToOne(mappedBy = "appointment")
-	@JsonBackReference
+  @JsonIgnoreProperties("appointment")
 	private Bill bill;
 
   @ManyToOne(fetch = FetchType.EAGER)
   @JoinColumn(name = "doctor_id", nullable = false)
-  @JsonIgnore
   private Doctor doctor;
 
   @Transient
@@ -66,6 +66,7 @@ public class Appointment {
       this.doctorId = doctor.getDoctorId(); 
     }
   }
+  
   public  void  setMyStatues(String s){
     this.status=s;
   }
@@ -116,6 +117,12 @@ public Doctor getDoctor() {
 }
 public void setDoctor(Doctor doctor) {
 	this.doctor = doctor;
+}
+public Bill getBill() {
+	return bill;
+}
+public void setBill(Bill bill) {
+	this.bill = bill;
 }
 public String getDoctorName() {
 	return doctorName;
