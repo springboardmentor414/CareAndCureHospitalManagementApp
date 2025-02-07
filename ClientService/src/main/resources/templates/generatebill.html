@@ -517,57 +517,57 @@
 		        <div class="form-container">
 		            <div class="form-group">
 		                <label for="appId">Appointment ID:</label>
-		                <input type="number" id="appId" name="appointment.appointmentId" placeholder="Enter Appointment ID">
+		                <input type="number" id="appId" th:field="*{appointment.appointmentId}" placeholder="Enter Appointment ID">
 		                <div class="error-message" id="appIdError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="billDate">Bill Date:</label>
-		                <input type="date" id="billDate" name="billDate">
+		                <input type="date" id="billDate" th:field="*{billDate}">
 		                <div class="error-message" id="billDateError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="consultationFees">Consultation Fees:</label>
-		                <input type="number" id="consultationFees" name="consultationFees" placeholder="Enter Consultation Fees">
+		                <input type="number" id="consultationFees" th:field="*{consultationFees}" placeholder="Enter Consultation Fees">
 		                <div class="error-message" id="consultationFeesError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="medicineFees">Medicine Fees:</label>
-		                <input type="number" id="medicineFees" name="medicineFees" placeholder="Enter Medicine Fees">
+		                <input type="number" id="medicineFees" th:field="*{medicineFees}" placeholder="Enter Medicine Fees">
 		                <div class="error-message" id="medicineFeesError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="testCharges">Test Charges:</label>
-		                <input type="number" id="testCharges" name="testCharges" placeholder="Enter Test Charges">
+		                <input type="number" id="testCharges" th:field="*{testCharges}" placeholder="Enter Test Charges">
 		                <div class="error-message" id="testChargesError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="miscellaneousCharge">Miscellaneous Charges:</label>
-		                <input type="number" id="miscellaneousCharge" name="miscellaneousCharge" placeholder="Enter Miscellaneous Charges">
+		                <input type="number" id="miscellaneousCharge" th:field="*{miscellaneousCharge}" placeholder="Enter Miscellaneous Charges">
 		                <div class="error-message" id="miscellaneousChargeError"></div>
 		            </div>
 
-		            <div class="form-group">
-		                <label for="isInsuranceApplicable">Is Insurance Applicable:</label>
-		                <select name="isInsuranceApplicable" required>
-		                    <option value="false">No</option>
-		                    <option value="true">Yes</option>
-		                </select>
-		            </div>
+					<div class="form-group">
+						<label for="isInsuranceApplicable">Is Insurance Applicable:</label>
+						<select name="isInsuranceApplicable" required>
+							<option value="false" th:selected="${bill.isInsuranceApplicable == false}">No</option>
+							<option value="true" th:selected="${bill.isInsuranceApplicable == true}">Yes</option>
+						</select>
+					</div>
 
 		            <div class="form-group">
 		                <label for="description">Description:</label>
-		                <input type="text" id="description" name="description" placeholder="Enter Description">
+		                <input type="text" id="description" th:field="*{description}" placeholder="Enter Description">
 		                <div class="error-message" id="descriptionError"></div>
 		            </div>
 
 		            <div class="form-group">
 		                <label for="paymentStatus">Payment Status:</label>
-		                <select name="paymentstatus" required>
+		                <select th:field="*{paymentstatus}" required>
 		                    <option value="unpaid">Unpaid</option>
 		                    <option value="paid">Paid</option>
 		                    <option value="partially_paid">Partially Paid</option>

@@ -5,27 +5,26 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.cac.model.AdminDto;
 import com.cac.model.Appointment;
 import com.cac.model.Bill;
 import com.cac.model.Doctor;
+import com.cac.model.Patient;
 
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.WebDataBinder;
-import org.springframework.web.bind.annotation.InitBinder;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.SessionAttribute;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.HttpServerErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -41,6 +40,29 @@ public class BillClientController {
 	@Autowired
 	public RestTemplate restTemplate;
 
+	Patient patientSession = null;
+
+	private AdminDto adminSession=null;
+
+	String role = null;
+
+	@ModelAttribute
+	public void getPatient(@SessionAttribute(name = "patientObj", required = false) Patient patObj) {
+		patientSession = patObj;
+	}
+
+	@ModelAttribute
+	public void getRole(@SessionAttribute(name = "userRole", required = false) String userRole, Model model) {
+		this.role = userRole;
+		model.addAttribute("userRole", userRole);
+	}
+
+	@ModelAttribute
+	public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj){
+			this.adminSession=adminObj;
+	}
+
+
 	@Value("${base.url}")
 	private String backendUrl;
 
@@ -51,14 +73,27 @@ public class BillClientController {
 	}
 	
 	@RequestMapping(value="/billHomePage")
-	public String registrationPage() {
+	public String registrationPage(Model model) {
+		if(role==null){
+			return "redirect:/adminLoginForm";
+		}
+		if(!role.equalsIgnoreCase("admin")){
+			model.addAttribute("errorMessage", "You don't have permission.");
+			return "unauthorized";
+		}
 	    return "frontpage";
 		
 	}
 	
 	@RequestMapping(value="/generateBillByAdmin/{appointmentId}")
 	public String generateBillPageByAdmin(@PathVariable int appointmentId, Model m) {
-
+		if(role==null){
+			return "redirect:/adminLoginForm";
+		}
+		if(!role.equalsIgnoreCase("admin")){
+			m.addAttribute("errorMessage", "You don't have permission.");
+			return "unauthorized";
+		}
 		Appointment appointment= restTemplate.getForEntity(backendUrl + "/api/admin/getAppointmentById/"+ appointmentId,Appointment.class).getBody();
 		Bill bill = new Bill();
 		if(appointment!=null){
@@ -77,6 +112,13 @@ public class BillClientController {
 	
 	@RequestMapping(value="/generateBill")
 	public String generateBillPage(Model m) {
+		if(role==null){
+			return "redirect:/adminLoginForm";
+		}
+		if(!role.equalsIgnoreCase("admin")){
+			m.addAttribute("errorMessage", "You don't have permission.");
+			return "unauthorized";
+		}
 		m.addAttribute("bill", new Bill());
 	    return "generatebill";
 	
@@ -105,8 +147,6 @@ public class BillClientController {
   	
   	}
     
-     
-	
      //http://localhost:8080/bills/2
      @RequestMapping(value = "/bills/{appointmentId}", method = RequestMethod.POST)
      public String submitNewBill(@PathVariable("appointmentId") int appointmentId, @ModelAttribute("bill") Bill bill, Model model) throws JsonMappingException, JsonProcessingException {
@@ -356,12 +396,6 @@ public class BillClientController {
 		    }
 		}
 	    
-	
-
-	
-	
-	
-	
 	@RequestMapping(value = "/findBillById", method = RequestMethod.GET)
 	public String findBillById(@RequestParam("billId") int billId, Model model) {
 	    Bill bill = null;
