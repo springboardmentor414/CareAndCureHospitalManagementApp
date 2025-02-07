@@ -2,366 +2,376 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>Appointment Management</title>
-	<style>
-		/* General Styling */
-body {
-    font-family: 'Arial', sans-serif;
-    margin: 0;
-    padding: 0;
-    background: linear-gradient(to right, #f0f4f8, #d9e4f5);
-    display: flex;
-    min-height: 100vh;
-    overflow: hidden;
-    animation: fadeIn 1s ease-in-out;
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Appointment Management</title>
+    <style>
+        /* General Styling */
+        body {
+            font-family: "Arial", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(to right, #f0f4f8, #d9e4f5);
+            display: flex;
+            min-height: 100vh;
+            overflow: hidden;
+            animation: fadeIn 1s ease-in-out;
+        }
 
-/* Container Layout */
-.container {
-    display: flex;
-    width: 100%;
-    overflow: hidden;
-    flex-wrap: wrap;
-}
+        /* Container Layout */
+        .container {
+            display: flex;
+            width: 100%;
+            overflow: hidden;
+            flex-wrap: wrap;
+        }
 
-/* Sidebar Animation */
-.sidebar {
-    flex: 1 1 300px;
-    background-color: rgb(64, 52, 118);
-    color: white;
-    padding: 2.5px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    transform: translateX(-100%);
-    animation: slideIn 0.8s ease-in-out forwards;
-}
+        /* Sidebar Animation */
+        .sidebar {
+            flex: 1 1 300px;
+            background-color: rgb(64, 52, 118);
+            color: white;
+            padding: 2.5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transform: translateX(-100%);
+            animation: slideIn 0.8s ease-in-out forwards;
+        }
 
-/* Content Section */
-.content {
-    flex: 2 1 600px;
-    padding: 20px;
-    background-color: white;
-    overflow-y: auto;
-    height: calc(100vh - 60px);
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-    border-radius: 12px;
-    display: flex;
-    flex-direction: column;
-    animation: fadeInUp 0.8s ease-in-out;
-}
+        /* Content Section */
+        .content {
+            flex: 2 1 600px;
+            padding: 20px;
+            background-color: white;
+            overflow-y: auto;
+            height: calc(100vh - 60px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 12px;
+            display: flex;
+            flex-direction: column;
+            animation: fadeInUp 0.8s ease-in-out;
+        }
 
-/* Header Styling */
-.header-container {
-    width: 100%;
-    text-align: center;
-    margin-bottom: 20px;
-    position: sticky;
-    top: 0;
-    background-color: white;
-    z-index: 10;
-}
+        /* Header Styling */
+        .header-container {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+            position: sticky;
+            top: 0;
+            background-color: white;
+            z-index: 10;
+        }
 
-h1 {
-    background-color: rgb(64, 52, 118);
-    color: white;
-    padding: 15px 20px;
-    border-radius: 8px;
-    font-size: 1.8em;
-    display: inline-block;
-    animation: bounce 1.5s infinite;
-}
+        h1 {
+            background-color: rgb(64, 52, 118);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            font-size: 1.8em;
+            display: inline-block;
+            animation: bounce 1.5s infinite;
+        }
 
-/* Appointment Card */
-.appointment {
-    background-color: white;
-    padding: 15px;
-    border: 1px solid #ddd;
-    border-radius: 12px;
-    margin-bottom: 15px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
+        /* Appointment Card */
+        .appointment {
+            background-color: white;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 12px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
 
-.appointment:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-}
+        .appointment:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
 
-/* Appointment Details */
-.appointment-title {
-    font-weight: bold;
-    color: rgb(64, 52, 118);
-    font-size: 1.3em;
-    margin-bottom: 10px;
-}
+        /* Appointment Details */
+        .appointment-title {
+            font-weight: bold;
+            color: rgb(64, 52, 118);
+            font-size: 1.3em;
+            margin-bottom: 10px;
+        }
 
-.appointment-details {
-    font-size: 1em;
-    color: #555;
-    margin-bottom: 8px;
-}
+        .appointment-details {
+            font-size: 1em;
+            color: #555;
+            margin-bottom: 8px;
+        }
 
-.appointment-details span {
-    font-weight: bold;
-}
+        .appointment-details span {
+            font-weight: bold;
+        }
 
-/* Status Colors */
-.green {
-    color: #28a745;
-    font-size: 1.1em;
-    font-weight: bold;
-}
+        /* Status Colors */
+        .green {
+            color: #28a745;
+            font-size: 1.1em;
+            font-weight: bold;
+        }
 
-.red {
-    color: red;
-    text-decoration: line-through;
-}
+        .red {
+            color: red;
+            text-decoration: line-through;
+        }
 
-.blue {
-    color: blue;
-    font-style: italic;
-}
+        .blue {
+            color: blue;
+            font-style: italic;
+        }
 
-/* Cancellation Reason */
-.reasonOfCancellation {
-    color: red;
-    font-weight: bold;
-    background-color: #f8d7da;
-    padding: 5px;
-    border-radius: 5px;
-}
+        /* Cancellation Reason */
+        .reasonOfCancellation {
+            color: red;
+            font-weight: bold;
+            background-color: #f8d7da;
+            padding: 5px;
+            border-radius: 5px;
+        }
 
-/* Buttons */
-.sidebar-button {
-    color: white;
-    font-size: 1.1em;
-    padding: 12px 20px;
-    margin: 10px 0;
-    cursor: pointer;
-    border: none;
-    border-radius: 8px;
-    width: auto;
-    text-align: center;
-    transition: background-color 0.3s, transform 0.2s;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
+        /* Buttons */
+        .sidebar-button {
+            color: white;
+            font-size: 1.1em;
+            padding: 12px 20px;
+            margin: 10px 0;
+            cursor: pointer;
+            border: none;
+            border-radius: 8px;
+            width: auto;
+            text-align: center;
+            transition: background-color 0.3s, transform 0.2s;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        }
 
-/* Schedule Button */
-#scheduleButton {
-    background-color: #28a745;
-}
+        /* Schedule Button */
+        #scheduleButton {
+            background-color: #28a745;
+        }
 
-#scheduleButton:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
+        #scheduleButton:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
 
-/*bill button*/
-.bill-button {
-    background-color: #28a745;
-}
+        /*bill button*/
+        .bill-button {
+            background-color: #28a745;
+        }
 
-.bill-button:hover {
-    background-color: #218838;
-    transform: scale(1.05);
-}
+        .bill-button:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
 
-/* Cancel Button */
-.cancel-button {
-    background-color: #dc3545;
-}
+        /* Cancel Button */
+        .cancel-button {
+            background-color: #dc3545;
+        }
 
-.cancel-button:hover {
-    background-color: #c82333;
-    transform: scale(1.05);
-}
+        .cancel-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
 
-/* Cancel Button */
-.back-button {
-    background-color: #353bdc;
-}
+        /* Cancel Button */
+        .back-button {
+            background-color: #353bdc;
+        }
 
-.back-button:hover {
-    background-color: #1e95c7;
-    transform: scale(1.05);
-}
+        .back-button:hover {
+            background-color: #1e95c7;
+            transform: scale(1.05);
+        }
 
+        /* Reschedule Button */
+        .reschedule-button {
+            background-color: #ffc107;
+            color: black;
+        }
 
+        .reschedule-button:hover {
+            background-color: #e0a800;
+            transform: scale(1.05);
+        }
 
-/* Reschedule Button */
-.reschedule-button {
-    background-color: #ffc107;
-    color: black;
-}
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
 
-.reschedule-button:hover {
-    background-color: #e0a800;
-    transform: scale(1.05);
-}
+            to {
+                opacity: 1;
+            }
+        }
 
-/* Animations */
-@keyframes fadeIn {
-    from {
-        opacity: 0;
-    }
-    to {
-        opacity: 1;
-    }
-}
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
 
-@keyframes fadeInUp {
-    from {
-        opacity: 0;
-        transform: translateY(20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
 
-@keyframes slideIn {
-    from {
-        transform: translateX(-100%);
-    }
-    to {
-        transform: translateX(0);
-    }
-}
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+            }
 
-@keyframes bounce {
-    0%, 100% {
-        transform: translateY(0);
-    }
-    50% {
-        transform: translateY(-5px);
-    }
-}
+            to {
+                transform: translateX(0);
+            }
+        }
 
-	</style>
+        @keyframes bounce {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-5px);
+            }
+        }
+    </style>
 </head>
 
 <body>
-	<div class="container">
+    <div class="container">
+        <div class="sidebar">
+            <button id="scheduleButton" class="sidebar-button"
+                th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">
+                Schedule Appointment
+            </button>
 
-		<div class="sidebar">
-			<button id="scheduleButton" class="sidebar-button"
-				th:onclick="|window.location.href='/patient/${patientId}/appointments/selectDoctor'|">Schedule
-				Appointment</button>
+            <button th:if="${userRole=='patient'}" class="sidebar-button back-button"
+                onclick="window.location.href='/patientPage'">
+                Back
+            </button>
+            <button th:if="${userRole=='admin'}" class="sidebar-button back-button"
+                onclick="window.location.href='/adminPatientPage'">
+                Back to Home
+            </button>
+        </div>
 
-                <button th:if="${userRole=='patient'}" class="sidebar-button back-button" onclick="window.location.href='/patientPage'">Back</button>
-                <button th:if="${userRole=='admin'}" class="sidebar-button back-button" onclick="window.location.href='/adminPatientPage'">Back to Home</button>
-		</div>
-
-		<div class="content">
-			<header class="header-container">
-				<h1>Appointment Management</h1>
-			</header>
-			<div id="dynamicContent">
-				<div th:if="${appointments == null or appointments.isEmpty()}">
-					<p>No appointments found.</p>
-				</div>
-				<div th:each="appointment : ${appointments}" class="appointment">
-					<!-- <div class="appointment-title" th:text="${appointment.appointmentDate + ' - ' + appointment.appointmentTime}">
+        <div class="content">
+            <header class="header-container">
+                <h1>Appointment Management</h1>
+            </header>
+            <div id="dynamicContent">
+                <div th:if="${appointments == null or appointments.isEmpty()}">
+                    <p>No appointments found.</p>
+                </div>
+                <div th:each="appointment : ${appointments}" class="appointment">
+                    <!-- <div class="appointment-title" th:text="${appointment.appointmentDate + ' - ' + appointment.appointmentTime}">
                     </div> -->
 
-					<!--<div class="appointment-title" th:text="${appointment != null ?
+                    <!--<div class="appointment-title" th:text="${appointment != null ?
                               (appointment.appointmentDate != null && appointment.appointmentTime != null ?
                               appointment.appointmentDate + ' - ' + T(java.time.LocalTime).parse(appointment.appointmentTime).format(T(java.time.format.DateTimeFormatter).ofPattern('hh:mm a')) :
                               'Appointment details unavailable') :
                               'No appointment found'}">
 					</div>-->
-					
-					<div class="appointment-title" th:text="${appointment != null ?
+
+                    <div class="appointment-title" th:text="${appointment != null ?
 					    (appointment.appointmentDate != null && appointment.appointmentTime != null ?
 					        appointment.appointmentDate.format(T(java.time.format.DateTimeFormatter).ofPattern('MMM dd, yyyy')) + ' - ' +
 					        appointment.appointmentTime.format(T(java.time.format.DateTimeFormatter).ofPattern('hh:mm a')) :
 					        'Appointment details unavailable') :
-					    'No appointment found'}">
-					</div>
+					    'No appointment found'}"></div>
 
+                    <div class="appointment-details">
+                        <span>Status:</span>
+                        <span
+                            th:classappend="${appointment.status == 'Cancelled' ? 'red' : (appointment.status == 'Scheduled' ? 'green' : (appointment.status == 'Pending' ? 'yellow' : (appointment.status == 'Rescheduled' ? 'blue' : 'yellow')))}"
+                            th:text="${appointment.status}">
+                        </span>
+                    </div>
+                    <div class="appointment-details">
+                        <span>Appointment ID:</span>
+                        <span class="details" th:text="${appointment.appointmentId}"></span>
+                    </div>
+                    <div class="appointment-details">
+                        <span>Doctor ID:</span>
+                        <span class="details" th:text="${appointment.doctorId ?: 'N/A'}"></span>
+                    </div>
+                    <div class="appointment-details">
+                        <span>Doctor Name:</span>
+                        <span class="details" th:text="${appointment.doctorName ?: 'N/A'}"></span>
+                    </div>
+                    <div class="appointment-details">
+                        <span>Reason:</span>
+                        <span class="details" th:text="${appointment.reason ?: 'N/A'}"></span>
+                    </div>
+                    <div th:if="${appointment.status == 'Cancelled'}" class="appointment-details">
+                        <span>Cancellation Reason:</span>
+                        <span class="reasonOfCancellation"
+                            th:text="${appointment.reasonOfCancellation ?: 'N/A'}"></span>
+                    </div>
 
+                    <div th:if="${appointment.status == 'Cancelled'}">
+                        <button class="sidebar-button reschedule-button"
+                            th:onclick="|window.location.href='/patient/${patientId}/appointments/reschedule/${appointment.appointmentId}'|">
+                            Reschedule Appointment
+                        </button>
+                    </div>
 
+                    <div th:if="${appointment.status != 'Cancelled'}">
+                        <button class="sidebar-button cancel-button"
+                            th:onclick="|window.location.href='/patient/${patientId}/appointments/cancel/${appointment.appointmentId}'|">
+                            Cancel Appointment
+                        </button>
+                    </div>
 
-
-					<div class="appointment-details">
-						<span>Status:</span>
-						<span
-							th:classappend="${appointment.status == 'Cancelled' ? 'red' : (appointment.status == 'Scheduled' ? 'green' : (appointment.status == 'Pending' ? 'yellow' : (appointment.status == 'Rescheduled' ? 'blue' : 'yellow')))}"
-							th:text="${appointment.status}">
-						</span>
-
-					</div>
-					<div class="appointment-details">
-						<span>Appointment ID:</span>
-						<span class="details" th:text="${appointment.appointmentId}"></span>
-					</div>
-					<div class="appointment-details">
-						<span>Doctor ID:</span>
-						<span class="details" th:text="${appointment.doctorId ?: 'N/A'}"></span>
-					</div>
-					<div class="appointment-details">
-						<span>Doctor Name:</span>
-						<span class="details" th:text="${appointment.doctorName ?: 'N/A'}"></span>
-					</div>
-					<div class="appointment-details">
-						<span>Reason:</span>
-						<span class="details" th:text="${appointment.reason ?: 'N/A'}"></span>
-					</div>
-					<div th:if="${appointment.status == 'Cancelled'}" class="appointment-details">
-						<span>Cancellation Reason:</span>
-						<span class="reasonOfCancellation "
-							th:text="${appointment.reasonOfCancellation ?: 'N/A'}"></span>
-					</div>
-
-					<div th:if="${appointment.status == 'Cancelled'}">
-						<button class="sidebar-button reschedule-button"
-							th:onclick="|window.location.href='/patient/${patientId}/appointments/reschedule/${appointment.appointmentId}'|">Reschedule
-							Appointment</button>
-					</div>
-
-					<div th:if="${appointment.status != 'Cancelled'}">
-						<button class="sidebar-button cancel-button"
-							th:onclick="|window.location.href='/patient/${patientId}/appointments/cancel/${appointment.appointmentId}'|">Cancel
-							Appointment</button>
-					</div>
-
-                   <!-- <div th:if="${userRole=='admin'}">
+                    <!-- <div th:if="${userRole=='admin'}">
                         <button class="sidebar-button bill-button"
                             th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate
                             Bill</button>
                     </div>-->
-					
-					<div th:if="${userRole == 'admin'}">
-					    <!-- Check if the bill object is empty -->
-					    <div th:if="${appointment.bill == null}">
-					        <button class="sidebar-button bill-button"
-					            th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate Bill</button>
-					    </div>
-					    <div th:if="${appointment.bill != null}">
-					        <button class="sidebar-button bill-button"
-					            th:onclick="|window.location.href='/viewBillDetails/${appointment.appointmentId}'|">View Bill Details</button>
-					    </div>
-					</div>
 
-					<div th:if="${userRole == 'patient'}">
-					    <!-- Check if the bill object is empty -->
-					    <div th:if="${appointment.bill != null}">
-					        <button class="sidebar-button bill-button"
-					            th:onclick="|window.location.href='/viewBillDetails/${appointment.appointmentId}'|">View Bill Details</button>
-					    </div>
-					</div>
+                    <div th:if="${userRole == 'admin'}">
+                        <!-- Check if the bill object is empty -->
+                        <div th:if="${appointment.bill == null}">
+                            <button class="sidebar-button bill-button"
+                                th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">
+                                Generate Bill
+                            </button>
+                        </div>
+                        <div th:if="${appointment.bill != null}">
+                            <button class="sidebar-button bill-button"
+                                th:onclick="|window.location.href='/findBillById?billId='+${appointment.bill.billId}|">
+                                View Bill Details
+                            </button>
+                        </div>
+                    </div>
 
-				</div>
-			</div>
-		</div>
-	</div>
+                    <div th:if="${userRole == 'patient'}">
+                        <!-- Check if the bill object is empty -->
+
+                        <div th:if="${appointment.bill != null}">
+                            <button class="sidebar-button bill-button"
+                                th:onclick="|window.location.href='/findBillById?billId='+${appointment.bill.billId}|">
+                                View Bill Details
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </body>
 
 </html>
-
