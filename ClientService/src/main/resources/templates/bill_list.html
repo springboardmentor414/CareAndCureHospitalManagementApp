@@ -209,7 +209,7 @@
         
         <form th:if="${balanceAmount > 0}" th:action="@{/create}" method="GET">
             <input type="hidden" name="billId" th:value="${bill.billId}" />
-            <input type="hidden" name="finalamount" th:value="${bill.finalamount}" />
+            <input type="hidden" name="finalamount" th:value="${balanceAmount}" />
             <button type="submit">Make Payment</button>
         </form>
         
