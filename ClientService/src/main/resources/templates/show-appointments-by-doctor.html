@@ -3,85 +3,43 @@
 <head>
     <title>Appointments by Doctor</title>
     <style>
-        /* General Styling */
         body {
-            font-family: 'Poppins', sans-serif;
+            font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
-            background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Light gradient */
+            background-color: #f4f4f9;
             color: #333;
         }
 
         h1 {
             text-align: center;
             margin-top: 20px;
-            font-size: 36px;
-            color: #0056b3;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
-            animation: fadeInDown 1s ease-in-out;
+            color: #444;
         }
 
-        /* Form Styling */
-        .filter-form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 20px;
+        form {
+            max-width: 600px;
             margin: 20px auto;
-            animation: fadeInUp 1s ease-in-out;
-        }
-
-        .filter-form form {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 10px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-        }
-
-        .filter-form label {
-            font-size: 14px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        .filter-form input {
-            padding: 10px;
+            padding: 20px;
+            background: #fff;
             border: 1px solid #ddd;
-            border-radius: 6px;
-            font-size: 14px;
-            transition: border-color 0.3s, box-shadow 0.3s;
-        }
-
-        .filter-form input:focus {
-            border-color: #0056b3;
-            box-shadow: 0 0 8px rgba(0, 86, 179, 0.4);
-        }
-
-        .filter-form button {
-            padding: 10px 15px;
-            font-size: 14px;
-            color: white;
-            background: linear-gradient(90deg, #42a5f5, #007bff); /* Gradient button */
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .filter-form button:hover {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         label {
-            font-size: 16px;
+            display: block;
+            margin: 10px 0 5px;
             font-weight: bold;
-            color: #444;
-            margin-bottom: 5px;
+        }
+
+        input[type="date"] {
+            width: calc(100% - 22px);
+            padding: 8px 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 16px;
         }
 
         .error-message {
@@ -93,194 +51,155 @@
         }
 
         button {
-            display: block;
-            width: 100%;
-            padding: 12px;
+            display: inline-block;
+            padding: 10px 15px;
             font-size: 16px;
-            color: white;
-            background: linear-gradient(90deg, #42a5f5, #007bff);
+            color: #fff;
+            background-color: #007bff;
             border: none;
-            border-radius: 6px;
+            border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
+            text-align: center;
         }
 
         button:hover {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            background-color: #0056b3;
         }
 
-        /* Table Styling */
         table {
-            width: 90%;
-            margin: 30px auto;
+            width: 80%;
+            margin: 20px auto;
             border-collapse: collapse;
-            background: white;
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
-            animation: fadeInUp 1.2s ease-in-out;
+            background: #fff;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        th, td {
-            padding: 12px 15px;
-            text-align: center;
-            font-size: 14px;
+        table th, table td {
             border: 1px solid #ddd;
+            padding: 10px;
+            text-align: left;
         }
 
-        th {
-            background: linear-gradient(90deg, #42a5f5, #007bff);
-            color: white;
-            text-transform: uppercase;
-            font-weight: bold;
+        table th {
+            background-color: #007bff;
+            color: #fff;
         }
 
-        tr:nth-child(even) {
+        table tr:nth-child(even) {
             background-color: #f9f9f9;
         }
 
-        tr:hover {
-            background-color: #e3f2fd;
+        table tr:hover {
+            background-color: #f1f1f1;
         }
 
-        /* Back Button Styling */
         .back-button {
-            position: absolute;
-            top: 20px;
-            left: 20px;
+            display: block;
+            margin: 20px auto;
+            width: fit-content;
             padding: 10px 20px;
             font-size: 16px;
-            color: white;
-            background: linear-gradient(90deg, #42a5f5, #007bff); /* Gradient for button */
-            border-radius: 8px;
+            color: #fff;
+            background-color: rgb(37, 6, 151);
+            border: none;
+            border-radius: 4px;
             text-decoration: none;
-            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
-            animation: fadeInUp 1.2s ease-in-out;
+            text-align: center;
         }
 
         .back-button:hover {
-            background: linear-gradient(90deg, #007bff, #0056b3);
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-        }
-
-        /* Animations */
-        @keyframes fadeInDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            background-color: rgb(44, 14, 134);
         }
     </style>
 
-    <script>
-        function validateDates() {
-            let fromDate = document.getElementById("fromDate").value;
-            let toDate = document.getElementById("toDate").value;
-            let errorMessage = document.getElementById("dateError");
+	<script>
+	    function validateDates() {
+	        let fromDate = document.getElementById("fromDate").value;
+	        let toDate = document.getElementById("toDate").value;
+	        let errorMessage = document.getElementById("dateError");
 
-            if (fromDate && toDate) {
-                if (toDate < fromDate) {
-                    errorMessage.style.display = "block";
-                    errorMessage.innerText = "Error: To Date cannot be earlier than From Date.";
-                    return false;
-                } else {
-                    errorMessage.style.display = "none";
-                }
-            }
-            return true;
-        }
+	        if (fromDate && toDate) {
+	            if (toDate < fromDate) {
+	                errorMessage.style.display = "block";
+	                errorMessage.innerText = "Error: To Date cannot be earlier than From Date.";
+	                return false;
+	            } else {
+	                errorMessage.style.display = "none";
+	            }
+	        }
+	        return true;
+	    }
 
-        function enableToDate() {
-            let fromDate = document.getElementById("fromDate").value;
-            let toDateInput = document.getElementById("toDate");
+	    function enableToDate() {
+	        let fromDate = document.getElementById("fromDate").value;
+	        let toDateInput = document.getElementById("toDate");
 
-            if (fromDate) {
-                toDateInput.removeAttribute("disabled");
-                toDateInput.setAttribute("min", fromDate);
-            } else {
-                toDateInput.value = "";
-                toDateInput.setAttribute("disabled", "true");
-            }
-        }
+	        if (fromDate) {
+	            toDateInput.removeAttribute("disabled");
+	            toDateInput.setAttribute("min", fromDate); // Ensures "To Date" cannot be before "From Date"
+	        } else {
+	            toDateInput.value = "";
+	            toDateInput.setAttribute("disabled", "true");
+	        }
+	    }
 
-        function validateForm(event) {
-            if (!validateDates()) {
-                event.preventDefault();
-            }
-        }
+	    function validateForm(event) {
+	        if (!validateDates()) {
+	            event.preventDefault(); // Prevent form submission if validation fails
+	        }
+	    }
 
-        document.addEventListener("DOMContentLoaded", function () {
-            let fromDate = document.getElementById("fromDate");
-            let toDateInput = document.getElementById("toDate");
+	    document.addEventListener("DOMContentLoaded", function () {
+	        let fromDate = document.getElementById("fromDate");
+	        let toDateInput = document.getElementById("toDate");
 
-            if (!fromDate.value) {
-                toDateInput.setAttribute("disabled", "true");
-            }
-        });
-    </script>
+	        if (!fromDate.value) {
+	            toDateInput.setAttribute("disabled", "true");
+	        }
+	    });
+	</script>
+
+
 </head>
 <body>
+    <h1>Appointments by Doctor</h1>
 
-<h1>Appointments by Doctor</h1>
+    <form action="/appointments/filteredByDoctor" method="get" onsubmit="validateForm(event)">
+        <label for="fromDate">From Date:</label>
+		<input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" oninput="enableToDate()" required />
 
-<!-- Filter Form -->
- <div class="filter-form">
-<form action="/appointments/filteredByDoctor" method="get" onsubmit="validateForm(event)">
-    <label for="fromDate">From Date:</label>
-    <input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" oninput="enableToDate()" required />
 
-    <label for="toDate">To Date:</label>
-    <input type="date" id="toDate" name="toDate" th:value="${param.toDate}" oninput="validateDates()" required />
+        <label for="toDate">To Date:</label>
+        <input type="date" id="toDate" name="toDate" th:value="${param.toDate}" oninput="validateDates()" required />
 
-    <p id="dateError" class="error-message"></p>
+        <p id="dateError" class="error-message"></p>
 
-    <button type="submit">Filter</button>
-</form>
-</div>
+        <button type="submit">Filter</button>
+    </form>
 
-<!-- Appointments Table -->
-<table>
-    <thead>
-    <tr>
-        <th>Doctor Id</th>
-        <th>Doctor Name</th>
-        <th>Specialization</th>
-        <th>Consultation Fee</th>
-        <th>Appointment Count</th>
-        <th>Revenue Generated</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="entry : ${doctorCounts}">
-        <td th:text="${entry['id']}"></td>
-        <td th:text="${entry['name']}"></td>
-        <td th:text="${entry['specialization']}"></td>
-        <td th:text="${entry['consultationFee']}"></td>
-        <td th:text="${entry['count']}"></td>
-        <td th:text="${entry['revenue']}"></td>
-    </tr>
-    </tbody>
-</table>
+    <table>
+        <thead>
+            <tr>
+                <th>Doctor Id</th>
+                <th>Doctor Name</th>
+                <th>Specialization</th>
+                <th>Consultation Fee</th>
+                <th>Appointment Count</th>
+                <th>Revenue Generated</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="entry : ${doctorCounts}">
+                <td th:text="${entry['id']}">Doctor Id</td>
+                <td th:text="${entry['name']}">Doctor Name</td>
+                <td th:text="${entry['specialization']}">Specialization</td>
+                <td th:text="${entry['consultationFee']}">0.0</td>
+                <td th:text="${entry['count']}">0</td>
+                <td th:text="${entry['revenue']}">0.0</td>
+            </tr>
+        </tbody>
+    </table>
 
-<a href="http://localhost:9093/adminDoctorPage" class="back-button">Back to Admin Page</a>
-
+    <a href="http://localhost:9093/adminDoctorPage" class="back-button">Back to Admin Page</a>
 </body>
 </html>
