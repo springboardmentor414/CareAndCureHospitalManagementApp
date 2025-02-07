@@ -131,7 +131,7 @@ public class AppointmentClientController {
 	}
 
 	@GetMapping("/{patientId}/appointments/selectDoctor")
-	public String showScheduleAppointment(@PathVariable Long patientId, @RequestParam(required = false) String name,
+	public String showScheduleAppointment(@PathVariable int patientId, @RequestParam(required = false) String name,
 			@RequestParam(required = false) String specialty, @RequestParam(required = false) String experience,
 			@RequestParam(required = false) String gender, Model model, HttpSession session) {
 
@@ -230,7 +230,7 @@ public class AppointmentClientController {
 	}
 
 	@GetMapping("/{patientId}/appointments/{doctorId}/schedule")
-	public String scheduleAppointment(@PathVariable Long patientId, @PathVariable Long doctorId, Model model) {
+	public String scheduleAppointment(@PathVariable int patientId, @PathVariable int doctorId, Model model) {
 
 		String url = baseUrl + "/api/doctors/" + doctorId;
 		try {
@@ -275,7 +275,7 @@ public class AppointmentClientController {
 	}
 
 	@GetMapping("/{patientId}/appointments/{doctorId}/schedule-timeslots")
-	public String timeslotAppointment(@PathVariable Long patientId, @PathVariable Long doctorId,
+	public String timeslotAppointment(@PathVariable int patientId, @PathVariable int doctorId,
 			@ModelAttribute ScheduleAppointmentDTO scheduleAppointmentDTO, Model model) {
 
 		String url = baseUrl + "/api/availability/time-slots";
@@ -431,7 +431,7 @@ public class AppointmentClientController {
 				System.out.println(dayOfWeek);
 				String timeSlot = scheduleAppointmentDTO.getAppointmentTime();
 				System.out.println(timeSlot);
-				Long doctorId1 = appointment.getDoctorId().longValue();
+				int doctorId1 = appointment.getDoctorId();
 				System.out.println(doctorId1);
 				System.out.println(dayOfWeek.toString());
 
@@ -477,7 +477,7 @@ public class AppointmentClientController {
 	}
 
 	@GetMapping("/{patientId}/appointments/cancel/{appointmentId}")
-	public String showCancelAppointment(@PathVariable Long patientId, @PathVariable int appointmentId, Model model) {
+	public String showCancelAppointment(@PathVariable int patientId, @PathVariable int appointmentId, Model model) {
 		CancelAppointmentDTO cancelAppointmentDTO = new CancelAppointmentDTO();
 		cancelAppointmentDTO.setAppointmentId(appointmentId); // Pre-fill the appointment ID
 		model.addAttribute("cancelAppointmentDTO", cancelAppointmentDTO);
@@ -486,7 +486,7 @@ public class AppointmentClientController {
 	}
 
 	@PostMapping("/{patientId}/appointments/cancel/{appointmentId}")
-	public String cancelAppointment(@PathVariable Long patientId, @PathVariable Long appointmentId,
+	public String cancelAppointment(@PathVariable int patientId, @PathVariable int appointmentId,
 			@ModelAttribute CancelAppointmentDTO cancelAppointmentDTO, Model model) {
 		System.out.println("Cancel Request Received for Patient ID: " + patientId);
 		System.out.println("Appointment ID: " + appointmentId);
@@ -523,7 +523,7 @@ public class AppointmentClientController {
 
 				// Now formattedTime will be in the "09:00 am" format
 				System.out.println(formattedTime);
-				Long doctorId = appointments.getDoctorId().longValue();
+				int doctorId = appointments.getDoctorId();
 				System.out.println(doctorId);
 				System.out.println(dayOfWeek.toString());
 
@@ -566,7 +566,7 @@ public class AppointmentClientController {
 	}
 
 	@GetMapping("/{patientId}/appointments/reschedule/{appointmentId}")
-	public String showRescheduleAppointment(@PathVariable Long patientId, @PathVariable Long appointmentId,
+	public String showRescheduleAppointment(@PathVariable int patientId, @PathVariable int appointmentId,
 			Model model) {
 
 		LocalDate today = LocalDate.now();
@@ -604,7 +604,7 @@ public class AppointmentClientController {
 					});
 			Appointment appointments = responseAppointment.getBody();
 
-			Long doctorId = appointments.getDoctorId().longValue();
+			int doctorId = appointments.getDoctorId();
 			System.out.println("doctorid: " + doctorId);
 
 			UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(url).queryParam("dayOfWeek", dayOfWeek)
@@ -724,7 +724,7 @@ public class AppointmentClientController {
 						});
 				Appointment appointments = responseAppointment.getBody();
 
-				Long doctorId = appointments.getDoctorId().longValue();
+				int doctorId = appointments.getDoctorId();
 				System.out.println("doctorid: " + doctorId);
 				// Convert the appointmentDate from "MMM dd, yyyy" format to LocalDate
 				DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.ENGLISH);

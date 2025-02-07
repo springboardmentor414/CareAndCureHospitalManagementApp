@@ -1,12 +1,12 @@
 package com.cac.model;
 
 public class AppointmentDTO {
-    private Long appointmentId;
-    private Long patientId;
+    private int appointmentId;
+    private int patientId;
     private String appointmentDate;
     private String appointmentTime;
     private String status;
-    private Long doctorId;
+    private int doctorId;
     private String reason;
     private String reasonOfCancellation;
     private String doctorName;
@@ -21,8 +21,8 @@ public class AppointmentDTO {
     public String getReason() {
 		return reason;
 	}
-	public AppointmentDTO(Long appointmentId, Long patientId, String appointmentDate, String appointmentTime,
-            String status, Long doctorId, String reason, String reasonOfCancellation, String doctorName) {
+	public AppointmentDTO(int appointmentId, int patientId, String appointmentDate, String appointmentTime,
+            String status, int doctorId, String reason, String reasonOfCancellation, String doctorName) {
         this.appointmentId = appointmentId;
         this.patientId = patientId;
         this.appointmentDate = appointmentDate;
@@ -45,23 +45,23 @@ public class AppointmentDTO {
 	public void setReasonOfCancellation(String reasonOfCancellation) {
 		this.reasonOfCancellation = reasonOfCancellation;
 	}
-	public Long getDoctorId() {
+	public int getDoctorId() {
         return doctorId;
     }
-    public void setDoctorId(Long doctorId) {
+    public void setDoctorId(int doctorId) {
         this.doctorId = doctorId;
     }
     
-    public Long getAppointmentId() {
+    public int getAppointmentId() {
         return appointmentId;
     }
-    public void setAppointmentId(Long appointmentId) {
+    public void setAppointmentId(int appointmentId) {
         this.appointmentId = appointmentId;
     }
-    public Long getPatientId() {
+    public int getPatientId() {
         return patientId;
     }
-    public void setPatientId(Long patientId) {
+    public void setPatientId(int patientId) {
         this.patientId = patientId;
     }
     public String getAppointmentDate() {

@@ -134,6 +134,7 @@
 	        document.getElementById("username").value = doctorId;
 	    }
 	</script>
+	
 
 </head>
 <body>
@@ -168,7 +169,7 @@
 
             <div class="form-group">
                 <label for="emailId">Email ID:</label>
-                <input type="email" id="emailId" name="emailId" th:field="*{emailId}" />
+                <input type="text" id="emailId" name="emailId" th:field="*{emailId}" />
                 <div th:if="${#fields.hasErrors('emailId')}" class="error-text" th:errors="*{emailId}"></div>
             </div>
 
