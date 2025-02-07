@@ -15,7 +15,6 @@ import com.cac.model.AdminDto;
 import com.cac.model.SelectSearchDate;
 
 import jakarta.servlet.http.HttpSession;
-import org.springframework.web.bind.annotation.RequestParam;
 
 
 @Controller
@@ -48,9 +47,7 @@ public class AdminCleintController {
 
 	@ModelAttribute
 	public void checkAdminObject(@SessionAttribute(name = "adminObj", required = false) AdminDto adminObj){
-		if(adminObj!=null) {
 			this.adminSession=adminObj;
-		}
 	}
 
 	private void cleanUpSessionAttributes(HttpSession session, Model model) {
