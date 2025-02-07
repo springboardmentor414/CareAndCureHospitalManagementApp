@@ -3,54 +3,189 @@
 <head>
     <title>Active Doctors List</title>
     <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Light blue gradient */
+            color: #333;
+            overflow-x: hidden;
+        }
+        header {
+            background: linear-gradient(90deg, #4faaf5, #044373); /* Blue gradient */
+            color: white;
+            padding: 1.5rem 0;
+            text-align: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            animation: fadeInDown 1s ease-in-out;
+        }
+
+        h1 {
+            text-align: center;
+            font-size: 36px;
+            font-weight: bold;
+            color: #007bff;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Table Container Styling */
+        .table-container {
+            overflow-x: auto;
+            padding: 20px;
+            margin: 20px auto;
+            width: 90%;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            /* width: 95%; */
+            max-width: 1200px;
+            
+            
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
         table {
             width: 100%;
             border-collapse: collapse;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+            border: 2px solid #162aa5;
         }
-        table, th, td {
-            border: 1px solid black;
-        }
+
         th, td {
-            padding: 8px;
             text-align: left;
+            padding: 12px;
+            border: 1px solid #ddd;
+            
         }
+
+        th {
+            background: linear-gradient(135deg, #1c60ae, #2389f5); /* Blue gradient for headers */
+            color: white;  
+            position: sticky;
+            top: 0;
+            z-index: 1;          
+        }
+
+        td {
+            background: #f9f9f9;
+            border: 1px solid #dbeaff; /* Light blue border */
+            font-size: 15px;
+            transition: background 0.3s ease; /* Light gray background for rows */
+        }
+
+        tr:hover {
+            background: #e3f2fd; /* Highlighted row on hover */
+            transition: background-color 0.3s ease;
+        }
+
+        /* Buttons */
         .edit-button {
-            background-color: #4CAF50; /* Green color */
+            padding: 10px 15px;
+            font-size: 14px;
             color: white;
-            padding: 5px 10px;
             border: none;
+            border-radius: 6px;
             cursor: pointer;
+            text-transform: uppercase;
+            transition: background 0.3s ease, transform 0.3s ease;
         }
+
+        .edit-button {
+            background: linear-gradient(135deg, #4CAF50, #2e7d32); /* Green gradient */
+        }
+
         .edit-button:hover {
-            background-color: #45a049;
+            background: linear-gradient(135deg, #45a049, #1b5e20); /* Darker green */
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
         }
-        .disable-button {
-            background-color: #f44336; /* Red color */
-            color: white;
-            padding: 5px 10px;
-            border: none;
-            cursor: pointer;
-        }
-        .disable-button:hover {
-            background-color: #e7e7e7;
-        }
-        
         /* Back Button Styling */
         .back-button {
             position: absolute;
             top: 20px;
             left: 20px;
         }
+
         .back-button a {
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
             color: white;
-            background-color: #007bff;
-            border-radius: 5px;
+            background-color: #174dc1; /* Navy blue */
+            border-radius: 10px;
             text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
+
         .back-button a:hover {
-            background-color: #0056b3;
+            background-color: #3869ed; 
+            transform: scale(1.05);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .table-container {
+                width: 95%;
+                padding: 15px;
+            }
+
+            th, td {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            .back-button a {
+                font-size: 13px;
+                padding: 8px 15px;
+            }
+
+            .edit-button, .disable-button {
+                font-size: 12px;
+                padding: 8px 12px;
+            }
         }
     </style>
 </head>
@@ -61,53 +196,55 @@
     <a href="/adminDoctorPage">Back</a>
 </div>
 
-<h1>List of Active Doctors</h1>
+<header>List of Active Doctors</header>
 
-<table>
-    <thead>
-    <tr>
-        <th>Doctor ID</th>
-        <th>Doctor Name</th>
-        <th>Specialization</th>
-        <th>Consultation Fees</th>
-        <th>Date of Joining</th>
-        <th>Years of Experience</th>
-        <th>Contact Number</th>
-        <th>Email ID</th>
-        <th>Gender</th>
-        <th>Location</th>
-        <th>Qualification</th>
-        <th>Surgeon</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Loop through the active doctors list and display each doctor's details -->
-    <tr th:each="doctor : ${doctors}">
-        <td th:text="${doctor.doctorId}"></td>
-        <td th:text="${doctor.doctorName}"></td>
-        <td th:text="${doctor.specialization}"></td>
-        <td th:text="${doctor.consultationFees}"></td>
-        <td th:text="${doctor.dateOfJoining}"></td>
-        <td th:text="${doctor.yearsOfExperience}"></td>
-        <td th:text="${doctor.contactNumber}"></td>
-        <td th:text="${doctor.emailId}"></td>
-        <td th:text="${doctor.gender}"></td>
-        <td th:text="${doctor.location}"></td>
-        <td th:text="${doctor.qualification}"></td>
-        <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
-        <td th:text="${doctor.status != null ? (doctor.status ? 'Active' : 'Inactive') : 'Inactive'}"></td>
-
-        <td>
-            <!-- Edit button for each doctor -->
-            <a th:href="@{/edit/{doctorId}(doctorId=${doctor.doctorId})}">
-                <button class="edit-button">Edit</button>
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
+<!-- Table Container -->
+<div class="table-container">
+    <table>
+        <thead>
+        <tr>
+            <th>Doctor ID</th>
+            <th>Doctor Name</th>
+            <th>Specialization</th>
+            <th>Consultation Fees</th>
+            <th>Date of Joining</th>
+            <th>Years of Experience</th>
+            <th>Contact Number</th>
+            <th>Email ID</th>
+            <th>Gender</th>
+            <th>Location</th>
+            <th>Qualification</th>
+            <th>Surgeon</th>
+            <th>Status</th>
+            <th>Actions</th>
+        </tr>
+        </thead>
+        <tbody>
+        <!-- Loop through the active doctors list and display each doctor's details -->
+        <tr th:each="doctor : ${doctors}">
+            <td th:text="${doctor.doctorId}"></td>
+            <td th:text="${doctor.doctorName}"></td>
+            <td th:text="${doctor.specialization}"></td>
+            <td th:text="${doctor.consultationFees}"></td>
+            <td th:text="${doctor.dateOfJoining}"></td>
+            <td th:text="${doctor.yearsOfExperience}"></td>
+            <td th:text="${doctor.contactNumber}"></td>
+            <td th:text="${doctor.emailId}"></td>
+            <td th:text="${doctor.gender}"></td>
+            <td th:text="${doctor.location}"></td>
+            <td th:text="${doctor.qualification}"></td>
+            <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
+            <td th:text="${doctor.status != null ? (doctor.status ? 'Active' : 'Inactive') : 'Inactive'}"></td>
+            <td>
+                <!-- Edit button for each doctor -->
+                <a th:href="@{/edit/{doctorId}(doctorId=${doctor.doctorId})}">
+                    <button class="edit-button">Edit</button>
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

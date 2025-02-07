@@ -1,25 +1,28 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.w3.org/1999/xhtml">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Appointments for Doctor</title>
     <style>
-        /* General Page Styling */
+        /* General Styling */
         body {
-            font-family: 'Arial', sans-serif;
+            font-family: 'Poppins', sans-serif;
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #74ebd5, #acb6e5); /* Gradient background */
+            padding: 0;
+            background: linear-gradient(135deg, #e3f2fd, #bbdefb); /* Light gradient */
             color: #333;
         }
 
         h1 {
             text-align: center;
-            font-size: 28px;
-            color: #2e7d32; /* Green color for heading */
-            margin-bottom: 20px;
+            font-size: 36px;
+            color: #0056b3; /* Deep blue for heading */
+            margin-top: 20px;
+            margin-bottom: 30px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            animation: fadeInDown 1s ease-in-out;
         }
 
-        /* Back Button Styling (Top Left) */
+        /* Back Button Styling */
         .back-button {
             position: absolute;
             top: 20px;
@@ -30,123 +33,149 @@
             padding: 10px 20px;
             font-size: 16px;
             color: white;
-            background-color: #007bff;
-            border-radius: 5px;
+            background: linear-gradient(90deg, #42a5f5, #007bff); /* Gradient for button */
+            border-radius: 8px;
             text-decoration: none;
+            transition: background 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .back-button a:hover {
-            background-color: #0056b3;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         /* Filter Form Styling */
         .filter-form {
-            text-align: center;
-            margin-bottom: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin: 20px auto;
+            animation: fadeInUp 1s ease-in-out;
+        }
+
+        .filter-form form {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 10px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .filter-form label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #333;
         }
 
         .filter-form input {
             padding: 10px;
-            margin: 5px;
-            font-size: 16px;
-            border-radius: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .filter-form input:focus {
+            border-color: #0056b3;
+            box-shadow: 0 0 8px rgba(0, 86, 179, 0.4);
         }
 
         .filter-form button {
-            padding: 10px 20px;
-            background-color: #4CAF50;
+            padding: 10px 15px;
+            font-size: 14px;
             color: white;
+            background: linear-gradient(90deg, #42a5f5, #007bff); /* Gradient button */
             border: none;
-            border-radius: 5px;
+            border-radius: 6px;
             cursor: pointer;
+            transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s ease;
         }
 
         .filter-form button:hover {
-            background-color: #45a049;
+            background: linear-gradient(90deg, #007bff, #0056b3);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         /* Table Styling */
         table {
-            width: 100%;
+            width: 90%;
+            margin: 0 auto;
             border-collapse: collapse;
-            margin-top: 20px;
-            border: 1px solid #ddd;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            animation: fadeInUp 1.2s ease-in-out;
         }
 
         th, td {
-            border: 1px solid #ddd;
             padding: 12px;
-            text-align: left;
+            text-align: center;
+            border: 1px solid #ddd;
+            font-size: 14px;
         }
 
         th {
-            background-color: #4CAF50; /* Green header */
+            background: linear-gradient(90deg, #42a5f5, #007bff); /* Gradient header */
             color: white;
+            text-transform: uppercase;
+            font-weight: bold;
         }
 
-        tr:nth-child(even) {
+        td {
             background-color: #f9f9f9;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
+        tr:hover td {
+            background-color: #e3f2fd;
+        }
+
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
-    <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            const fromDateInput = document.getElementById("fromDate");
-            const toDateInput = document.getElementById("toDate");
-            const form = document.querySelector(".filter-form form");
-
-            // Disable "To Date" initially if "From Date" is not set
-            if (!fromDateInput.value) {
-                toDateInput.disabled = true;
-            }
-
-            fromDateInput.addEventListener("change", function () {
-                if (fromDateInput.value) {
-                    toDateInput.disabled = false;
-                    toDateInput.min = fromDateInput.value; // Set "To Date" min to "From Date"
-                } else {
-                    toDateInput.disabled = true;
-                    toDateInput.value = ""; // Reset "To Date" if "From Date" is cleared
-                }
-            });
-
-            form.addEventListener("submit", function (event) {
-                const fromDate = new Date(fromDateInput.value);
-                const toDate = new Date(toDateInput.value);
-
-                if (toDate < fromDate) {
-                    alert("Error: 'To Date' must be greater than or equal to 'From Date'.");
-                    event.preventDefault();
-                }
-            });
-        });
-    </script>
-	
 </head>
 <body>
 
-	<!-- Back Button (Top Left) -->
-	<div class="back-button">
-	    <a th:href="@{/doctorHomePage/{doctorId}(doctorId=${doctorId})}">Back</a>
-	</div>
-
+<!-- Back Button -->
+<div class="back-button">
+    <a th:href="@{/doctorHomePage/{doctorId}(doctorId=${doctorId})}">Back</a>
+</div>
 
 <h1>Appointments for Doctor</h1>
 
 <!-- Filter Form -->
 <div class="filter-form">
-	<form method="get" th:action="@{/appointments-doctors/{doctorId}/filtered(doctorId=${doctorId})}">
-
-        <label for="fromDate">From: </label>
+    <form method="get" th:action="@{/appointments-doctors/{doctorId}/filtered(doctorId=${doctorId})}">
+        <label for="fromDate">From:</label>
         <input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" required />
-        
-        <label for="toDate">To: </label>
+
+        <label for="toDate">To:</label>
         <input type="date" id="toDate" name="toDate" th:value="${param.toDate}" required />
-        
+
         <button type="submit">Filter</button>
     </form>
 </div>

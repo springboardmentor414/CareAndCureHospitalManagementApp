@@ -5,105 +5,227 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Doctor</title>
     <style>
+        /* General Styles */
         body {
-            font-family: Arial, sans-serif;
-            background-color: #ADD8E6; /* Light Blue */
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start; /* Change to flex-start for top alignment */
-            height: 100vh;
-            overflow-y: auto; /* Enable scrolling */
+          font-family: "Poppins", sans-serif;
+          margin: 0;
+          padding: 0;
+          background: linear-gradient(
+            to bottom,
+            #e3f2fd,
+            #bbdefb
+          ); /* Soft blue gradient */
+          color: #333;
+          overflow-x: hidden;
+          animation: fadeIn 1s ease-in-out;
         }
-
+  
+        /* Container Styling */
         .container {
-            background-color: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 600px;
-            margin: 20px; /* Add margin for spacing from the top */
-            box-sizing: border-box;
+          width: 40%;
+          margin: 40px auto;
+          background: #ffffff;
+          padding: 25px;
+          border-radius: 12px;
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+          animation: slideIn 1s ease-out;
         }
-
-
+  
+        .container:hover {
+          box-shadow: 0 12px 25px rgba(0, 0, 0, 0.3);
+        }
+  
         h1 {
-            text-align: center;
-            color: #333;
-            font-size: 24px;
-            margin-bottom: 20px;
+          text-align: center;
+          color: #0056b3; /* Dark Blue */
+          font-size: 30px;
+          margin-bottom: 20px;
+          animation: popUp 0.8s ease-in-out;
         }
-
+  
+        /* Form Styling */
         form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
+          display: flex;
+          flex-direction: column;
+          gap: 20px;
         }
-
+  
         label {
-            font-size: 16px;
-            color: #555;
+          font-size: 14px;
+          color: #333; /* Neutral Dark */
+          font-weight: bold;
+          margin-bottom: 8px;
+          opacity: 0;
+          animation: fadeInLeft 0.6s ease forwards;
         }
-
-        input, select, button {
-            padding: 10px;
-            font-size: 14px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+  
+        @keyframes fadeInLeft {
+          from {
+            opacity: 0;
+            transform: translateX(-30px);
+          }
+          to {
+            opacity: 1;
+            transform: translateX(0);
+          }
         }
-
+  
+        input[type="text"],
+        input[type="email"],
+        input[type="number"],
+        input[type="date"],
+        
+        select {
+          width: 100%;
+          padding: 12px;
+          font-size: 14px;
+          border: 1px solid #ddd;
+          border-radius: 6px;
+          box-sizing: border-box;
+          transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        input[type="password"]{
+            width: 60%;
+            padding: 12px;
+            font-size: 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            box-sizing: border-box;
+            transition: border 0.3s, box-shadow 0.3s, transform 0.3s;
+        }
+        input:focus,
+        select:focus {
+          border-color: #0056b3;
+          box-shadow: 0 0 10px rgba(0, 86, 179, 0.4);
+          transform: scale(1.02);
+          outline: none;
+        }
+  
         input[type="checkbox"] {
-            width: auto;
+          margin-right: 10px;
         }
-
+  
+        /* Buttons */
         button {
-            background-color: #4CAF50;
-            color: white;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
+          padding: 12px;
+          font-size: 16px;
+          color: #fff;
+          background: linear-gradient(
+            to right,
+            #42a5f5,
+            #007bff
+          ); /* Blue gradient */
+          border: none;
+          border-radius: 8px;
+          cursor: pointer;
+          transition: background 0.3s, transform 0.3s ease, box-shadow 0.3s;
         }
-
+  
         button:hover {
-            background-color: #45a049;
+          background: linear-gradient(to right, #1e88e5, #0056b3);
+          transform: scale(1.05);
+          box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
         }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
+  
+        /* Back Button */
+        .back-button {
+          display: inline-block;
+          margin-bottom: 20px;
+          padding: 10px 15px;
+          background: linear-gradient(
+            to right,
+            #64b5f6,
+            #42a5f5
+          ); /* Light blue gradient */
+          color: white;
+          border: none;
+          border-radius: 6px;
+          text-decoration: none;
+          font-size: 14px;
+          transition: background 0.3s, transform 0.2s ease;
+          animation: fadeInLeft 0.8s ease-in-out;
         }
-
-        .form-group input, .form-group select {
-            width: 100%;
+  
+        .back-button:hover {
+          background: linear-gradient(to right, #42a5f5, #1e88e5);
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
-
-        .status-checkbox, .surgeon-checkbox {
-            display: flex;
-            align-items: center;
+  
+        /* Messages */
+        .success-message {
+          background-color: #d4edda;
+          color: #155724;
+          padding: 12px;
+          border: 1px solid #c3e6cb;
+          border-radius: 6px;
+          font-size: 14px;
+          animation: fadeIn 0.5s ease-in-out;
         }
-
-        .status-checkbox input, .surgeon-checkbox input {
-            width: auto;
-            margin-right: 10px;
+  
+        .error-message {
+          background-color: #f8d7da;
+          color: #721c24;
+          padding: 12px;
+          border: 1px solid #f5c6cb;
+          border-radius: 6px;
+          font-size: 14px;
+          animation: fadeIn 0.5s ease-in-out;
         }
-
-        .status-checkbox label, .surgeon-checkbox label {
-            font-size: 14px;
-            color: #555;
+  
+        .error-text {
+          color: #e3342f;
+          font-size: 13px;
+          margin-top: 5px;
         }
-
-        .input-group {
-            display: flex;
-            flex-direction: column;
+  
+        .form-actions {
+          text-align: center;
         }
-
-        .input-group input {
-            width: 100%;
+  
+        /* Animations */
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
         }
-
-    </style>
+        
+        @keyframes slideIn {
+          from {
+            opacity: 0;
+            transform: translateY(50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes fadeInDown {
+          from {
+            opacity: 0;
+            transform: translateY(-50px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        @keyframes popUp {
+          from {
+            transform: scale(0.8);
+            opacity: 0;
+          }
+          to {
+            transform: scale(1);
+            opacity: 1;
+          }
+        }
+      </style>
     <script>
         // Function to fetch doctor details
         async function fetchDoctorDetails(doctorId) {
