@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!--<!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
 <head>
@@ -99,15 +99,15 @@
 
 <body>
 	<div class="container">
-		<!-- Page Title -->
+		 Page Title 
 		<h1> Status</h1>
 
-		<!-- Conditional Display with Styled Messages -->
+		 Conditional Display with Styled Messages 
 		<div>
-			<!-- Error Message -->
+			 Error Message 
 			<p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>
 
-			<!-- Success Message -->
+			 Success Message 
 			<p th:unless="${errorMessage}" class="success-message" th:text="'Registration Successful'"></p>
 		</div>
 
@@ -116,3 +116,101 @@
 </body>
 
 </html>
+
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error 404 - Page Not Found</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #e3f2fd;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            height: 100vh;
+            position: relative;
+        }
+        .error-message {
+            font-size: 28px;
+            font-weight: bold;
+            color: #0d47a1;
+            padding: 20px;
+        }
+        .hospital {
+            position: absolute;
+            top: 20%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+        }
+        .road {
+            position: relative;
+            width: 100%;
+            height: 150px;
+            background: #0d47a1;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .road::before {
+            content: "";
+            position: absolute;
+            width: 100%;
+            height: 10px;
+            background: white;
+            top: 50%;
+            left: 0;
+            transform: translateY(-50%);
+        }
+        .ambulance {
+            position: absolute;
+            bottom: 20px;
+            width: 100px;
+            animation: move 4s linear infinite;
+        }
+        .sign-board {
+            position: absolute;
+            bottom: 180px;
+            left: 10%;
+            background: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            color: #0d47a1;
+            font-weight: bold;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+        }
+        @keyframes move {
+            from { right: -120px; }
+            to { right: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="error-message">
+		<!--⚠️ Error 404 - Page Not Found--> 
+		
+					
+					<p th:if="${errorMessage}" class="error-message" th:text="${errorMessage}"></p>
+
+					 
+					<p th:unless="${errorMessage}" class="success-message" th:text="'Registration Successful'"></p>
+				
+		
+	⚠️</div>
+    <img src="https://i.pinimg.com/originals/29/0b/54/290b54548d8114b65d0653f3b278176a.png" class="hospital" alt="Hospital">
+    
+    <div class="road">
+        <img src="https://static.vecteezy.com/system/resources/previews/036/273/079/original/cute-ambulance-illustration-free-png.png" class="ambulance" alt="Ambulance">
+    </div>
+</body>
+</html>
+

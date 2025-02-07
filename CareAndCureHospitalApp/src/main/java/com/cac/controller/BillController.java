@@ -71,10 +71,15 @@ public class BillController {
 
 	// searchBillbyBillId
 	@GetMapping("/bills/{billId}")
-	public ResponseEntity<?> getBillById(@PathVariable int billId) throws ResourceNotFoundException, Exception {
-
+	public ResponseEntity<?> getBillById(@PathVariable int billId)  {
+        try {
 		Bill bill = billService.getBillById(billId);
 		return ResponseEntity.ok(bill); // Return 200 OK
+        }
+        catch (Exception ex) {
+			return ResponseEntity.status(HttpStatus.NOT_FOUND)
+					.body("An error occurred: " + ex.getMessage());
+		}
 
 	}
 	// http://localhost:8082/bills/2

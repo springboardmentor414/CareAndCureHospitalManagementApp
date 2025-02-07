@@ -18,7 +18,6 @@ target/
 *.iws
 *.iml
 *.ipr
-.bin
 
 ### NetBeans ###
 /nbproject/private/
@@ -32,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+
+.metadata/
