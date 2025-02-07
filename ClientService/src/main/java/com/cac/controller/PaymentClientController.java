@@ -4,6 +4,7 @@ import com.cac.model.*;
 import com.cac.model.Payment;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -99,12 +100,14 @@ public class PaymentClientController {
         return "redirect:/payments";
     }
 
-    @GetMapping("/searchPaymentByBillId")
+  /*  @GetMapping("/searchPaymentByBillId")
     public String searchPayments(
             @RequestParam(required = false) Integer billId,
             @RequestParam(required = false) String paymentMethod,
             @RequestParam(required = false) String paymentStatus,
             Model model) {
+    	System.out.println("hello client");
+        System.out.println(billId+" "+paymentMethod+" "+paymentStatus);
         try {
             logger.info("Payment Method: " + paymentMethod);
             logger.info("Payment Status: " + paymentStatus);
@@ -112,12 +115,15 @@ public class PaymentClientController {
             UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(backendUrl + "/searchbypayment");
             if (billId != null) {
                 builder.queryParam("billId", billId);
+                System.out.println(billId);
             }
             if (paymentMethod != null && !paymentMethod.isEmpty()) {
                 builder.queryParam("paymentMethod", paymentMethod);
+                System.out.println(paymentMethod);
             }
             if (paymentStatus != null && !paymentStatus.isEmpty()) {
                 builder.queryParam("paymentStatus", paymentStatus);
+                System.out.println(billId);
             }
 
             String queryUrl = builder.toUriString();
@@ -131,7 +137,77 @@ public class PaymentClientController {
                     Payment[].class
             );
             if (response.getBody() != null && response.getBody().length > 0) {
-                model.addAttribute("payments", Arrays.asList(response.getBody()));
+                List<Payment> payments = Arrays.asList(response.getBody()); // Convert array to list
+                model.addAttribute("payments", payments);
+                
+                // Print the list
+                System.out.println("CLient list");
+                for (Payment p : payments) {
+                    System.out.println(p);  // Assuming Payment has a proper toString() method
+                }
+            }
+            else {
+                model.addAttribute("errorMessage", "No payments found matching the criteria.");
+            }
+        } catch (HttpClientErrorException.NotFound ex) {
+            logger.severe("Error searching payments: " + ex.getResponseBodyAsString());
+            model.addAttribute("errorMessage", ex.getResponseBodyAsString());
+        } catch (Exception e) {
+            logger.severe("Unexpected error searching payments: " + e.getMessage());
+            model.addAttribute("errorMessage", "An unexpected error occurred while searching payments.");
+        }
+        return "payments";
+    }*/
+    @GetMapping("/searchPaymentByBillId")
+    public String searchPayments(
+            @RequestParam(required = false) Integer billId,
+            @RequestParam(required = false) String paymentMethod,
+            @RequestParam(required = false) String paymentStatus,
+            Model model) {
+        
+        System.out.println("hello client");
+        System.out.println(billId + " " + paymentMethod + " " + paymentStatus);
+        
+        try {
+            logger.info("Payment Method: " + paymentMethod);
+            logger.info("Payment Status: " + paymentStatus);
+
+            UriComponentsBuilder builder = UriComponentsBuilder.fromHttpUrl(backendUrl + "/searchbypayment");
+            if (billId != null) {
+                builder.queryParam("billId", billId);
+                System.out.println(billId);
+            }
+            if (paymentMethod != null && !paymentMethod.isEmpty()) {
+                builder.queryParam("paymentMethod", paymentMethod);
+                System.out.println(paymentMethod);
+            }
+            if (paymentStatus != null && !paymentStatus.isEmpty()) {
+                builder.queryParam("paymentStatus", paymentStatus);
+                System.out.println(paymentStatus);
+            }
+
+            String queryUrl = builder.toUriString();
+            logger.info("Query URL: " + queryUrl);
+
+            RestTemplate restTemplate = new RestTemplate();
+
+            // Use ParameterizedTypeReference to get List<Payment>
+            ResponseEntity<List<Payment>> response = restTemplate.exchange(
+                    queryUrl,
+                    HttpMethod.GET,
+                    null,
+                    new ParameterizedTypeReference<List<Payment>>() {}
+            );
+
+            if (response.getBody() != null && !response.getBody().isEmpty()) {
+                List<Payment> payments = response.getBody(); // Directly get List<Payment>
+                model.addAttribute("payments", payments);
+
+                // Print the list
+                System.out.println("Client list:");
+                for (Payment p : payments) {
+                    System.out.println(p); // Assuming Payment has a proper toString() method
+                }
             } else {
                 model.addAttribute("errorMessage", "No payments found matching the criteria.");
             }
@@ -142,6 +218,7 @@ public class PaymentClientController {
             logger.severe("Unexpected error searching payments: " + e.getMessage());
             model.addAttribute("errorMessage", "An unexpected error occurred while searching payments.");
         }
+
         return "payments";
     }
     @GetMapping("/searchByPaymentDate")

@@ -9,6 +9,7 @@ import jakarta.persistence.*;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 
 import java.sql.Date;
 
@@ -21,10 +22,22 @@ public class Payment {
 	 @Id
 	 private String razorpayOrderId;
 
-	@ManyToOne
+	/*@ManyToOne
     @JoinColumn(name = "billid", nullable = false)
 	@JsonBackReference
-    private Bill bill;
+    private Bill bill;*/
+	
+	
+	/*@ManyToOne(fetch = FetchType.EAGER) // Use EAGER fetching
+    @JoinColumn(name = "bill_id", nullable = false)
+    //@JsonIgnoreProperties("payments") // Ignore recursive serialization
+    private Bill bill;*/
+	 
+	 @ManyToOne(fetch = FetchType.EAGER) // Ensures bill is loaded with Payment
+	 @JoinColumn(name = "billid", nullable = false)
+	 @JsonIgnoreProperties("payList") // Prevents recursion but allows bill in Payment response
+	 private Bill bill;
+
 	
 	/*@OneToOne(mappedBy = "appointment")
 	@JsonBackReference
@@ -96,4 +109,11 @@ public class Payment {
         this.currency = currency;
     }
 
+	@Override
+	public String toString() {
+		return "Payment [razorpayOrderId=" + razorpayOrderId + ", bill=" + bill + ", paymentMethod=" + paymentMethod
+				+ ", amount=" + amount + ", paymentStatus=" + paymentStatus + ", paymentDate=" + paymentDate
+				+ ", currency=" + currency + "]";
+	}
+    
 }
