@@ -135,7 +135,7 @@
             document.getElementById("dateOfJoining").value = doctor.dateOfJoining;
             document.getElementById("yearsOfExperience").value = doctor.yearsOfExperience;
 			document.getElementById("username").value = doctor.username;
-			document.getElementById("password").value = doctor.password;
+			//document.getElementById("password").value = doctor.password;
             document.getElementById("status").checked = doctor.status;
             document.getElementById("surgeon").checked = doctor.surgeon;
             document.getElementById("gender").value = doctor.gender;
@@ -157,7 +157,7 @@
                 dateOfJoining: document.getElementById("dateOfJoining").value,
                 yearsOfExperience: document.getElementById("yearsOfExperience").value,
 				username:  document.getElementById("username").value,
-				password:  document.getElementById("password").value,
+				//password:  document.getElementById("password").value,
                 status: document.getElementById("status").checked,
                 surgeon: document.getElementById("surgeon").checked,
                 gender: document.getElementById("gender").value,
@@ -265,10 +265,13 @@
             <input type="text" id="username" placeholder="Enter username"><br>
         </div>
 
+		<!-- Hidden input to pass the doctor ID 
         <div class="input-group">
             <label for="password">password:</label>
             <input type="text" id="password" placeholder="Enter password"><br>
         </div>
+		-->
+		
 
 
         <div class="status-checkbox">

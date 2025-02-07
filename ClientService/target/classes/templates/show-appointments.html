@@ -99,8 +99,10 @@
             const toDateInput = document.getElementById("toDate");
             const form = document.querySelector(".filter-form form");
 
-            // Disable "To Date" initially
-            toDateInput.disabled = true;
+            // Disable "To Date" initially if "From Date" is not set
+            if (!fromDateInput.value) {
+                toDateInput.disabled = true;
+            }
 
             fromDateInput.addEventListener("change", function () {
                 if (fromDateInput.value) {
@@ -123,6 +125,7 @@
             });
         });
     </script>
+	
 </head>
 <body>
 
@@ -135,12 +138,13 @@
 
 <!-- Filter Form -->
 <div class="filter-form">
-    <form method="get">
+	<form method="get" th:action="@{/appointments/{doctorId}/filtered(doctorId=${doctorId})}">
+
         <label for="fromDate">From: </label>
-        <input type="date" id="fromDate" name="fromDate" required />
+        <input type="date" id="fromDate" name="fromDate" th:value="${param.fromDate}" required />
         
         <label for="toDate">To: </label>
-        <input type="date" id="toDate" name="toDate" required />
+        <input type="date" id="toDate" name="toDate" th:value="${param.toDate}" required />
         
         <button type="submit">Filter</button>
     </form>
