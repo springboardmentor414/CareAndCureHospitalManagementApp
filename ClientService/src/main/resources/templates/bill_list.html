@@ -89,6 +89,42 @@
         .back-btn:hover {
             background: #5a6268;
         }
+		
+		
+				    .payment-grid {
+				        display: grid;
+				        grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+				        gap: 20px;
+				    }
+				    .payment-card {
+				        background: #fff;
+				        padding: 15px;
+				        border-radius: 10px;
+				        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+				        transition: transform 0.2s ease-in-out;
+				    }
+				    .payment-card:hover {
+				        transform: translateY(-3px);
+				        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+				    }
+				    .payment-info {
+				        display: flex;
+				        justify-content: space-between;
+				        padding: 8px 0;
+				        border-bottom: 1px solid #eee;
+				    }
+				    .payment-info:last-child {
+				        border-bottom: none;
+				    }
+				    .payment-info strong {
+				        color: #007bff;
+				    }
+				    .payment-info p {
+				        margin: 0;
+				        font-weight: bold;
+				        color: #333;
+				    }
+				
     </style>
 </head>
 
@@ -140,6 +176,36 @@
                 <div><strong>Status</strong><p th:text="${bill.appointment.status}"></p></div>
             </div>
         </div>
+		
+		<!-- Payment Details -->
+		<div th:if="${not #lists.isEmpty(bill.payList)}" class="section">
+		    <h3>Payment Details</h3>
+		    <div class="payment-grid">
+		        <div th:each="payment : ${bill.payList}" class="payment-card">
+		            <div class="payment-info">
+		                <strong>Payment Method:</strong> <p th:text="${payment.paymentMethod}"></p>
+		            </div>
+		            <div class="payment-info">
+		                <strong>Amount:</strong> <p th:text="${payment.amount}"></p>
+		            </div>
+		            <div class="payment-info">
+		                <strong>Payment Status:</strong> <p th:text="${payment.paymentStatus}"></p>
+		            </div>
+		            <div class="payment-info">
+		                <strong>Payment Date:</strong> <p th:text="${payment.paymentDate}"></p>
+		            </div>
+		            <div class="payment-info">
+		                <strong>Razorpay Order ID:</strong> <p th:text="${payment.razorpayOrderId}"></p>
+		            </div>
+		            <div class="payment-info">
+		                <strong>Currency:</strong> <p th:text="${payment.currency}"></p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+
+		
+
         
         <form th:if="${balanceAmount > 0}" th:action="@{/create}" method="GET">
             <input type="hidden" name="billId" th:value="${bill.billId}" />

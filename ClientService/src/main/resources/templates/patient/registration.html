@@ -193,6 +193,30 @@
       /* justify-content: space-between; */
       gap: 10px;
     }
+
+    span {
+    display: inline-block;
+    margin-top: 15px;
+    font-size: 14px;
+    color: #555; /* Neutral gray color for the text */
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    
+}
+
+/* Styling for the "Login" link */
+span a {
+    text-decoration: none; /* Remove underline */
+    color: #4faaf5; /* Matching the Care and Cure theme's blue */
+    font-weight: bold;
+    transition: color 0.3s ease, transform 0.2s ease;
+}
+
+/* Hover effect for the "Login" link */
+span a:hover {
+    color: #2c3e50; /* Darker shade of blue for hover */
+    transform: translateY(-2px); /* Slight upward movement on hover */
+    text-decoration: underline; /* Add underline for emphasis */
+}
   </style>
 </head>
 
@@ -435,7 +459,7 @@
       </table>
 
     </form>
-    <span>Already Registered ? <a th:href="@{/patientLoginForm}">Login</a></span>
+    <center><span>Already Registered ? <a th:href="@{/patientLoginForm}">Login</a></span>
 
     <!-- Additional Buttons -->
     <div class="button-container">
@@ -457,7 +481,7 @@
 
     </div>
 
-  </div>
+  
   </div>
 
   <!-- Include Flatpickr JS -->

@@ -2,24 +2,37 @@
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
     <title>Active Doctors List</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
     <style>
-        /* General Page Styling */
-        body {
-            font-family: 'Arial', sans-serif;
+        /* Global Styles */
+        * {
             margin: 0;
-            padding: 20px;
-            background: linear-gradient(135deg, #74ebd5, #acb6e5); /* Gradient background */
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #fef6e4, #dbeaff); /* Background gradient */
             color: #333;
+            line-height: 1.6;
+            overflow-x: hidden;
         }
 
-        h1 {
+        /* Header Styling */
+        header {
+            background: linear-gradient(90deg, #4faaf5, #044373); /* Blue gradient */
+            color: white;
+            padding: 1.5rem 0;
             text-align: center;
-            font-size: 28px;
-            color: #2e7d32;
-            margin-bottom: 20px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 2rem;
+            font-weight: bold;
+            letter-spacing: 1px;
+            text-transform: uppercase;
         }
 
-        /* Back Button Styling (Top Left) */
+        /* Back Button Styling */
         .back-button {
             position: absolute;
             top: 20px;
@@ -27,118 +40,178 @@
         }
 
         .back-button a {
-            padding: 10px 20px;
+            padding: 12px 20px;
             font-size: 16px;
             color: white;
-            background-color: #007bff;
-            border-radius: 5px;
+            background-color: #14279B; /* Navy blue */
+            border-radius: 10px;
             text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
         }
 
         .back-button a:hover {
-            background-color: #0056b3;
+            background-color: #1d4ed8; /* Lighter blue */
+            transform: scale(1.05);
         }
 
-        /* Table Styling */
+        /* Table Container */
+        .table-container {
+            overflow-x: auto;
+            margin: 20px auto;
+            width: 90%;
+            animation: fadeIn 1.2s ease-in-out;
+        }
+
+        /* Table Styles */
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 20px;
-            border: 1px solid #ddd;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+            background: white;
+            border: 2px solid #14279B; /* Navy blue border */
         }
 
         th, td {
-            border: 1px solid #ddd;
             padding: 12px;
             text-align: left;
         }
 
         th {
-            background-color: #4CAF50;
+            background: #1c57b0; 
             color: white;
+            position: sticky;
+            top: 0;
+            z-index: 1;
         }
 
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
+        td {
+            background: #fdf2dc; /* Soft beige */
+            color: #333;
+            border: 1px solid #dbeaff; /* Light blue border */
+            font-size: 15px;
+            transition: background 0.3s ease;
         }
 
-        tr:hover {
-            background-color: #f1f1f1;
+        tr:nth-child(odd) td {
+            background: white; /* Alternating white rows */
         }
 
-        /* Button Styling */
-        .disable-button {
-            background-color: #f44336;
+        tr:hover td {
+            background: #fef6e4; /* Highlight row on hover */
+        }
+
+        /* Action Button Styling */
+        .action-buttons {
+            text-align: center;
+        }
+
+        .action-buttons button {
+            background-color: #007bff; /* Blue color */
             color: white;
-            padding: 8px 12px;
+            padding: 8px 16px;
             border: none;
-            border-radius: 5px;
+            border-radius: 10px;
             font-size: 14px;
             cursor: pointer;
+            transition: background 0.3s ease, transform 0.2s ease-in-out;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
         }
 
-        .disable-button:hover {
-            background-color: #d32f2f;
+        .action-buttons button:hover {
+            background-color: #0056b3; /* Darker blue */
+            transform: scale(1.05);
         }
 
-        .action-buttons a {
-            text-decoration: none;
+        /* Animations */
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
     </style>
 </head>
 <body>
 
-<!-- Back Button (Top Left) -->
-<div class="back-button">
-    <a th:href="@{/adminDoctorPage}">Back</a>
-</div>
+    <!-- Back Button (Top Left) -->
+    <div class="back-button">
+        <a th:href="@{/adminDoctorPage}">Back</a>
+    </div>
+    
+    <header>List of Active Doctors</header>
+    
+    <!-- Doctors Table -->
+    <div class="table-container">
+        <body>
 
-<h1>List of Active Doctors</h1>
-
-<!-- Doctors Table -->
-<table>
-    <thead>
-    <tr>
-        <th>Doctor ID</th>
-        <th>Doctor Name</th>
-        <th>Specialization</th>
-        <th>Consultation Fees</th>
-        <th>Date of Joining</th>
-        <th>Years of Experience</th>
-        <th>Contact Number</th>
-        <th>Email ID</th>
-        <th>Gender</th>
-        <th>Location</th>
-        <th>Qualification</th>
-        <th>Surgeon</th>
-        <th>Status</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <!-- Loop through the active doctors list and display each doctor's details -->
-    <tr th:each="doctor : ${doctors}">
-        <td th:text="${doctor.doctorId}"></td>
-        <td th:text="${doctor.doctorName}"></td>
-        <td th:text="${doctor.specialization}"></td>
-        <td th:text="${doctor.consultationFees}"></td>
-        <td th:text="${doctor.dateOfJoining}"></td>
-        <td th:text="${doctor.yearsOfExperience}"></td>
-        <td th:text="${doctor.contactNumber}"></td>
-        <td th:text="${doctor.emailId}"></td>
-        <td th:text="${doctor.gender}"></td>
-        <td th:text="${doctor.location}"></td>
-        <td th:text="${doctor.qualification}"></td>
-        <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
-        <td th:text="${doctor.status != null ? (doctor.status ? 'Active' : 'Inactive') : 'Inactive'}"></td>
-        <td class="action-buttons">
-            <!-- Show appointments button -->
-            <a th:href="@{/appointments/{doctorId}(doctorId=${doctor.doctorId})}">
-                <button class="disable-button">Show Appointments</button>
-            </a>
-        </td>
-    </tr>
-    </tbody>
-</table>
-</body>
+            <!-- Back Button (Top Left) -->
+            <div class="back-button">
+                <a th:href="@{/adminDoctorPage}">Back</a>
+            </div>            
+            <!-- Doctors Table -->
+            <table>
+                <thead>
+                <tr>
+                    <th>Doctor ID</th>
+                    <th>Doctor Name</th>
+                    <th>Specialization</th>
+                    <th>Consultation Fees</th>
+                    <th>Date of Joining</th>
+                    <th>Years of Experience</th>
+                    <th>Contact Number</th>
+                    <th>Email ID</th>
+                    <th>Gender</th>
+                    <th>Location</th>
+                    <th>Qualification</th>
+                    <th>Surgeon</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Loop through the active doctors list and display each doctor's details -->
+                <tr th:each="doctor : ${doctors}">
+                    <td th:text="${doctor.doctorId}"></td>
+                    <td th:text="${doctor.doctorName}"></td>
+                    <td th:text="${doctor.specialization}"></td>
+                    <td th:text="${doctor.consultationFees}"></td>
+                    <td th:text="${doctor.dateOfJoining}"></td>
+                    <td th:text="${doctor.yearsOfExperience}"></td>
+                    <td th:text="${doctor.contactNumber}"></td>
+                    <td th:text="${doctor.emailId}"></td>
+                    <td th:text="${doctor.gender}"></td>
+                    <td th:text="${doctor.location}"></td>
+                    <td th:text="${doctor.qualification}"></td>
+                    <td th:text="${doctor.surgeon != null ? (doctor.surgeon ? 'Yes' : 'No') : 'No'}"></td>
+                    <td th:text="${doctor.status != null ? (doctor.status ? 'Active' : 'Inactive') : 'Inactive'}"></td>
+                    <td class="action-buttons">
+                        <!-- Show appointments button -->
+                        <a th:href="@{/appointments/{doctorId}(doctorId=${doctor.doctorId})}">
+                            <button class="disable-button">Show Appointments</button>
+                        </a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            </body>
+    </div>
+    </body>
 </html>

@@ -2,10 +2,114 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
     <title>Doctor Details</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+    <!-- <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"> -->
+    <style>
+        /* General body styles */
+        body {
+            font-family: 'Poppins', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(180deg, #b1dbf2, #ffffff);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Container styles */
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+            animation: fadeIn 1s ease-in-out;
+        }
+
+        /* Header styles */
+        h2 {
+            text-align: center;
+            color: #004f77;
+            margin-bottom: 25px;
+            animation: slideDown 1s ease-in-out;
+        }
+
+        /* Table styles */
+        .table {
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 20px;
+            border: none;
+        }
+
+        .table th {
+            background: linear-gradient(90deg, #4aa3ec, #0b79d0);
+            color: white;
+            text-align: left;
+            padding: 15px;
+            font-size: 16px;
+            width: 30%;
+        }
+
+        .table td {
+            background: #edf6f9;
+            color: #333;
+            padding: 15px;
+            font-size: 15px;
+            transition: background 0.3s ease;
+        }
+
+        .table td:hover {
+            background: #d9eaf7;
+        }
+
+        /* Button styles */
+        .btn {
+            display: block;
+            margin: 30px auto 0 auto;
+            padding: 12px 25px;
+            font-size: 16px;
+            background: linear-gradient(90deg, #53b0fc, #0b79d0);
+            color: white;
+            font-weight: bold;
+            border-radius: 8px;
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.3s ease, transform 0.2s ease-in-out;
+            width: fit-content;
+        }
+
+        .btn:hover {
+            background: linear-gradient(90deg, #0b79d0,#53b0fc);
+            transform: scale(1.05);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Animation Keyframes */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
-<div class="container mt-4">
+<div class="container">
     <h2>Doctor Profile</h2>
     <table class="table table-bordered">
         <tr><th>Doctor ID:</th><td th:text="${doctor.doctorId}"></td></tr>
@@ -22,10 +126,9 @@
         <tr><th>Surgeon:</th><td th:text="${doctor.surgeon} ? 'Yes' : 'No'"></td></tr>
         <tr><th>Status:</th><td th:text="${doctor.status} ? 'Active' : 'Inactive'"></td></tr>
     </table>
-	<a th:href="@{/doctorHomePage/{doctorId}(doctorId=${doctor.doctorId})}" class="btn btn-primary">
-	    Back to Portal
-	</a>
-
+    <a th:href="@{/doctorHomePage/{doctorId}(doctorId=${doctor.doctorId})}" class="btn">
+        Back to Portal
+    </a>
 </div>
 </body>
 </html>

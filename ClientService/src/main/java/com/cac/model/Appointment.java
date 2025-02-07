@@ -13,8 +13,33 @@ public class Appointment {
     private String status;
     private String reasonOfCancellation;
     private Patient patient;
+    
+    private String doctorName;
+    
+    private Bill bill;
+    private Doctor doctor;
+    
+    
 	
-    // Getters and setters
+    public String getDoctorName() {
+		return doctorName;
+	}
+	public void setDoctorName(String doctorName) {
+		this.doctorName = doctorName;
+	}
+	public Bill getBill() {
+		return bill;
+	}
+	public void setBill(Bill bill) {
+		this.bill = bill;
+	}
+	public Doctor getDoctor() {
+		return doctor;
+	}
+	public void setDoctor(Doctor doctor) {
+		this.doctor = doctor;
+	}
+	// Getters and setters
 	public int getAppointmentId() {
 		return appointmentId;
 	}
@@ -68,6 +93,13 @@ public class Appointment {
 	}
 	public void setReasonOfCancellation(String reasonOfCancellation) {
 		this.reasonOfCancellation = reasonOfCancellation;
+	}
+	@Override
+	public String toString() {
+		return "Appointment [appointmentId=" + appointmentId + ", patientId=" + patientId + ", reason=" + reason
+				+ ", doctorId=" + doctorId + ", appointmentDate=" + appointmentDate + ", appointmentTime="
+				+ appointmentTime + ", status=" + status + ", reasonOfCancellation=" + reasonOfCancellation
+				+ ", patient=" + patient + ", doctorName=" + doctorName + ", bill=" + bill + ", doctor=" + doctor + "]";
 	}
 
    

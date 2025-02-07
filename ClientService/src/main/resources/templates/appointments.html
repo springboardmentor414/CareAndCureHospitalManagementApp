@@ -270,12 +270,23 @@ h1 {
 					<!-- <div class="appointment-title" th:text="${appointment.appointmentDate + ' - ' + appointment.appointmentTime}">
                     </div> -->
 
-					<div class="appointment-title" th:text="${appointment != null ?
+					<!--<div class="appointment-title" th:text="${appointment != null ?
                               (appointment.appointmentDate != null && appointment.appointmentTime != null ?
                               appointment.appointmentDate + ' - ' + T(java.time.LocalTime).parse(appointment.appointmentTime).format(T(java.time.format.DateTimeFormatter).ofPattern('hh:mm a')) :
                               'Appointment details unavailable') :
                               'No appointment found'}">
+					</div>-->
+					
+					<div class="appointment-title" th:text="${appointment != null ?
+					    (appointment.appointmentDate != null && appointment.appointmentTime != null ?
+					        appointment.appointmentDate.format(T(java.time.format.DateTimeFormatter).ofPattern('MMM dd, yyyy')) + ' - ' +
+					        appointment.appointmentTime.format(T(java.time.format.DateTimeFormatter).ofPattern('hh:mm a')) :
+					        'Appointment details unavailable') :
+					    'No appointment found'}">
 					</div>
+
+
+
 
 
 					<div class="appointment-details">
@@ -320,11 +331,32 @@ h1 {
 							Appointment</button>
 					</div>
 
-                    <div th:if="${userRole=='admin'}">
+                   <!-- <div th:if="${userRole=='admin'}">
                         <button class="sidebar-button bill-button"
                             th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate
                             Bill</button>
-                    </div>
+                    </div>-->
+					
+					<div th:if="${userRole == 'admin'}">
+					    <!-- Check if the bill object is empty -->
+					    <div th:if="${appointment.bill == null}">
+					        <button class="sidebar-button bill-button"
+					            th:onclick="|window.location.href='/generateBillByAdmin/${appointment.appointmentId}'|">Generate Bill</button>
+					    </div>
+					    <div th:if="${appointment.bill != null}">
+					        <button class="sidebar-button bill-button"
+					            th:onclick="|window.location.href='/viewBillDetails/${appointment.appointmentId}'|">View Bill Details</button>
+					    </div>
+					</div>
+
+					<div th:if="${userRole == 'patient'}">
+					    <!-- Check if the bill object is empty -->
+					    <div th:if="${appointment.bill != null}">
+					        <button class="sidebar-button bill-button"
+					            th:onclick="|window.location.href='/viewBillDetails/${appointment.appointmentId}'|">View Bill Details</button>
+					    </div>
+					</div>
+
 				</div>
 			</div>
 		</div>
